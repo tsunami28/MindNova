@@ -1,7 +1,7 @@
 ---
 key: MN-12
 type: story
-status: backlog
+status: in-progress
 epic: MN-1
 points: 3
 priority: high
@@ -72,3 +72,8 @@ Test trait mapping:
 * CodeQL and Trivy add build time; monitor the 5-minute budget.
 * Initial Trivy scan may flag transitive dependency CVEs with no fix available;
   configure a .trivyignore for acknowledged findings if needed.
+
+## Artifacts and references
+
+* CI workflow - .github/workflows/ci.yml
+* Branch - MN-12

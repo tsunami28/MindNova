@@ -29,6 +29,7 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Treatment Notes and Progress](./discovery/epics/treatment-notes-and-progress.md) - 📌 Background
 - [Work Items](./discovery/README.md) - Local work-item tracker for MindNova.
 - [Evaluate Database Technology for MindNova](./discovery/spikes/database-technology-selection.md) - 📌 Background
+- [Sprint 1 - Platform Foundation](./discovery/sprints/sprint-1.md) - MN-12 is first: CI enables quality gates for all subsequent work.
 - [Client CRUD API Endpoints](./discovery/stories/client-records-and-history/client-crud-endpoints.md) - 📌 Background
 - [Client Domain Model and Migration](./discovery/stories/client-records-and-history/client-domain-model.md) - 📌 Background
 - [Client Search and Pagination](./discovery/stories/client-records-and-history/client-search-and-pagination.md) - 📌 Background
