@@ -1,0 +1,6 @@
+@MindNova.Api_HostAddress = http://localhost:5193
+
+GET {{MindNova.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
