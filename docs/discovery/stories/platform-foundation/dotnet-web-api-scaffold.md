@@ -1,7 +1,7 @@
 ---
 key: MN-9
 type: story
-status: backlog
+status: done
 epic: MN-1
 points: 5
 priority: high

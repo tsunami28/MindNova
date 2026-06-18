@@ -1,0 +1,140 @@
+Test run for C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\bin\Debug\net10.0\MindNova.Api.Tests.dll (.NETCoreApp,Version=v10.0)
+VSTest version 18.0.2 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\bin\Debug\net10.0\MindNova.Api.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.0+00ab0a9ec4 (64-bit .NET 10.0.9)
+[xUnit.net 00:00:00.27]   Discovering: MindNova.Api.Tests
+[xUnit.net 00:00:00.35]   Discovered:  MindNova.Api.Tests
+[xUnit.net 00:00:00.38]   Starting:    MindNova.Api.Tests
+[testcontainers.org 00:00:00.36] Connected to Docker:
+  Host: npipe://./pipe/docker_engine
+  Server Version: 5.8.3
+  Kernel Version: 6.18.33.1-microsoft-standard-WSL2
+  API Version: 1.44
+  Operating System: fedora
+  Total Memory: 7.62 GB
+[testcontainers.org 00:00:00.77] Docker container cc3776777e8e created
+[testcontainers.org 00:00:00.88] Start Docker container cc3776777e8e
+[testcontainers.org 00:00:01.22] Wait for Docker container cc3776777e8e to complete readiness checks
+[testcontainers.org 00:00:01.26] Docker container cc3776777e8e ready
+[testcontainers.org 00:00:01.39] Docker container b14739a7d5f0 created
+[testcontainers.org 00:00:01.46] Docker container d9d216d00b76 created
+[testcontainers.org 00:00:01.47] Start Docker container b14739a7d5f0
+[testcontainers.org 00:00:01.58] Start Docker container d9d216d00b76
+[testcontainers.org 00:00:01.85] Wait for Docker container b14739a7d5f0 to complete readiness checks
+[testcontainers.org 00:00:01.88] Wait for Docker container d9d216d00b76 to complete readiness checks
+[testcontainers.org 00:00:01.93] Execute "/bin/sh -c true && (grep -i ':0*599' /proc/net/tcp* || nc -vz -w 1 localhost 1433 || /bin/bash -c '</dev/tcp/localhost/1433')" at Docker container b14739a7d5f0
+[testcontainers.org 00:00:01.98] Execute "/bin/sh -c true && (grep -i ':0*599' /proc/net/tcp* || nc -vz -w 1 localhost 1433 || /bin/bash -c '</dev/tcp/localhost/1433')" at Docker container d9d216d00b76
+  Passed MindNova.Api.Tests.Infrastructure.DbContextRegistrationTests.DbContext_ResolvesFromServiceProvider_WithSqlServerProvider [870 ms]
+[xUnit.net 00:00:02.87]     MindNova.Api.Tests.Health.HealthEndpointTests.Health_ReturnsOk_WhenDatabaseIsReachable [FAIL]
+[xUnit.net 00:00:02.87]       System.InvalidOperationException : cannot hijack chunked or content length stream
+[xUnit.net 00:00:02.87]       Stack Trace:
+[xUnit.net 00:00:02.87]         /_/src/Docker.DotNet/Microsoft.Net.Http.Client/HttpConnectionResponseContent.cs(37,0): at Microsoft.Net.Http.Client.HttpConnectionResponseContent.HijackStream()
+[xUnit.net 00:00:02.88]         /_/src/Docker.DotNet/DockerClient.cs(400,0): at Docker.DotNet.DockerClient.MakeRequestForHijackedStreamAsync(IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken)
+[xUnit.net 00:00:02.88]         /_/src/Docker.DotNet/Endpoints/ExecOperations.cs(58,0): at Docker.DotNet.ExecOperations.StartContainerExecAsync(String id, ContainerExecStartParameters parameters, CancellationToken cancellationToken)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Clients/DockerContainerOperations.cs(165,0): at DotNet.Testcontainers.Clients.DockerContainerOperations.ExecAsync(String id, IList`1 command, CancellationToken ct)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Configurations/WaitStrategies/UntilUnixCommandIsCompleted.cs(22,0): at DotNet.Testcontainers.Configurations.UntilUnixCommandIsCompleted.UntilAsync(IContainer container)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Containers/DockerContainer.cs(646,0): at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs(184,0): at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass24_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext()
+[xUnit.net 00:00:02.88]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs(213,0): at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Containers/DockerContainer.cs(664,0): at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Containers/DockerContainer.cs(526,0): at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Containers/DockerContainer.cs(309,0): at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct)
+[xUnit.net 00:00:02.88]         C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\Health\HealthEndpointTests.cs(16,0): at MindNova.Api.Tests.Health.HealthEndpointTests.InitializeAsync()
+[xUnit.net 00:00:02.88]     MindNova.Api.Tests.Infrastructure.MigrationTests.InitialMigration_AppliesCleanly_ToEmptyDatabase [FAIL]
+[xUnit.net 00:00:02.88]       System.InvalidOperationException : cannot hijack chunked or content length stream
+[xUnit.net 00:00:02.88]       Stack Trace:
+[xUnit.net 00:00:02.88]         /_/src/Docker.DotNet/Microsoft.Net.Http.Client/HttpConnectionResponseContent.cs(37,0): at Microsoft.Net.Http.Client.HttpConnectionResponseContent.HijackStream()
+[xUnit.net 00:00:02.88]         /_/src/Docker.DotNet/DockerClient.cs(400,0): at Docker.DotNet.DockerClient.MakeRequestForHijackedStreamAsync(IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken)
+[xUnit.net 00:00:02.88]         /_/src/Docker.DotNet/Endpoints/ExecOperations.cs(58,0): at Docker.DotNet.ExecOperations.StartContainerExecAsync(String id, ContainerExecStartParameters parameters, CancellationToken cancellationToken)
+[xUnit.net 00:00:02.88]         /_/src/Testcontainers/Clients/DockerContainerOperations.cs(165,0): at DotNet.Testcontainers.Clients.DockerContainerOperations.ExecAsync(String id, IList`1 command, CancellationToken ct)
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Configurations/WaitStrategies/UntilUnixCommandIsCompleted.cs(22,0): at DotNet.Testcontainers.Configurations.UntilUnixCommandIsCompleted.UntilAsync(IContainer container)
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Containers/DockerContainer.cs(646,0): at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct)
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs(184,0): at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass24_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext()
+[xUnit.net 00:00:02.89]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs(213,0): at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct)
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Containers/DockerContainer.cs(664,0): at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct)
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Containers/DockerContainer.cs(526,0): at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct)
+[xUnit.net 00:00:02.89]         /_/src/Testcontainers/Containers/DockerContainer.cs(309,0): at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct)
+[xUnit.net 00:00:02.89]         C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\Infrastructure\MigrationTests.cs(13,0): at MindNova.Api.Tests.Infrastructure.MigrationTests.InitializeAsync()
+[testcontainers.org 00:00:02.38] Docker container f1e7fa437b30 created
+[testcontainers.org 00:00:02.48] Start Docker container f1e7fa437b30
+[testcontainers.org 00:00:02.86] Wait for Docker container f1e7fa437b30 to complete readiness checks
+[testcontainers.org 00:00:02.96] Execute "/bin/sh -c true && (grep -i ':0*599' /proc/net/tcp* || nc -vz -w 1 localhost 1433 || /bin/bash -c '</dev/tcp/localhost/1433')" at Docker container f1e7fa437b30
+[xUnit.net 00:00:03.85]     MindNova.Api.Tests.Health.HealthEndpointTests.Health_ReturnsServiceUnavailable_WhenDatabaseIsUnreachable [FAIL]
+[xUnit.net 00:00:03.85]       System.InvalidOperationException : cannot hijack chunked or content length stream
+[xUnit.net 00:00:03.85]       Stack Trace:
+[xUnit.net 00:00:03.85]         /_/src/Docker.DotNet/Microsoft.Net.Http.Client/HttpConnectionResponseContent.cs(37,0): at Microsoft.Net.Http.Client.HttpConnectionResponseContent.HijackStream()
+[xUnit.net 00:00:03.85]         /_/src/Docker.DotNet/DockerClient.cs(400,0): at Docker.DotNet.DockerClient.MakeRequestForHijackedStreamAsync(IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken)
+[xUnit.net 00:00:03.85]         /_/src/Docker.DotNet/Endpoints/ExecOperations.cs(58,0): at Docker.DotNet.ExecOperations.StartContainerExecAsync(String id, ContainerExecStartParameters parameters, CancellationToken cancellationToken)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Clients/DockerContainerOperations.cs(165,0): at DotNet.Testcontainers.Clients.DockerContainerOperations.ExecAsync(String id, IList`1 command, CancellationToken ct)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Configurations/WaitStrategies/UntilUnixCommandIsCompleted.cs(22,0): at DotNet.Testcontainers.Configurations.UntilUnixCommandIsCompleted.UntilAsync(IContainer container)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Containers/DockerContainer.cs(646,0): at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs(184,0): at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass24_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext()
+[xUnit.net 00:00:03.85]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs(213,0): at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Containers/DockerContainer.cs(664,0): at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Containers/DockerContainer.cs(526,0): at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct)
+[xUnit.net 00:00:03.85]         /_/src/Testcontainers/Containers/DockerContainer.cs(309,0): at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct)
+[xUnit.net 00:00:03.85]         C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\Health\HealthEndpointTests.cs(16,0): at MindNova.Api.Tests.Health.HealthEndpointTests.InitializeAsync()
+[xUnit.net 00:00:03.86]   Finished:    MindNova.Api.Tests
+  Failed MindNova.Api.Tests.Infrastructure.MigrationTests.InitialMigration_AppliesCleanly_ToEmptyDatabase [1 ms]
+  Error Message:
+   System.InvalidOperationException : cannot hijack chunked or content length stream
+  Stack Trace:
+     at Microsoft.Net.Http.Client.HttpConnectionResponseContent.HijackStream() in /_/src/Docker.DotNet/Microsoft.Net.Http.Client/HttpConnectionResponseContent.cs:line 37
+   at Docker.DotNet.DockerClient.MakeRequestForHijackedStreamAsync(IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken) in /_/src/Docker.DotNet/DockerClient.cs:line 400
+   at Docker.DotNet.ExecOperations.StartContainerExecAsync(String id, ContainerExecStartParameters parameters, CancellationToken cancellationToken) in /_/src/Docker.DotNet/Endpoints/ExecOperations.cs:line 58
+   at DotNet.Testcontainers.Clients.DockerContainerOperations.ExecAsync(String id, IList`1 command, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerContainerOperations.cs:line 165
+   at DotNet.Testcontainers.Configurations.UntilUnixCommandIsCompleted.UntilAsync(IContainer container) in /_/src/Testcontainers/Configurations/WaitStrategies/UntilUnixCommandIsCompleted.cs:line 22
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 646
+   at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass24_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext() in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 184
+--- End of stack trace from previous location ---
+   at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct) in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 213
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 664
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 526
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 309
+   at MindNova.Api.Tests.Infrastructure.MigrationTests.InitializeAsync() in C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\Infrastructure\MigrationTests.cs:line 13
+  Failed MindNova.Api.Tests.Health.HealthEndpointTests.Health_ReturnsOk_WhenDatabaseIsReachable [1 ms]
+  Error Message:
+   System.InvalidOperationException : cannot hijack chunked or content length stream
+  Stack Trace:
+     at Microsoft.Net.Http.Client.HttpConnectionResponseContent.HijackStream() in /_/src/Docker.DotNet/Microsoft.Net.Http.Client/HttpConnectionResponseContent.cs:line 37
+   at Docker.DotNet.DockerClient.MakeRequestForHijackedStreamAsync(IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken) in /_/src/Docker.DotNet/DockerClient.cs:line 400
+   at Docker.DotNet.ExecOperations.StartContainerExecAsync(String id, ContainerExecStartParameters parameters, CancellationToken cancellationToken) in /_/src/Docker.DotNet/Endpoints/ExecOperations.cs:line 58
+   at DotNet.Testcontainers.Clients.DockerContainerOperations.ExecAsync(String id, IList`1 command, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerContainerOperations.cs:line 165
+   at DotNet.Testcontainers.Configurations.UntilUnixCommandIsCompleted.UntilAsync(IContainer container) in /_/src/Testcontainers/Configurations/WaitStrategies/UntilUnixCommandIsCompleted.cs:line 22
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 646
+   at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass24_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext() in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 184
+--- End of stack trace from previous location ---
+   at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct) in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 213
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 664
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 526
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 309
+   at MindNova.Api.Tests.Health.HealthEndpointTests.InitializeAsync() in C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\Health\HealthEndpointTests.cs:line 16
+  Failed MindNova.Api.Tests.Health.HealthEndpointTests.Health_ReturnsServiceUnavailable_WhenDatabaseIsUnreachable [1 ms]
+  Error Message:
+   System.InvalidOperationException : cannot hijack chunked or content length stream
+  Stack Trace:
+     at Microsoft.Net.Http.Client.HttpConnectionResponseContent.HijackStream() in /_/src/Docker.DotNet/Microsoft.Net.Http.Client/HttpConnectionResponseContent.cs:line 37
+   at Docker.DotNet.DockerClient.MakeRequestForHijackedStreamAsync(IEnumerable`1 errorHandlers, HttpMethod method, String path, IQueryString queryString, IRequestContent body, IDictionary`2 headers, TimeSpan timeout, CancellationToken cancellationToken) in /_/src/Docker.DotNet/DockerClient.cs:line 400
+   at Docker.DotNet.ExecOperations.StartContainerExecAsync(String id, ContainerExecStartParameters parameters, CancellationToken cancellationToken) in /_/src/Docker.DotNet/Endpoints/ExecOperations.cs:line 58
+   at DotNet.Testcontainers.Clients.DockerContainerOperations.ExecAsync(String id, IList`1 command, CancellationToken ct) in /_/src/Testcontainers/Clients/DockerContainerOperations.cs:line 165
+   at DotNet.Testcontainers.Configurations.UntilUnixCommandIsCompleted.UntilAsync(IContainer container) in /_/src/Testcontainers/Configurations/WaitStrategies/UntilUnixCommandIsCompleted.cs:line 22
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(WaitStrategy waitStrategy, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 646
+   at DotNet.Testcontainers.Configurations.WaitStrategy.<>c__DisplayClass24_0.<<WaitUntilAsync>g__UntilAsync|0>d.MoveNext() in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 184
+--- End of stack trace from previous location ---
+   at DotNet.Testcontainers.Configurations.WaitStrategy.WaitUntilAsync(Func`1 wait, TimeSpan interval, TimeSpan timeout, Int32 retries, CancellationToken ct) in /_/src/Testcontainers/Configurations/WaitStrategies/WaitStrategy.cs:line 213
+   at DotNet.Testcontainers.Containers.DockerContainer.CheckReadinessAsync(IEnumerable`1 waitStrategies, CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 664
+   at DotNet.Testcontainers.Containers.DockerContainer.UnsafeStartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 526
+   at DotNet.Testcontainers.Containers.DockerContainer.StartAsync(CancellationToken ct) in /_/src/Testcontainers/Containers/DockerContainer.cs:line 309
+   at MindNova.Api.Tests.Health.HealthEndpointTests.InitializeAsync() in C:\Users\katin500\repos\planning\MindNova\tests\MindNova.Api.Tests\Health\HealthEndpointTests.cs:line 16
+
+Test Run Failed.
+Total tests: 4
+     Passed: 1
+     Failed: 3
+ Total time: 5,0820 Seconds
