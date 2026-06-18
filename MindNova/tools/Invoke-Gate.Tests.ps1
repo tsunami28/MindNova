@@ -42,23 +42,21 @@ Describe 'Invoke-Gate' {
         $gate = New-FakeGate -Root $script:Root -ExitCode 0
         $r = Invoke-Wrapper -Gate $gate -Mode 'Blocking'
         $r.ExitCode | Should -Be 0
-        $r.Output | Should -Not -Match 'task.logissue'
+        $r.Output | Should -Not -Match '::error::'
     }
 
-    It 'turns a non-zero gate into a warning + SucceededWithIssues in Advisory mode (wrapper exits 0)' {
+    It 'turns a non-zero gate into a warning annotation in Advisory mode (wrapper exits 0)' {
         $gate = New-FakeGate -Root $script:Root -ExitCode 1
         $r = Invoke-Wrapper -Gate $gate -Mode 'Advisory'
         $r.ExitCode | Should -Be 0
-        $r.Output | Should -Match '##vso\[task.logissue type=warning\]'
-        $r.Output | Should -Match '##vso\[task.complete result=SucceededWithIssues;\]'
+        $r.Output | Should -Match '::warning::'
     }
 
-    It 'turns a non-zero gate into an error + Failed in Blocking mode (wrapper exits 0)' {
+    It 'turns a non-zero gate into an error annotation in Blocking mode (wrapper exits 1)' {
         $gate = New-FakeGate -Root $script:Root -ExitCode 1
         $r = Invoke-Wrapper -Gate $gate -Mode 'Blocking'
-        $r.ExitCode | Should -Be 0
-        $r.Output | Should -Match '##vso\[task.logissue type=error\]'
-        $r.Output | Should -Match '##vso\[task.complete result=Failed;\]'
+        $r.ExitCode | Should -Be 1
+        $r.Output | Should -Match '::error::'
     }
 
     It 'includes the clause and label in the annotation' {

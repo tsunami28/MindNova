@@ -8,7 +8,7 @@ Ordered by priority. Top items are next to pick up.
 | MN-9 | .NET 10 Web API Project Scaffold | story | done | 5 | MN-1 |
 | MN-10 | ASP.NET Identity Setup | story | backlog | 5 | MN-1 |
 | MN-11 | Azure Infrastructure (Bicep/azd) | story | backlog | 5 | MN-1 |
-| MN-12 | CI Pipeline (Azure Pipelines) | story | backlog | 3 | MN-1 |
+| MN-12 | CI Pipeline (GitHub Actions) | story | backlog | 3 | MN-1 |
 | MN-1 | Platform Foundation | epic | backlog | - | - |
 | MN-2 | Client Records and History | epic | backlog | - | MN-2 |
 | MN-13 | Client Domain Model and Migration | story | backlog | 3 | MN-2 |

@@ -16,7 +16,7 @@ The earlier 3-PR stack was **collapsed into a single PR**. All work now lands on
 ## Step 1 - Adopt the contract  [deferred by choice]
 - **[done]** Collapsed the 3-PR stack into the single #75836; resolved the `main` conflict (the bicep doc duplicate); C02 + artifact-graph gates pass locally.
 - **[deferred]** Merge #75836 to `main` after team review - postponed to keep building in-branch first (user's call). This is still the real adoption gate; nothing is enforced team-wide until it merges.
-- **[deferred]** Add the code-analysis pipeline to the `main` branch policy so the C02 + artifact-graph gates run **pre-merge** (Azure DevOps admin). Best done at/with the merge.
+- **[deferred]** Add the code-analysis workflow to the `main` branch protection rules so the C02 + artifact-graph gates run **pre-merge** (GitHub repo admin). Best done at/with the merge.
 - **[deferred]** Delete the personal `~/.claude/skills/` copies (all 6 confirmed safe) so the repo ones are not shadowed - do right after merge, so any main-based checkout keeps the skills.
 - Unblocks the gate phase (Step 6) and team-wide use. Authoring (Steps 2-5) proceeds in-branch meanwhile.
 
@@ -68,7 +68,7 @@ layers - the LLM-maintained knowledge layer, complementary to the artifact graph
   `docs-functional/getting-started.md` and `docs-functional/troubleshooting.md` (the latter cross-links
   the technical `docs/troubleshooting.md`). `Check-DocsWiki` now passes (71 pages, no orphans or broken links).
 - Adaptation: portable relative markdown links instead of Obsidian `[[wikilinks]]` / Dataview, because our
-  docs render in Azure DevOps and the IDE.
+  docs render in GitHub and the IDE.
 
 ## Step 5 - Multi-agent orchestration  [done]
 - **[done]** Authored the dispatch contract `docs/ai-sdlc/orchestration.md`: the independence rule (when steps fan out vs must serialize), the cross-tool mechanism (parallel via subagents on Claude, sequential on Copilot and other agents), the gates (each side-effectful leaf still confirms on its own - parallelism never relaxes a gate), the "not an autopilot" posture, and result aggregation.
@@ -78,16 +78,16 @@ layers - the LLM-maintained knowledge layer, complementary to the artifact graph
 - Pending: eval-validation of the dispatch behaviour (cross-cutting); real exercise on a live story once the contract is adopted (Step 1).
 - Landed in #75836.
 
-## Step 6 - The gate phase (L3 -> L4 enforcement, Azure DevOps)  [in progress: gates wired in-branch; full enforcement still blocked on cleanup + PAT + ADO admin]
+## Step 6 - The gate phase (L3 -> L4 enforcement, GitHub Actions)  [in progress: gates wired in-branch; full enforcement still blocked on cleanup]
 - **[done] Doc gates blocking** in `code-analysis-pipeline.yml` (trigger on `main` + `ai-sdlc`): C02 line-citations, artifact-graph link resolution, C10 docs-wiki (no orphans/broken links) + index-in-sync, C11 no em-dashes. All pass today, so they enforce now.
 - **[done] Code/API/coverage gates wired advisory** (`continueOnError: true` - report but do not fail the build), because the codebase has pre-existing findings: C05 `LogMindNova` (29 raw `LogLevel.*` calls), C04 ARG KQL escaping (5 sites), C06 PascalCase wire names (2 candidates: `userId`, `senderUpn`), C09 coverage (>= 80%, below today). Story-trait coverage is report-only (fails only on a malformed `[Trait("Story")]` key; 169 classes untagged). Scripts: `Check-LogMindNova.ps1`, `Check-KqlEscaping.ps1`, `Check-ApiPascalCase.ps1`, `Check-Coverage.ps1`, `Check-StoryTraits.ps1`. Recorded as advisory-active in `docs/constitution.md` v1.3.
 - **[todo] Flip each advisory gate to blocking** after its findings are cleaned up: migrate the 29 log calls, escape or allowlist the 5 KQL sites, resolve the 2 wire names, raise coverage to 80% (or adopt the SonarCloud quality gate on new code), tag tests then run the story-trait gate with `-Strict`.
 - **[todo] Flip security scans to blocking** (MSDO Trivy/Checkov, Semgrep, Gitleaks) - currently advisory and main-only; risky to flip before triaging their pre-existing findings.
 - **[todo] Jira-side graph integrity** (story <-> spec/ADR backlinks, story-to-story links) via a PAT - the half of the artifact graph CI cannot yet check.
 - **[todo] `adr-check` + `constitution-check`** jobs (C01 ADR-before-merge, machine constitution compliance).
-- **[todo] Add the pipeline to the `main` branch policy** so every gate runs pre-merge (ADO admin); today CI runs on push to `ai-sdlc`, not as PR build validation.
+- **[todo] Add the workflow to the `main` branch protection rules** so every gate runs pre-merge (GitHub repo admin); today CI runs on push to `ai-sdlc`, not as PR check.
 - **Not covered:** OpenAPI code-vs-spec drift (needs build-time Swagger generation; `Check-ApiPascalCase.ps1` only checks wire-name casing, not drift).
-- Depends on: Step 1 (contract adopted) + PAT + ADO admin for the still-blocked items. The advisory wiring is the early-feedback stage; maturity moves to L3/L4 as each gate flips to blocking.
+- Depends on: Step 1 (contract adopted) for the still-blocked items. The advisory wiring is the early-feedback stage; maturity moves to L3/L4 as each gate flips to blocking.
 
 ## Step 7 - BMAD / ECC gap extraction  [todo]
 - Gap-analyse what BMAD/ECC provide beyond our map; extract only the valuable templates (attributed per licence); drop BMAD/ECC + `/autopilot` references from the committed contract (move the autopilot section to a personal, gitignored `CLAUDE.local.md`).

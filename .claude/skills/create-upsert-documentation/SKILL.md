@@ -47,7 +47,7 @@ separately, and decide each even if the answer is "no functional change".
 - **Synthesis over storage.** A page holds evolved understanding, not a raw dump. Link to the source
   (code symbol, ADR, ticket) for the detail rather than pasting it.
 - **Cross-link, portably.** Link related pages with **relative markdown links** (e.g.
-  `[lifecycle](../lifecycle.md)`), never `[[wikilinks]]`: Azure DevOps and the IDE do not render
+  `[lifecycle](../lifecycle.md)`), never `[[wikilinks]]`: GitHub and the IDE do not render
   Obsidian wikilinks or Dataview front-matter, but relative links render everywhere and are what the
   lint validates. Every new or substantially changed page should join the web, not sit orphaned.
 - **Query-filing.** A good answer to a real question becomes (or updates) a page, so knowledge

@@ -38,7 +38,7 @@ Run the CI code-analysis gates locally before pushing (catches doc, skill, graph
 - **.NET 10** (`net10.0`), nullable reference types disabled (`<Nullable>disable</Nullable>`) in all project files; do not use `string?`, `int?`, or any nullable annotation on reference types. Nullable value types (`int?`) are permitted only where the domain requires an absent value.
 - **Central Package Management** (`MindNova/Directory.Packages.props`); lock files tracked.
 - **Testing**: xUnit + Moq + AutoFixture; tests mirror `src/` under `tests/`.
-- **CI/CD**: Azure Pipelines (SonarCloud, Trivy/Checkov/Semgrep).
+- **CI/CD**: GitHub Actions (CodeQL, Trivy, Coverlet).
 - **MindNova runs in** dev, prd. Branches: `main` deploys to prd; `develop` (or feature branches merged to develop) deploys to dev. There is no staging environment. Environment-specific config keys are suffixed `-dev` and `-prd` respectively.
 
 Full C# / config / serialization / logging / testing detail: `docs/conventions/csharp.md`.
@@ -76,15 +76,10 @@ Work items (epics, stories, spikes, bugs) live as markdown files under `docs/dis
 
 ### Creating a PR (canonical path)
 
-- Use the helper `MindNova/toolsNew-MindNovaPullRequest.ps1` (entry function `New-MindNovaPullRequest`). It splits the description into a line array, rejects bullets that would corrupt the call, creates the PR, reads it back, and throws on a truncated or empty description. Prefer it over hand-rolling `az repos pr create`. Invoke it from PowerShell, not by shelling out from bash with a PowerShell here-string (`@'...'@`): bash does not parse here-strings, so the `@` delimiters leak in as the first and last description lines (the helper now strips a leaked lone `@` / `@'` / `'@` line and warns, but calling it from PowerShell avoids the issue).
-- **If you invoke `az` directly, the description is the trap.** `az repos pr create` / `az repos pr update` silently truncates multi-line `--description` to the first line; always pass an array and use `*` for bullets (a leading `-` is parsed as an option flag). Set `$OrgUrl` to your Azure DevOps organisation URL before running any `az` command. Example: `$lines = @("## Summary", "", "## Change", "* one"); az repos pr update --id <id> --org $OrgUrl --description $lines`.
-- **Always verify the description after create or update.** Follow this procedure:
-  1. Create or update the PR.
-  2. Read back: `$pr = az repos pr show --id <id> --org $OrgUrl -o json | ConvertFrom-Json` (do not use JMESPath `length()` - `az.cmd` on Windows breaks on `(` and `{` inside `--query`).
-  3. If `$pr.description.Length -lt <expected-min>`, run a corrective `az repos pr update` with a line array and re-verify.
-  4. An empty or title-length description is a hard failure; do not proceed until fixed.
-  The helper `New-MindNovaPullRequest` does all of this for you.
-- **When az or MCP will not work.** The MCP `repo_create_pull_request` runs as a separate service identity that usually lacks repo write and fails with `TF400813`; an `az login` refresh does not fix it. If the `azure-devops` CLI extension throws `WinError 5` on its dist-info, it was installed elevated, so reinstall it unelevated. Fallback if both fail: output the pre-filled browser URL `$OrgUrl/<project>/_git/<repo>/pullrequestcreate?sourceRef=<branch>&targetRef=main` and stop. Do not proceed with post-PR steps (description verification, ticket enrichment) until the user confirms the PR number.
+- Use the helper `MindNova/tools/New-MindNovaPullRequest.ps1` (entry function `New-MindNovaPullRequest`). It builds the PR body, creates the PR via `gh pr create`, reads it back, and throws on an empty description. Prefer it over hand-rolling `gh pr create`.
+- **If you invoke `gh` directly:** `gh pr create --title "..." --body "..." --base main`. The GitHub CLI handles multi-line bodies reliably; pass the body as a single string or pipe from a file with `--body-file`.
+- **Always verify the description after create.** Read back: `gh pr view <number> --json body | ConvertFrom-Json` and confirm `.body` is non-empty and complete.
+- **Fallback if gh CLI is not authenticated.** Output the pre-filled browser URL `https://github.com/<owner>/<repo>/compare/main...<branch>?expand=1` and stop. Do not proceed with post-PR steps until the user confirms the PR number.
 
 ## Where the detail lives
 

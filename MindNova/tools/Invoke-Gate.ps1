@@ -1,25 +1,25 @@
 #Requires -Version 7
 <#
 .SYNOPSIS
-    Runs a constitution / AI-SDLC gate script in Azure DevOps CI with a readable result.
+    Runs a constitution / AI-SDLC gate script in GitHub Actions CI with a readable result.
 
 .DESCRIPTION
     The gate scripts (Check-*.ps1) signal "issues found" with a non-zero exit code. Run directly in a
-    PowerShell@2 task that surfaces in the build as the opaque "PowerShell exited with code '1'", which
-    reads like the script crashed rather than the validation simply finding issues.
+    pwsh step that surfaces as the opaque "Process completed with exit code 1", which reads like
+    the script crashed rather than the validation simply finding issues.
 
     This wrapper runs the gate, lets its own output (the human-readable violation list) flow to the
-    log, and then translates a non-zero exit into a proper Azure DevOps annotation:
+    log, and then translates a non-zero exit into a proper GitHub Actions annotation:
 
-      - Advisory mode: a warning + SucceededWithIssues (the gate does not block the build yet).
-      - Blocking mode: an error + Failed (the gate fails the build, but with a clean message instead
-        of "PowerShell exited with code 1").
+      - Advisory mode: a warning annotation (the gate does not block the workflow yet).
+      - Blocking mode: an error annotation + non-zero exit (the gate fails the step).
 
-    In both modes the wrapper itself exits 0, so the task result comes from the logging command, not
-    a raw exit code. The gate script is unchanged and still exits non-zero on a developer machine.
+    In advisory mode the wrapper exits 0, so the step passes despite issues. In blocking mode it
+    exits 1 so the workflow step fails with a clear message. The gate script is unchanged and still
+    exits non-zero on a developer machine.
 
     A genuine crash in the gate (a thrown, terminating error rather than a clean non-zero exit) still
-    propagates and fails the task loudly, so real script bugs are not masked.
+    propagates and fails the step loudly, so real script bugs are not masked.
 
 .PARAMETER Script
     Path to the gate script to run (e.g. Check-DocEmDashes.ps1).
@@ -31,7 +31,7 @@
     Short human label used in the message (e.g. "no em-dash characters").
 
 .PARAMETER Mode
-    Advisory (default) emits a warning and SucceededWithIssues. Blocking emits an error and Failed.
+    Advisory (default) emits a warning annotation. Blocking emits an error and fails the step.
 
 .PARAMETER GateArgs
     Remaining arguments are passed through verbatim to the gate script (e.g. -RepoRoot <path>, or
@@ -75,12 +75,11 @@ $code = $LASTEXITCODE
 
 if ($code -ne 0) {
     if ($Mode -eq 'Blocking') {
-        Write-Host ("##vso[task.logissue type=error]{0}: {1} failed (see the log above for the specific findings). This gate is blocking; fix the listed issues to pass CI." -f $Clause, $What)
-        Write-Host ("##vso[task.complete result=Failed;]{0}: {1} failed" -f $Clause, $What)
+        Write-Host ("::error::{0}: {1} failed (see the log above for the specific findings). This gate is blocking; fix the listed issues to pass CI." -f $Clause, $What)
+        exit 1
     }
     else {
-        Write-Host ("##vso[task.logissue type=warning]{0} advisory: {1} found issue(s) (see the log above). Not blocking yet; tracked debt to clear before this gate becomes blocking." -f $Clause, $What)
-        Write-Host ("##vso[task.complete result=SucceededWithIssues;]{0} advisory: issues found" -f $Clause)
+        Write-Host ("::warning::{0} advisory: {1} found issue(s) (see the log above). Not blocking yet; tracked debt to clear before this gate becomes blocking." -f $Clause, $What)
     }
 }
 

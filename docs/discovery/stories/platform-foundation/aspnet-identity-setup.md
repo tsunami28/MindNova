@@ -32,13 +32,43 @@ relates:
 
 ✅ Success Criteria
 
-* ASP.NET Identity tables created via EF migration (AspNetUsers, AspNetRoles, etc.).
-* POST /api/auth/register creates a user account.
-* POST /api/auth/login returns a JWT bearer token.
-* Endpoints can be decorated with [Authorize(Roles = "...")] and enforcement works.
-* Seed data creates default roles: Admin, Therapist, Receptionist.
-* Password policy enforced (minimum length, complexity).
-* Tests cover: registration, login, invalid credentials, role-based access denial.
+* AC-1: An EF Core migration adds the ASP.NET Identity schema (AspNetUsers, AspNetRoles,
+  AspNetUserRoles, and related tables) and applies cleanly to the existing database.
+* AC-2: POST /api/auth/register with a valid email and password returns HTTP 200 and
+  persists the user.
+* AC-3: POST /api/auth/register with a duplicate email returns a ProblemDetails error.
+* AC-4: POST /api/auth/register with a password that violates the minimum-length or
+  complexity policy returns a ProblemDetails error listing the violations.
+* AC-5: POST /api/auth/login with valid credentials returns HTTP 200 with a JWT bearer token.
+* AC-6: POST /api/auth/login with invalid credentials returns a ProblemDetails error.
+* AC-7: The returned JWT contains the user's assigned roles as claims.
+* AC-8: A request to an [Authorize]-protected endpoint without a token returns HTTP 401.
+* AC-9: A request to an [Authorize(Roles = "Admin")]-protected endpoint with a token
+  lacking the Admin role returns HTTP 403.
+* AC-10: Default roles (Admin, Therapist, Receptionist) exist in the database after
+  startup seeding.
+
+Test trait mapping:
+- AC-1: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-1")]` - integration test applying
+  the migration to a test database; asserts Identity tables exist.
+- AC-2: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-2")]` - integration test via
+  WebApplicationFactory; asserts 200 and user persisted.
+- AC-3: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-3")]` - integration test; asserts
+  ProblemDetails on duplicate email.
+- AC-4: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-4")]` - integration test; asserts
+  ProblemDetails with violation details on weak password.
+- AC-5: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-5")]` - integration test; asserts
+  200 and a valid JWT in response.
+- AC-6: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-6")]` - integration test; asserts
+  ProblemDetails on wrong credentials.
+- AC-7: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-7")]` - unit test; decodes token
+  and asserts role claims present.
+- AC-8: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-8")]` - integration test; asserts
+  401 when no Authorization header sent.
+- AC-9: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-9")]` - integration test; asserts
+  403 when token lacks required role.
+- AC-10: `[Trait("Story","MN-10")]` + `[Trait("AC","AC-10")]` - integration test; queries
+  roles from seeded test database; asserts all three exist.
 
 🛠️ How we'll do it
 
