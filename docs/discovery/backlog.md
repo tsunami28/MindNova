@@ -5,7 +5,7 @@ Ordered by priority. Top items are next to pick up.
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
 | MN-8 | Evaluate Database Technology for MindNova | spike | done | - | - |
-| MN-9 | .NET 10 Web API Project Scaffold | story | backlog | 5 | MN-1 |
+| MN-9 | .NET 10 Web API Project Scaffold | story | in-progress | 5 | MN-1 |
 | MN-10 | ASP.NET Identity Setup | story | backlog | 5 | MN-1 |
 | MN-11 | Azure Infrastructure (Bicep/azd) | story | backlog | 5 | MN-1 |
 | MN-12 | CI Pipeline (Azure Pipelines) | story | backlog | 3 | MN-1 |

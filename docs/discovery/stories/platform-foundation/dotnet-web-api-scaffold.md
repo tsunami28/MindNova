@@ -1,7 +1,7 @@
 ---
 key: MN-9
 type: story
-status: backlog
+status: in-progress
 epic: MN-1
 points: 5
 priority: high
@@ -34,12 +34,33 @@ relates:
 
 ✅ Success Criteria
 
-* Solution compiles targeting net10.0 with nullable disabled.
-* Controller-based routing with a /health endpoint returning 200.
-* EF Core configured with SQL Server provider and an initial migration (empty DbContext).
-* Docker Compose file starts a SQL Server container and the API connects to it.
-* Central Package Management (Directory.Packages.props) in use.
-* README documents how to run locally.
+* AC-1: Solution compiles targeting net10.0 with `<Nullable>disable</Nullable>` in all project files.
+* AC-2: Project structure contains src/MindNova.Api (Web API), src/MindNova.Domain (class lib),
+  src/MindNova.Infrastructure (class lib), and tests/MindNova.Api.Tests (xUnit).
+* AC-3: GET /health returns HTTP 200 with a healthy status when the database is reachable.
+* AC-4: GET /health returns HTTP 503 (unhealthy) when the database is unreachable.
+* AC-5: EF Core DbContext is registered with the SQL Server provider and resolves from DI.
+* AC-6: An initial EF Core migration exists and applies cleanly to an empty database.
+* AC-7: Docker Compose file starts a SQL Server 2022 container; the API connects to it on startup.
+* AC-8: Central Package Management (Directory.Packages.props) is in use; no `<Version>` attributes
+  appear in individual .csproj files.
+* AC-9: A README documents prerequisites and steps to run the application locally.
+
+Test trait mapping:
+- AC-1: build-time verification (compilation fails if violated); not unit-tested.
+- AC-2: build-time verification (project structure); not unit-tested.
+- AC-3: `[Trait("Story","MN-9")]` + `[Trait("AC","AC-3")]` - integration test via WebApplicationFactory
+  with a test SQL container; asserts 200 and healthy response body.
+- AC-4: `[Trait("Story","MN-9")]` + `[Trait("AC","AC-4")]` - integration test with an invalid connection
+  string; asserts 503.
+- AC-5: `[Trait("Story","MN-9")]` + `[Trait("AC","AC-5")]` - unit test resolving MindNovaDbContext from
+  a test service provider; asserts non-null and correct provider.
+- AC-6: `[Trait("Story","MN-9")]` + `[Trait("AC","AC-6")]` - integration test applying migrations to a
+  test database; asserts no exceptions and schema exists.
+- AC-7: manual verification (Docker Compose up, observe API logs); not unit-tested.
+- AC-8: build-time verification (CI script or test scanning .csproj files for stray Version attributes);
+  not unit-tested.
+- AC-9: manual verification (file exists, content reviewed); not unit-tested.
 
 🛠️ How we'll do it
 
@@ -53,3 +74,17 @@ relates:
 ⚠️ Risks & Blockers
 
 * None - MN-8 (DB choice) is resolved.
+
+🔧 Technical Implementation
+
+* Solution: `MindNova/MindNova.sln` (4 projects)
+* API host: `MindNova/src/MindNova.Api/Program.cs` (health checks, DI, controllers)
+* DbContext: `MindNova/src/MindNova.Infrastructure/Data/MindNovaDbContext.cs`
+* DI registration: `MindNova/src/MindNova.Infrastructure/DependencyInjection.cs`
+* Migration: `MindNova/src/MindNova.Infrastructure/Data/Migrations/` (InitialCreate)
+* Docker Compose: `MindNova/docker-compose.yml` (SQL Server 2022)
+* Tests: `MindNova/tests/MindNova.Api.Tests/Health/HealthEndpointTests.cs` (AC-3, AC-4),
+  `MindNova/tests/MindNova.Api.Tests/Infrastructure/DbContextRegistrationTests.cs` (AC-5),
+  `MindNova/tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs` (AC-6)
+* ADR: `docs/adrs/0008-azure-sql-database-serverless.md`
+* Branch: `MN-9`
