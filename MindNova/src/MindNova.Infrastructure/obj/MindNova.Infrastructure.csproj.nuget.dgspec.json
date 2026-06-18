@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj": {}
+    "c:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj": {}
   },
   "projects": {
     "C:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Domain\\MindNova.Domain.csproj": {
@@ -358,14 +358,14 @@
         }
       }
     },
-    "C:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj": {
+    "c:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj",
+        "projectUniqueName": "c:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj",
         "projectName": "MindNova.Infrastructure",
-        "projectPath": "C:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj",
+        "projectPath": "c:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\MindNova.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\katin500\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\obj\\",
+        "outputPath": "c:\\Users\\katin500\\repos\\planning\\MindNova\\src\\MindNova.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "centralPackageVersionsManagementEnabled": true,
         "fallbackFolders": [

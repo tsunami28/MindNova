@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MindNova.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a26c57e44ac931b1193934d1ac1f032af3712b4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10fc9ae48f41123388e05e0f9729827442cf594b")]
 [assembly: System.Reflection.AssemblyProductAttribute("MindNova.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MindNova.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

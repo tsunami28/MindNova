@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/1LOW1ldDAM=",
+  "dgSpecHash": "X1oekTPFAjg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\katin500\\repos\\planning\\MindNova\\tests\\MindNova.Api.Tests\\MindNova.Api.Tests.csproj",
+  "projectFilePath": "c:\\Users\\katin500\\repos\\planning\\MindNova\\tests\\MindNova.Api.Tests\\MindNova.Api.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\katin500\\.nuget\\packages\\autofixture\\4.18.1\\autofixture.4.18.1.nupkg.sha512",
     "C:\\Users\\katin500\\.nuget\\packages\\autofixture.xunit2\\4.18.1\\autofixture.xunit2.4.18.1.nupkg.sha512",
