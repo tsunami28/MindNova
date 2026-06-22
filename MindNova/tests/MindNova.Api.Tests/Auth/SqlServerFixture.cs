@@ -80,7 +80,10 @@ public class SqlServerFixture : IAsyncLifetime
         {
             try
             {
-                using var connection = new SqlConnection(_owner.GetConnectionString());
+                var host = container.Hostname;
+                var port = container.GetMappedPublicPort(ContainerPort);
+                var cs = $"Server={host},{port};Database=master;User Id=sa;Password={SaPassword};TrustServerCertificate=true;Connect Timeout=5";
+                using var connection = new SqlConnection(cs);
                 await connection.OpenAsync();
                 using var command = connection.CreateCommand();
                 command.CommandText = "SELECT 1";

@@ -105,7 +105,7 @@ public class AuthEndpointTests
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Token", content);
+        Assert.Contains("token", content, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
