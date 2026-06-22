@@ -81,6 +81,7 @@ request test per endpoint.)
 * Service interface - src/MindNova.Infrastructure/Services/IClientService.cs
 * Service implementation - src/MindNova.Infrastructure/Services/ClientService.cs
 * Integration tests - tests/MindNova.Api.Tests/Clients/ClientEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/7
 
 ## Decisions and ADRs
 
