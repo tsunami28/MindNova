@@ -8,7 +8,7 @@
 *.suo
 
 # Test results
-**/TestResults/
+**/TestResults*/
 test-results*.txt
 
 # OS
