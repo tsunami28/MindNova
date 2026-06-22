@@ -31,6 +31,9 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | MN-16 | Client Treatment History Timeline | story | backlog | 5 | MN-2 |
 | MN-6 | Resource and Therapist Allocation | epic | backlog | - | MN-6 |
 | MN-3 | Therapy Sessions and Visits | epic | backlog | - | MN-3 |
+| MN-17 | Session Domain Model and Migration | story | backlog | 3 | MN-3 |
+| MN-18 | Session CRUD API Endpoints | story | backlog | 5 | MN-3 |
+| MN-19 | Session History and Filtering | story | backlog | 3 | MN-3 |
 | MN-4 | Calendar Planning and Availability | epic | backlog | - | MN-4 |
 | MN-5 | Treatment Notes and Progress | epic | backlog | - | MN-5 |
 | MN-7 | Reporting and Analytics | epic | backlog | - | MN-7 |

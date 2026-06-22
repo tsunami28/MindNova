@@ -1,0 +1,251 @@
+openapi: 3.0.3
+info:
+  title: MindNova Sessions API
+  description: Therapy session management for the MindNova psychotherapy consultancy platform.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /sessions:
+    post:
+      operationId: createSession
+      summary: Create a new therapy session (status defaults to Scheduled)
+      tags: [Sessions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '200':
+          description: Created session or validation error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SessionResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    get:
+      operationId: listSessions
+      summary: List sessions with optional filtering and pagination
+      tags: [Sessions]
+      parameters:
+        - name: client_id
+          in: query
+          description: Filter by client
+          schema:
+            type: string
+            format: uuid
+        - name: therapist_id
+          in: query
+          description: Filter by therapist (ApplicationUser ID)
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by session status
+          schema:
+            type: string
+            enum: [Scheduled, Completed, Cancelled, NoShow]
+        - name: date_from
+          in: query
+          description: Filter sessions scheduled on or after this date
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          description: Filter sessions scheduled on or before this date
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          description: Page number (1-based)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Paged list of sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedSessionResponse'
+        '401':
+          description: Missing or invalid authentication token
+
+  /sessions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Session identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getSession
+      summary: Get a single session by ID
+      tags: [Sessions]
+      responses:
+        '200':
+          description: Session data or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SessionResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    put:
+      operationId: updateSession
+      summary: Update session details or transition status
+      tags: [Sessions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSessionRequest'
+      responses:
+        '200':
+          description: Updated session or error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SessionResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateSessionRequest:
+      type: object
+      required: [ClientId, TherapistUserId, ScheduledAt, DurationMinutes, SessionType]
+      properties:
+        ClientId:
+          type: string
+          format: uuid
+        TherapistUserId:
+          type: string
+        ScheduledAt:
+          type: string
+          format: date-time
+        DurationMinutes:
+          type: integer
+          minimum: 1
+        SessionType:
+          type: string
+          enum: [Individual, Group, Intake, FollowUp]
+        Notes:
+          type: string
+          maxLength: 2000
+
+    UpdateSessionRequest:
+      type: object
+      properties:
+        ScheduledAt:
+          type: string
+          format: date-time
+        DurationMinutes:
+          type: integer
+          minimum: 1
+        SessionType:
+          type: string
+          enum: [Individual, Group, Intake, FollowUp]
+        Status:
+          type: string
+          enum: [Scheduled, Completed, Cancelled, NoShow]
+          description: Transition status (enforces allowed transitions)
+        Notes:
+          type: string
+          maxLength: 2000
+
+    SessionResponse:
+      type: object
+      properties:
+        Id:
+          type: string
+          format: uuid
+        ClientId:
+          type: string
+          format: uuid
+        TherapistUserId:
+          type: string
+        ScheduledAt:
+          type: string
+          format: date-time
+        DurationMinutes:
+          type: integer
+        SessionType:
+          type: string
+          enum: [Individual, Group, Intake, FollowUp]
+        Status:
+          type: string
+          enum: [Scheduled, Completed, Cancelled, NoShow]
+        Notes:
+          type: string
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+
+    PagedSessionResponse:
+      type: object
+      properties:
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionResponse'
+        TotalCount:
+          type: integer
+        Page:
+          type: integer
+        PageSize:
+          type: integer
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+          description: Semantic status code (400 for validation, 404 for not found)
+        Type:
+          type: string
+        Instance:
+          type: string

@@ -39,6 +39,9 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Azure Infrastructure (Bicep/azd)](./discovery/stories/platform-foundation/azure-infrastructure-bicep.md) - 📌 Background
 - [CI Pipeline (GitHub Actions)](./discovery/stories/platform-foundation/ci-pipeline.md) - 📌 Background
 - [.NET 10 Web API Project Scaffold](./discovery/stories/platform-foundation/dotnet-web-api-scaffold.md) - 📌 Background
+- [Session CRUD API Endpoints](./discovery/stories/therapy-sessions-and-visits/session-crud-endpoints.md) - 📌 Background
+- [Session Domain Model and Migration](./discovery/stories/therapy-sessions-and-visits/session-domain-model.md) - 📌 Background
+- [Session History and Filtering](./discovery/stories/therapy-sessions-and-visits/session-history-filtering.md) - 📌 Background
 
 ## General
 
