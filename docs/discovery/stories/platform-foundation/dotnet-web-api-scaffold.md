@@ -1,7 +1,7 @@
 ---
 key: MN-9
 type: story
-status: in-progress
+status: done
 epic: MN-1
 points: 5
 priority: high
@@ -88,3 +88,15 @@ Test trait mapping:
   `MindNova/tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs` (AC-6)
 * ADR: `docs/adrs/0008-azure-sql-database-serverless.md`
 * Branch: `MN-9`
+
+## Decisions and ADRs
+
+* 2026-06-18: Azure SQL Database (serverless) with EF Core SQL Server provider - see docs/adrs/0008-azure-sql-database-serverless.md
+
+## Related items
+
+* MN-8 - database technology decision (ADR 0008) that this story implements
+* MN-10 - ASP.NET Identity Setup (depends on this scaffold)
+* MN-11 - Azure Infrastructure Bicep/azd (depends on this scaffold)
+* MN-12 - CI Pipeline (depends on this scaffold)
+* MN-13 - Client Domain Model and Migration (depends on this scaffold)

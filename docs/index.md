@@ -7,7 +7,6 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 ## adrs
 
 - [ADR 0008: Azure SQL Database (serverless) as the MindNova backend database](./adrs/0008-azure-sql-database-serverless.md) - MindNova requires a backend database to persist client records, therapy sessions, treatment notes, therapist profiles, calendar availability, and reporting aggregates.
-- [ADR 0009: Use Azure Verified Modules from the Bicep public registry](./adrs/0009-avm-registry-modules-for-bicep.md) - MN-11 (Azure Infrastructure - Bicep/azd) requires Bicep modules for App Service, Azure SQL Server, and Key Vault.
 - [Architecture Decision Records](./adrs/README.md) - This folder records load-bearing technical decisions for MindNova.
 
 ## ai-sdlc
@@ -30,15 +29,17 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Treatment Notes and Progress](./discovery/epics/treatment-notes-and-progress.md) - 📌 Background
 - [Work Items](./discovery/README.md) - Local work-item tracker for MindNova.
 - [Evaluate Database Technology for MindNova](./discovery/spikes/database-technology-selection.md) - 📌 Background
+- [Sprint 1 - Platform Foundation](./discovery/sprints/sprint-1.md) - MN-12 is first: CI enables quality gates for all subsequent work.
 - [Client CRUD API Endpoints](./discovery/stories/client-records-and-history/client-crud-endpoints.md) - 📌 Background
 - [Client Domain Model and Migration](./discovery/stories/client-records-and-history/client-domain-model.md) - 📌 Background
 - [Client Search and Pagination](./discovery/stories/client-records-and-history/client-search-and-pagination.md) - 📌 Background
 - [Client Treatment History Timeline](./discovery/stories/client-records-and-history/client-treatment-history-timeline.md) - 📌 Background
 - [ASP.NET Identity Setup](./discovery/stories/platform-foundation/aspnet-identity-setup.md) - 📌 Background
 - [Azure Infrastructure (Bicep/azd)](./discovery/stories/platform-foundation/azure-infrastructure-bicep.md) - 📌 Background
-- [CI Pipeline (Azure Pipelines)](./discovery/stories/platform-foundation/ci-pipeline.md) - 📌 Background
+- [CI Pipeline (GitHub Actions)](./discovery/stories/platform-foundation/ci-pipeline.md) - 📌 Background
 - [.NET 10 Web API Project Scaffold](./discovery/stories/platform-foundation/dotnet-web-api-scaffold.md) - 📌 Background
 
 ## General
 
 - [Constitution - Application.MindNova](./constitution.md) - Non-negotiable engineering principles for this repository.
+- [Local development setup](./local-dev-setup.md) - Prerequisites and configuration for running and testing MindNova on a developer workstation.

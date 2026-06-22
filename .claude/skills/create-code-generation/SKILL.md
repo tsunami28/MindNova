@@ -68,7 +68,7 @@ Record which path is available now; step 10 uses it. (See AGENTS.md, "Work items
 
 ## Designed for the (deferred) gate phase
 
-This sequence mirrors the future Azure DevOps gated pipeline, so the artifacts it produces are gate-ready:
+This sequence mirrors the future GitHub Actions gated pipeline, so the artifacts it produces are gate-ready:
 - story-tagged tests -> future AC/story-trait gate;
 - >=80% coverage -> future coverage gate;
 - ADRs in `docs/adrs/` -> future `adr-check`;

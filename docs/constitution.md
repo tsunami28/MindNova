@@ -11,7 +11,7 @@ conventions) or `docs/adrs/` (one-off decisions), not here. Keep this list small
 
 **Enforcement legend:** `mechanism - status`. mechanism = CI gate | linter | hook | skill |
 code review (manual). status = active | deferred (planned target). Deferred clauses are
-tracked debt for the Azure DevOps gate phase, not aspirations.
+tracked debt for the CI gate phase, not aspirations.
 
 **Version:** 1.3  **Last updated:** 2026-06-03
 

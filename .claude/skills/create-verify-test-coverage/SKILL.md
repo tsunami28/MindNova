@@ -18,7 +18,7 @@ Owned by the **QA** persona (the create-verify-test-coverage step). Invoked as `
 Verify the change is adequately tested before it ships, on two axes: line coverage on the
 changed projects, and acceptance-criteria coverage. This skill **measures, it does not
 assert**: it runs the tests with coverage and reads the result. Every number it reports is
-one it actually produced. It is the local face of the deferred Azure DevOps coverage / AC
+one it actually produced. It is the local face of the deferred GitHub Actions coverage / AC
 gate (mirroring `create-code-generation`'s "Designed for the gate phase" section): until
 that CI gate is blocking, this step enforces the same two checks here, so the story is
 gate-ready when the gate lands and attaches with no rework.

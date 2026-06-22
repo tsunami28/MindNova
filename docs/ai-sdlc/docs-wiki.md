@@ -30,7 +30,7 @@ instead of spawning duplicates or orphans:
 
 ### Cross-links, portable (not Obsidian)
 Pages link related pages with **relative markdown links** (e.g. `[lifecycle](../lifecycle.md)`), not
-`[[wikilinks]]`. Our docs render in Azure DevOps and the IDE, where `[[...]]` and Dataview front-matter
+`[[wikilinks]]`. Our docs render in GitHub and the IDE, where `[[...]]` and Dataview front-matter
 queries do not resolve; relative links render everywhere and are validated by the lint. This is the
 one deliberate deviation from Karpathy's Obsidian-based original.
 

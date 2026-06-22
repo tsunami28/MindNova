@@ -37,12 +37,5 @@ Do **not** write an ADR for routine work covered by the conventions in `docs/con
 
 | ADR | Title | Status |
 |---|---|---|
-| [0001](0001-blazor-page-authorization.md) | Blazor page authorization in Portal.MindNova | Accepted |
-| [0002](0002-logMindNova-logging-convention.md) | LogMindNova logging convention | Accepted |
-| [0003](0003-business-outcomes-return-200.md) | Non-error business outcomes return 200 OK | Accepted |
-| [0004](0004-hub-spoke-private-dns-boundary.md) | Private DNS lives in hub subscriptions, attribution follows peering | Accepted |
-| [0005](0005-portal-ui-foundation.md) | Portal UI foundation ([PLACEHOLDER] Design System + Bootstrap on Blazor Server) | Accepted |
-| [0006](0006-fire-and-forget-scoped-execution.md) | Running scoped services as fire-and-forget background work | Proposed |
-| [0007](0007-analyzer-backed-clean-code-rules.md) | Analyzer-backed Clean Code rules (SonarAnalyzer + .editorconfig) | Proposed |
 | [0008](0008-azure-sql-database-serverless.md) | Azure SQL Database (serverless) as the MindNova backend database | Accepted |
 | [0009](0009-avm-registry-modules-for-bicep.md) | Use Azure Verified Modules from the Bicep public registry | Accepted |

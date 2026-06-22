@@ -8,7 +8,7 @@ description: >
   task", "create an epic", "raise a ticket", or any description of work that
   should be tracked as a new item, even when they only describe the work rather
   than naming a ticket. Do NOT use this for reading, searching, commenting on,
-  transitioning, or reviewing existing tickets; for Azure DevOps board work
+  transitioning, or reviewing existing tickets; for GitHub issues or pull
   items, GitHub issues or pull requests, Confluence pages, or PRDs; or for a
   bare "what points would you give" estimate when there is no ticket to create.
 ---

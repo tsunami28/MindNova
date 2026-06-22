@@ -1,7 +1,7 @@
 ---
 key: MN-11
 type: story
-status: in-progress
+status: done
 epic: MN-1
 points: 5
 priority: high
@@ -35,18 +35,38 @@ relates:
 
 ✅ Success Criteria
 
-* Bicep modules: Azure WebApp (Linux, .NET 10), Azure SQL Database (serverless),
-  App Service Plan, Key Vault (connection string storage).
-* azure.yaml wires the API project for azd deploy.
-* Parameter files for dev and prd environments.
-* Dev uses serverless SQL (auto-pause) and Free/Basic App Service Plan.
-* Prd uses serverless or Standard SQL and Standard App Service Plan.
-* Managed Identity connects WebApp to SQL (no connection string secrets in app settings).
-* azd up provisions and deploys the API end-to-end.
+* AC-1: infra/main.bicep exists and compiles without errors (`az bicep build` succeeds).
+* AC-2: Bicep defines modules for App Service Plan, WebApp (Linux, .NET 10 runtime),
+  Azure SQL Database (serverless compute tier), and Key Vault.
+* AC-3: azure.yaml at the repo root references the MindNova.Api project as the
+  deployable service.
+* AC-4: Environment-specific parameter files exist for dev and prd
+  (e.g. main.dev.bicepparam, main.prd.bicepparam).
+* AC-5: Dev parameters specify a Free or Basic App Service Plan SKU and serverless SQL
+  with auto-pause enabled.
+* AC-6: Prd parameters specify a Standard App Service Plan SKU and serverless or
+  provisioned SQL without auto-pause.
+* AC-7: The WebApp authenticates to Azure SQL via Managed Identity; no password-based
+  connection string appears in app settings or Bicep outputs.
+* AC-8: `azd up` from a clean state provisions all resources and deploys the API
+  end-to-end without manual intervention.
+
+Test trait mapping:
+- AC-1: `[Trait("Story","MN-11")]` + `[Trait("AC","AC-1")]` - build-time verification;
+  a CI step or local script runs `az bicep build` and asserts exit code 0.
+- AC-2: verified by inspecting Bicep module structure; not unit-tested.
+- AC-3: verified by inspecting azure.yaml content; not unit-tested.
+- AC-4: verified by file existence check; not unit-tested.
+- AC-5: verified by inspecting dev parameter file values; not unit-tested.
+- AC-6: verified by inspecting prd parameter file values; not unit-tested.
+- AC-7: verified by reviewing Bicep outputs and deployed app settings for absence of
+  password-based connection strings; not unit-tested.
+- AC-8: manual verification (run `azd up` against a test subscription and observe
+  successful deployment); not unit-tested.
 
 🛠️ How we'll do it
 
-* Create infra/ directory with main.bicep, modules/ (web-app.bicep, sql.bicep, key-vault.bicep).
+* Create infra/ directory with main.bicep, using modules (web-app, sql, key-vault) based on the [Azure Verified Modules](https://github.com/Azure/Azure-Verified-Modules)
 * Add azure.yaml at repo root referencing the API project.
 * Use Bicep parameter files (main.bicepparam) with environment-specific values.
 * Configure managed identity and SQL AAD authentication for passwordless access.
