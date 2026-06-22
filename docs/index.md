@@ -7,6 +7,7 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 ## adrs
 
 - [ADR 0008: Azure SQL Database (serverless) as the MindNova backend database](./adrs/0008-azure-sql-database-serverless.md) - MindNova requires a backend database to persist client records, therapy sessions, treatment notes, therapist profiles, calendar availability, and reporting aggregates.
+- [ADR 0009: Use Azure Verified Modules from the Bicep public registry](./adrs/0009-avm-registry-modules-for-bicep.md) - MN-11 (Azure Infrastructure - Bicep/azd) requires Bicep modules for App Service, Azure SQL Server, and Key Vault.
 - [Architecture Decision Records](./adrs/README.md) - This folder records load-bearing technical decisions for MindNova.
 
 ## ai-sdlc

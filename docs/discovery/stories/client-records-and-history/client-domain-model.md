@@ -32,14 +32,27 @@ relates:
 
 ✅ Success Criteria
 
-* Client entity in MindNova.Domain: Id (Guid), FirstName, LastName, DateOfBirth,
-  Email, Phone, EmergencyContactName, EmergencyContactPhone, Address, CreatedAt,
-  UpdatedAt, IsArchived.
-* EF Core entity configuration in MindNova.Infrastructure (explicit column types,
-  indexes on LastName and Email).
-* Migration creates the Clients table in the database.
-* Migration runs cleanly against the local SQL Server container.
-* Unit tests verify entity instantiation and validation rules.
+* AC-1: Client entity class exists in MindNova.Domain/Entities/ with all
+  twelve properties: Id (Guid), FirstName, LastName, DateOfBirth (DateTime),
+  Email, Phone, EmergencyContactName, EmergencyContactPhone, Address,
+  CreatedAt (DateTime), UpdatedAt (DateTime), IsArchived (bool).
+* AC-2: MindNovaDbContext declares a DbSet<Client> property and the Client
+  entity is registered in OnModelCreating.
+* AC-3: An IEntityTypeConfiguration<Client> configures explicit SQL column
+  types, max lengths, and marks FirstName, LastName, and Email as required.
+* AC-4: The entity configuration defines indexes on LastName and Email.
+* AC-5: An EF Core migration creates the Clients table with all configured
+  columns, constraints, and indexes.
+* AC-6: The migration applies cleanly against a SQL Server Testcontainer
+  without errors.
+* AC-7: Domain validation rejects a Client with a missing or empty
+  FirstName, LastName, or Email.
+* AC-8: Domain validation rejects a Client with an invalid email format.
+
+(Test traits: each AC covered by xUnit tests tagged [Trait("Story","MN-13")]
++ [Trait("AC","AC-n")]. AC-1 through AC-4 and AC-7/AC-8 are unit tests.
+AC-5/AC-6 are integration tests using the existing SqlServerContainer
+pattern.)
 
 🛠️ How we'll do it
 
