@@ -1,7 +1,7 @@
 ---
 key: MN-14
 type: story
-status: backlog
+status: in-progress
 epic: MN-2
 points: 5
 priority: high
@@ -76,6 +76,12 @@ request test per endpoint.)
 ## Artifacts and references
 
 * API contract - specs/clients.openapi.yaml (covers MN-14, MN-15, MN-16)
+* Controller - src/MindNova.Api/Controllers/ClientsController.cs
+* DTOs - src/MindNova.Api/Contracts/CreateClientRequest.cs, UpdateClientRequest.cs, ClientResponse.cs
+* Service interface - src/MindNova.Infrastructure/Services/IClientService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/ClientService.cs
+* Integration tests - tests/MindNova.Api.Tests/Clients/ClientEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/7
 
 ## Decisions and ADRs
 
