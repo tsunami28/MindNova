@@ -1,7 +1,7 @@
 ---
 key: MN-17
 type: story
-status: backlog
+status: in-progress
 epic: MN-3
 points: 3
 priority: minor
@@ -83,3 +83,16 @@ pattern.)
 * Depends on MN-2 (Client entity) for the FK target, which is complete.
 * TherapistUserId references ApplicationUser (Identity), not a dedicated
   Therapist entity. MN-6 adds TherapistProfile later without breaking this FK.
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/Session.cs
+* SessionType enum - src/MindNova.Domain/Entities/SessionType.cs
+* SessionStatus enum - src/MindNova.Domain/Entities/SessionStatus.cs
+* Validator - src/MindNova.Domain/Validation/SessionValidator.cs
+* EF configuration - src/MindNova.Infrastructure/Data/SessionConfiguration.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddSessions)
+* Unit tests - tests/MindNova.Api.Tests/Domain/SessionEntityTests.cs, SessionValidatorTests.cs
+* Config tests - tests/MindNova.Api.Tests/Infrastructure/SessionConfigurationTests.cs
+* Integration tests - tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/9
