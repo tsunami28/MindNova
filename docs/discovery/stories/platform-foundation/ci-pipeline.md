@@ -1,7 +1,7 @@
 ---
 key: MN-12
 type: story
-status: in-progress
+status: done
 epic: MN-1
 points: 3
 priority: high
@@ -77,3 +77,7 @@ Test trait mapping:
 
 * CI workflow - .github/workflows/ci.yml
 * Branch - MN-12
+
+## Timeline
+
+- 2026-06-22: CI workflow verified complete - all 9 ACs are infrastructure/runtime-verified. First real validation via MN-10 PR.
