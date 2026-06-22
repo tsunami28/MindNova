@@ -42,3 +42,4 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 ## General
 
 - [Constitution - Application.MindNova](./constitution.md) - Non-negotiable engineering principles for this repository.
+- [Local development setup](./local-dev-setup.md) - Prerequisites and configuration for running and testing MindNova on a developer workstation.
