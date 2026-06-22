@@ -45,3 +45,4 @@ Do **not** write an ADR for routine work covered by the conventions in `docs/con
 | [0006](0006-fire-and-forget-scoped-execution.md) | Running scoped services as fire-and-forget background work | Proposed |
 | [0007](0007-analyzer-backed-clean-code-rules.md) | Analyzer-backed Clean Code rules (SonarAnalyzer + .editorconfig) | Proposed |
 | [0008](0008-azure-sql-database-serverless.md) | Azure SQL Database (serverless) as the MindNova backend database | Accepted |
+| [0009](0009-avm-registry-modules-for-bicep.md) | Use Azure Verified Modules from the Bicep public registry | Accepted |

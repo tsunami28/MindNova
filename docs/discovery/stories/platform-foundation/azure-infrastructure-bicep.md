@@ -1,7 +1,7 @@
 ---
 key: MN-11
 type: story
-status: backlog
+status: in-progress
 epic: MN-1
 points: 5
 priority: high
@@ -9,6 +9,8 @@ labels: [MindNova]
 relates:
   - key: MN-9
     why: "needs the project structure to define azure.yaml service reference"
+  - key: MN-8
+    why: "ADR 0008 decides serverless SQL tier used in AC-2/AC-5/AC-6"
 ---
 
 # Azure Infrastructure (Bicep/azd)
@@ -53,3 +55,15 @@ relates:
 
 * Subscription quotas or permissions may block first deployment; verify access early.
 * Managed Identity + SQL AAD auth requires the deployer to have directory permissions.
+
+## Decisions and ADRs
+
+* 2026-06-18: Azure SQL Database (serverless) selected as backend database - see docs/adrs/0008-azure-sql-database-serverless.md
+* 2026-06-22: AVM registry modules (pinned versions) over local Bicep modules - see docs/adrs/0009-avm-registry-modules-for-bicep.md
+
+## Artifacts and references
+
+* Bicep orchestrator - MindNova/infra/main.bicep
+* Dev parameters - MindNova/infra/main.dev.bicepparam
+* Prd parameters - MindNova/infra/main.prd.bicepparam
+* azd manifest - MindNova/azure.yaml
