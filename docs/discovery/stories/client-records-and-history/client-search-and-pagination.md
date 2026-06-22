@@ -65,3 +65,4 @@ pattern.)
 
 * API contract - specs/clients.openapi.yaml (listClients operation)
 * Integration tests - tests/MindNova.Api.Tests/Clients/ClientSearchTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/8
