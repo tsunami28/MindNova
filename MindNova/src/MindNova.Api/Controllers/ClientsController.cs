@@ -56,10 +56,25 @@ public class ClientsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> List(
+        [FromQuery(Name = "search")] string search = null,
+        [FromQuery(Name = "page")] int page = 1,
+        [FromQuery(Name = "page_size")] int pageSize = 20,
+        [FromQuery(Name = "include_archived")] bool includeArchived = false)
     {
-        var clients = await _clientService.ListAsync();
-        return Ok(clients.Select(MapToResponse).ToList());
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 1;
+        if (pageSize > 100) pageSize = 100;
+
+        var (clients, totalCount) = await _clientService.ListAsync(search, page, pageSize, includeArchived);
+
+        return Ok(new PagedResponse<ClientResponse>
+        {
+            Items = clients.Select(MapToResponse).ToList(),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        });
     }
 
     [HttpPut("{id:guid}")]

@@ -31,13 +31,32 @@ public class ClientService : IClientService
         return await _context.Clients.FindAsync(id);
     }
 
-    public async Task<List<Client>> ListAsync()
+    public async Task<(List<Client> Items, int TotalCount)> ListAsync(string search, int page, int pageSize, bool includeArchived)
     {
-        return await _context.Clients
-            .Where(c => !c.IsArchived)
+        var query = _context.Clients.AsQueryable();
+
+        if (!includeArchived)
+            query = query.Where(c => !c.IsArchived);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(c =>
+                c.FirstName.Contains(term) ||
+                c.LastName.Contains(term) ||
+                c.Email.Contains(term));
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
             .OrderBy(c => c.LastName)
             .ThenBy(c => c.FirstName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        return (items, totalCount);
     }
 
     public async Task<Client> UpdateAsync(Guid id, Client updated)

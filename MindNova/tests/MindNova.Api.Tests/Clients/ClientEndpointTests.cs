@@ -152,11 +152,11 @@ public class ClientEndpointTests
         await client.PostAsJsonAsync("/api/clients", request);
 
         var response = await client.GetAsync("/api/clients");
-        var body = await response.Content.ReadFromJsonAsync<List<ClientResponse>>(JsonOptions);
+        var body = await response.Content.ReadFromJsonAsync<PagedResponse<ClientResponse>>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(body);
-        Assert.All(body, c => Assert.False(c.IsArchived));
+        Assert.All(body.Items, c => Assert.False(c.IsArchived));
     }
 
     [Fact]
@@ -247,8 +247,8 @@ public class ClientEndpointTests
         await client.DeleteAsync($"/api/clients/{created.Id}");
 
         var listResponse = await client.GetAsync("/api/clients");
-        var list = await listResponse.Content.ReadFromJsonAsync<List<ClientResponse>>(JsonOptions);
-        Assert.DoesNotContain(list, c => c.Id == created.Id);
+        var list = await listResponse.Content.ReadFromJsonAsync<PagedResponse<ClientResponse>>(JsonOptions);
+        Assert.DoesNotContain(list.Items, c => c.Id == created.Id);
 
         var getResponse = await client.GetAsync($"/api/clients/{created.Id}");
         var retrieved = await getResponse.Content.ReadFromJsonAsync<ClientResponse>(JsonOptions);
