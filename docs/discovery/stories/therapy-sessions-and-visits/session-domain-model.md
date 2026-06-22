@@ -95,3 +95,4 @@ pattern.)
 * Unit tests - tests/MindNova.Api.Tests/Domain/SessionEntityTests.cs, SessionValidatorTests.cs
 * Config tests - tests/MindNova.Api.Tests/Infrastructure/SessionConfigurationTests.cs
 * Integration tests - tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/9
