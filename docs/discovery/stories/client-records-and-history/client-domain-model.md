@@ -1,7 +1,7 @@
 ---
 key: MN-13
 type: story
-status: backlog
+status: in-progress
 epic: MN-2
 points: 3
 priority: high
@@ -66,3 +66,18 @@ pattern.)
 * Depends on MN-9 (project scaffold with DbContext).
 * Field list may expand when GDPR/consent requirements are scoped; keep the
   entity extensible.
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/Client.cs
+* Validator - src/MindNova.Domain/Validation/ClientValidator.cs
+* EF configuration - src/MindNova.Infrastructure/Data/ClientConfiguration.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/20260622115717_AddClients.cs
+* Unit tests - tests/MindNova.Api.Tests/Domain/ClientEntityTests.cs, ClientValidatorTests.cs
+* Config tests - tests/MindNova.Api.Tests/Infrastructure/ClientConfigurationTests.cs
+* Integration tests - tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/6
+
+## Decisions and ADRs
+
+* 2026-06-18: Azure SQL Database (serverless) selected - see docs/adrs/0008-azure-sql-database-serverless.md (inherited via MN-8)
