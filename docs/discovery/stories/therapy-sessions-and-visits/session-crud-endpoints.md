@@ -1,7 +1,7 @@
 ---
 key: MN-18
 type: story
-status: backlog
+status: in-progress
 epic: MN-3
 points: 5
 priority: minor
@@ -88,3 +88,9 @@ pattern.)
 ## Artifacts and references
 
 * API contract - specs/sessions.openapi.yaml (covers MN-18, MN-19)
+* Controller - src/MindNova.Api/Controllers/SessionsController.cs
+* DTOs - src/MindNova.Api/Contracts/CreateSessionRequest.cs, UpdateSessionRequest.cs, SessionResponse.cs
+* Service interface - src/MindNova.Infrastructure/Services/ISessionService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/SessionService.cs
+* Integration tests - tests/MindNova.Api.Tests/Sessions/SessionEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/10
