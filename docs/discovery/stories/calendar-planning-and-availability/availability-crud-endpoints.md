@@ -88,3 +88,4 @@ pattern.)
 * Service interface - src/MindNova.Infrastructure/Services/IAvailabilityService.cs
 * Service implementation - src/MindNova.Infrastructure/Services/AvailabilityService.cs
 * Integration tests - tests/MindNova.Api.Tests/Availability/AvailabilityEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/14
