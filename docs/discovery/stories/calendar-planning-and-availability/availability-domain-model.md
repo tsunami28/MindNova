@@ -88,3 +88,4 @@ pattern.)
 * Unit tests - tests/MindNova.Api.Tests/Domain/AvailabilityBlockEntityTests.cs, AvailabilityBlockValidatorTests.cs
 * Config tests - tests/MindNova.Api.Tests/Infrastructure/AvailabilityBlockConfigurationTests.cs
 * Integration tests - tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/13
