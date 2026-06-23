@@ -1,7 +1,7 @@
 ---
 key: MN-22
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 5
 priority: minor
@@ -76,3 +76,9 @@ pattern.)
 * Depends on MN-21 (availability CRUD) for availability data to exist.
 * Edge case: sessions spanning midnight or multi-day blocks are out of scope
   for V1 (all sessions assumed same-day).
+
+## Artifacts and references
+
+* ConflictDetectionService - src/MindNova.Infrastructure/Services/ConflictDetectionService.cs
+* Interface - src/MindNova.Infrastructure/Services/IConflictDetectionService.cs
+* Integration tests - tests/MindNova.Api.Tests/Sessions/ConflictDetectionTests.cs

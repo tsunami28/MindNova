@@ -15,15 +15,18 @@ public class SessionsController : ControllerBase
 {
     private readonly ISessionService _sessionService;
     private readonly IClientService _clientService;
+    private readonly IConflictDetectionService _conflictDetectionService;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public SessionsController(
         ISessionService sessionService,
         IClientService clientService,
+        IConflictDetectionService conflictDetectionService,
         UserManager<ApplicationUser> userManager)
     {
         _sessionService = sessionService;
         _clientService = clientService;
+        _conflictDetectionService = conflictDetectionService;
         _userManager = userManager;
     }
 
@@ -80,6 +83,19 @@ public class SessionsController : ControllerBase
                 Title = "Validation failed",
                 Detail = string.Join("; ", validationErrors),
                 Status = 400
+            });
+        }
+
+        var conflictError = await _conflictDetectionService.CheckConflictsAsync(
+            session.TherapistUserId, session.ScheduledAt, session.DurationMinutes);
+        if (conflictError != null)
+        {
+            var statusCode = conflictError.Contains("overlap") ? 409 : 400;
+            return Ok(new ProblemDetails
+            {
+                Title = statusCode == 409 ? "Scheduling conflict" : "No availability",
+                Detail = conflictError,
+                Status = statusCode
             });
         }
 
@@ -169,6 +185,30 @@ public class SessionsController : ControllerBase
             SessionType = sessionType,
             Notes = request.Notes
         };
+
+        var existingSession = await _sessionService.GetByIdAsync(id);
+        if (existingSession == null)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Session not found",
+                Detail = $"No session with ID {id} exists.",
+                Status = 404
+            });
+        }
+
+        var conflictError = await _conflictDetectionService.CheckConflictsAsync(
+            existingSession.TherapistUserId, updated.ScheduledAt, updated.DurationMinutes, id);
+        if (conflictError != null)
+        {
+            var statusCode = conflictError.Contains("overlap") ? 409 : 400;
+            return Ok(new ProblemDetails
+            {
+                Title = statusCode == 409 ? "Scheduling conflict" : "No availability",
+                Detail = conflictError,
+                Status = statusCode
+            });
+        }
 
         var (result, error) = await _sessionService.UpdateAsync(id, updated, newStatus);
 
