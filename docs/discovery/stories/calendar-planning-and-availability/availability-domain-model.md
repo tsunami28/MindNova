@@ -1,7 +1,7 @@
 ---
 key: MN-20
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 3
 priority: minor
@@ -78,3 +78,13 @@ pattern.)
 
 * TimeSpan for time-of-day is idiomatic in .NET but maps to time(7) in SQL
   Server; verify EF Core handles this correctly.
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/AvailabilityBlock.cs
+* Validator - src/MindNova.Domain/Validation/AvailabilityBlockValidator.cs
+* EF configuration - src/MindNova.Infrastructure/Data/AvailabilityBlockConfiguration.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddAvailabilityBlocks)
+* Unit tests - tests/MindNova.Api.Tests/Domain/AvailabilityBlockEntityTests.cs, AvailabilityBlockValidatorTests.cs
+* Config tests - tests/MindNova.Api.Tests/Infrastructure/AvailabilityBlockConfigurationTests.cs
+* Integration tests - tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs
