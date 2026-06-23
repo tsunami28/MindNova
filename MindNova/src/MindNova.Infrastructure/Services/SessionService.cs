@@ -31,9 +31,26 @@ public class SessionService : ISessionService
         return await _context.Sessions.FindAsync(id);
     }
 
-    public async Task<(List<Session> Items, int TotalCount)> ListAsync(int page, int pageSize)
+    public async Task<(List<Session> Items, int TotalCount)> ListAsync(
+        Guid? clientId, string therapistId, SessionStatus? status,
+        DateTime? dateFrom, DateTime? dateTo, int page, int pageSize)
     {
         var query = _context.Sessions.AsQueryable();
+
+        if (clientId.HasValue)
+            query = query.Where(s => s.ClientId == clientId.Value);
+
+        if (!string.IsNullOrWhiteSpace(therapistId))
+            query = query.Where(s => s.TherapistUserId == therapistId);
+
+        if (status.HasValue)
+            query = query.Where(s => s.Status == status.Value);
+
+        if (dateFrom.HasValue)
+            query = query.Where(s => s.ScheduledAt >= dateFrom.Value);
+
+        if (dateTo.HasValue)
+            query = query.Where(s => s.ScheduledAt <= dateTo.Value);
 
         var totalCount = await query.CountAsync();
 
