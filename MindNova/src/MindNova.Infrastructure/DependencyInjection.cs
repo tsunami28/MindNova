@@ -31,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IClientService, ClientService>();
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<IAvailabilityService, AvailabilityService>();
+        services.AddScoped<IConflictDetectionService, ConflictDetectionService>();
 
         return services;
     }
