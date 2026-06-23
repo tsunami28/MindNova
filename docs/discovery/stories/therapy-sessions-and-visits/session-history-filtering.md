@@ -61,3 +61,4 @@ relates:
 
 * API contract - specs/sessions.openapi.yaml (listSessions operation)
 * Integration tests - tests/MindNova.Api.Tests/Sessions/SessionFilterTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/11
