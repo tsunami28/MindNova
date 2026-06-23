@@ -93,3 +93,4 @@ pattern.)
 * Service interface - src/MindNova.Infrastructure/Services/ISessionService.cs
 * Service implementation - src/MindNova.Infrastructure/Services/SessionService.cs
 * Integration tests - tests/MindNova.Api.Tests/Sessions/SessionEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/10
