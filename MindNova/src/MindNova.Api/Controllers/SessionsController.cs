@@ -106,6 +106,11 @@ public class SessionsController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> List(
+        [FromQuery(Name = "client_id")] Guid? clientId = null,
+        [FromQuery(Name = "therapist_id")] string therapistId = null,
+        [FromQuery(Name = "status")] string status = null,
+        [FromQuery(Name = "date_from")] DateTime? dateFrom = null,
+        [FromQuery(Name = "date_to")] DateTime? dateTo = null,
         [FromQuery(Name = "page")] int page = 1,
         [FromQuery(Name = "page_size")] int pageSize = 20)
     {
@@ -113,7 +118,12 @@ public class SessionsController : ControllerBase
         if (pageSize < 1) pageSize = 1;
         if (pageSize > 100) pageSize = 100;
 
-        var (sessions, totalCount) = await _sessionService.ListAsync(page, pageSize);
+        SessionStatus? statusFilter = null;
+        if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<SessionStatus>(status, out var parsed))
+            statusFilter = parsed;
+
+        var (sessions, totalCount) = await _sessionService.ListAsync(
+            clientId, therapistId, statusFilter, dateFrom, dateTo, page, pageSize);
 
         return Ok(new PagedResponse<SessionResponse>
         {

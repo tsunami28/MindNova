@@ -1,7 +1,7 @@
 ---
 key: MN-19
 type: story
-status: backlog
+status: in-progress
 epic: MN-3
 points: 3
 priority: minor
@@ -56,3 +56,8 @@ relates:
 * Depends on MN-18 (CRUD endpoints and service layer).
 * Complex date range queries may need indexed columns on ScheduledAt; the
   MN-17 configuration should include this index.
+
+## Artifacts and references
+
+* API contract - specs/sessions.openapi.yaml (listSessions operation)
+* Integration tests - tests/MindNova.Api.Tests/Sessions/SessionFilterTests.cs
