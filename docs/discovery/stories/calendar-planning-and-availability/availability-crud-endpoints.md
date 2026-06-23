@@ -1,7 +1,7 @@
 ---
 key: MN-21
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 5
 priority: minor
@@ -83,3 +83,9 @@ pattern.)
 ## Artifacts and references
 
 * API contract - specs/availability.openapi.yaml
+* Controller - src/MindNova.Api/Controllers/AvailabilityController.cs
+* DTOs - src/MindNova.Api/Contracts/CreateAvailabilityBlockRequest.cs, UpdateAvailabilityBlockRequest.cs, AvailabilityBlockResponse.cs
+* Service interface - src/MindNova.Infrastructure/Services/IAvailabilityService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/AvailabilityService.cs
+* Integration tests - tests/MindNova.Api.Tests/Availability/AvailabilityEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/14
