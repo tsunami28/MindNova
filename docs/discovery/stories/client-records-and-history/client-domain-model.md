@@ -1,7 +1,7 @@
 ---
 key: MN-13
 type: story
-status: backlog
+status: in-progress
 epic: MN-2
 points: 3
 priority: high
@@ -32,14 +32,27 @@ relates:
 
 ✅ Success Criteria
 
-* Client entity in MindNova.Domain: Id (Guid), FirstName, LastName, DateOfBirth,
-  Email, Phone, EmergencyContactName, EmergencyContactPhone, Address, CreatedAt,
-  UpdatedAt, IsArchived.
-* EF Core entity configuration in MindNova.Infrastructure (explicit column types,
-  indexes on LastName and Email).
-* Migration creates the Clients table in the database.
-* Migration runs cleanly against the local SQL Server container.
-* Unit tests verify entity instantiation and validation rules.
+* AC-1: Client entity class exists in MindNova.Domain/Entities/ with all
+  twelve properties: Id (Guid), FirstName, LastName, DateOfBirth (DateTime),
+  Email, Phone, EmergencyContactName, EmergencyContactPhone, Address,
+  CreatedAt (DateTime), UpdatedAt (DateTime), IsArchived (bool).
+* AC-2: MindNovaDbContext declares a DbSet<Client> property and the Client
+  entity is registered in OnModelCreating.
+* AC-3: An IEntityTypeConfiguration<Client> configures explicit SQL column
+  types, max lengths, and marks FirstName, LastName, and Email as required.
+* AC-4: The entity configuration defines indexes on LastName and Email.
+* AC-5: An EF Core migration creates the Clients table with all configured
+  columns, constraints, and indexes.
+* AC-6: The migration applies cleanly against a SQL Server Testcontainer
+  without errors.
+* AC-7: Domain validation rejects a Client with a missing or empty
+  FirstName, LastName, or Email.
+* AC-8: Domain validation rejects a Client with an invalid email format.
+
+(Test traits: each AC covered by xUnit tests tagged [Trait("Story","MN-13")]
++ [Trait("AC","AC-n")]. AC-1 through AC-4 and AC-7/AC-8 are unit tests.
+AC-5/AC-6 are integration tests using the existing SqlServerContainer
+pattern.)
 
 🛠️ How we'll do it
 
@@ -53,3 +66,18 @@ relates:
 * Depends on MN-9 (project scaffold with DbContext).
 * Field list may expand when GDPR/consent requirements are scoped; keep the
   entity extensible.
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/Client.cs
+* Validator - src/MindNova.Domain/Validation/ClientValidator.cs
+* EF configuration - src/MindNova.Infrastructure/Data/ClientConfiguration.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/20260622115717_AddClients.cs
+* Unit tests - tests/MindNova.Api.Tests/Domain/ClientEntityTests.cs, ClientValidatorTests.cs
+* Config tests - tests/MindNova.Api.Tests/Infrastructure/ClientConfigurationTests.cs
+* Integration tests - tests/MindNova.Api.Tests/Infrastructure/MigrationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/6
+
+## Decisions and ADRs
+
+* 2026-06-18: Azure SQL Database (serverless) selected - see docs/adrs/0008-azure-sql-database-serverless.md (inherited via MN-8)

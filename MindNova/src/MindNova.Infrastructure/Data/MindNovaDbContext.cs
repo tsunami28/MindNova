@@ -11,8 +11,13 @@ public class MindNovaDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<Session> Sessions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new ClientConfiguration());
+        modelBuilder.ApplyConfiguration(new SessionConfiguration());
     }
 }

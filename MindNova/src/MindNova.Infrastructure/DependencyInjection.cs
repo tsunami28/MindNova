@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MindNova.Domain.Entities;
 using MindNova.Infrastructure.Auth;
 using MindNova.Infrastructure.Data;
+using MindNova.Infrastructure.Services;
 
 namespace MindNova.Infrastructure;
 
@@ -27,6 +28,8 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IClientService, ClientService>();
+        services.AddScoped<ISessionService, SessionService>();
 
         return services;
     }

@@ -38,6 +38,7 @@ Run the CI code-analysis gates locally before pushing (catches doc, skill, graph
 - **.NET 10** (`net10.0`), nullable reference types disabled (`<Nullable>disable</Nullable>`) in all project files; do not use `string?`, `int?`, or any nullable annotation on reference types. Nullable value types (`int?`) are permitted only where the domain requires an absent value.
 - **Central Package Management** (`MindNova/Directory.Packages.props`); lock files tracked.
 - **Testing**: xUnit + Moq + AutoFixture; tests mirror `src/` under `tests/`.
+- **Container runtime**: Podman (not Docker). Integration tests use Testcontainers with Podman; set `TESTCONTAINERS_RYUK_DISABLED=true`. See `docs/local-dev-setup.md` for setup and troubleshooting.
 - **CI/CD**: GitHub Actions (CodeQL, Trivy, Coverlet).
 - **MindNova runs in** dev, prd. Branches: `main` deploys to prd; `develop` (or feature branches merged to develop) deploys to dev. There is no staging environment. Environment-specific config keys are suffixed `-dev` and `-prd` respectively.
 

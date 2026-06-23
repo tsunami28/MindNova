@@ -1,0 +1,337 @@
+openapi: 3.0.3
+info:
+  title: MindNova Clients API
+  description: Client records management for the MindNova psychotherapy consultancy platform.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /clients:
+    post:
+      operationId: createClient
+      summary: Create a new client record
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClientRequest'
+      responses:
+        '200':
+          description: Created client or validation error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ClientResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    get:
+      operationId: listClients
+      summary: List clients with optional search and pagination
+      tags: [Clients]
+      parameters:
+        - name: search
+          in: query
+          description: Case-insensitive partial match on first name, last name, or email
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number (1-based)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: include_archived
+          in: query
+          description: When true, includes archived clients in results
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Paged list of clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedClientResponse'
+        '401':
+          description: Missing or invalid authentication token
+
+  /clients/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Client identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getClient
+      summary: Get a single client by ID
+      tags: [Clients]
+      responses:
+        '200':
+          description: Client data or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ClientResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    put:
+      operationId: updateClient
+      summary: Update client details
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClientRequest'
+      responses:
+        '200':
+          description: Updated client or error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ClientResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    delete:
+      operationId: archiveClient
+      summary: Soft-archive a client (sets IsArchived to true)
+      tags: [Clients]
+      responses:
+        '200':
+          description: Archived client or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ClientResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+  /clients/{id}/timeline:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Client identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getClientTimeline
+      summary: Get chronological treatment history timeline for a client
+      tags: [Clients]
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-based, newest first)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of events per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Paged timeline events or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PagedTimelineResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateClientRequest:
+      type: object
+      required: [FirstName, LastName, Email]
+      properties:
+        FirstName:
+          type: string
+          maxLength: 100
+        LastName:
+          type: string
+          maxLength: 100
+        DateOfBirth:
+          type: string
+          format: date
+        Email:
+          type: string
+          format: email
+          maxLength: 200
+        Phone:
+          type: string
+          maxLength: 30
+        EmergencyContactName:
+          type: string
+          maxLength: 200
+        EmergencyContactPhone:
+          type: string
+          maxLength: 30
+        Address:
+          type: string
+          maxLength: 500
+
+    UpdateClientRequest:
+      type: object
+      required: [FirstName, LastName, Email]
+      properties:
+        FirstName:
+          type: string
+          maxLength: 100
+        LastName:
+          type: string
+          maxLength: 100
+        DateOfBirth:
+          type: string
+          format: date
+        Email:
+          type: string
+          format: email
+          maxLength: 200
+        Phone:
+          type: string
+          maxLength: 30
+        EmergencyContactName:
+          type: string
+          maxLength: 200
+        EmergencyContactPhone:
+          type: string
+          maxLength: 30
+        Address:
+          type: string
+          maxLength: 500
+
+    ClientResponse:
+      type: object
+      properties:
+        Id:
+          type: string
+          format: uuid
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        DateOfBirth:
+          type: string
+          format: date
+        Email:
+          type: string
+        Phone:
+          type: string
+        EmergencyContactName:
+          type: string
+        EmergencyContactPhone:
+          type: string
+        Address:
+          type: string
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+        IsArchived:
+          type: boolean
+
+    PagedClientResponse:
+      type: object
+      properties:
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientResponse'
+        TotalCount:
+          type: integer
+        Page:
+          type: integer
+        PageSize:
+          type: integer
+
+    TimelineEvent:
+      type: object
+      properties:
+        Date:
+          type: string
+          format: date-time
+        EventType:
+          type: string
+          enum: [Session, Note, StatusChange]
+        Summary:
+          type: string
+        SourceId:
+          type: string
+          format: uuid
+
+    PagedTimelineResponse:
+      type: object
+      properties:
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineEvent'
+        TotalCount:
+          type: integer
+        Page:
+          type: integer
+        PageSize:
+          type: integer
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+          description: Semantic status code (400 for validation, 404 for not found)
+        Type:
+          type: string
+        Instance:
+          type: string
