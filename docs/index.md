@@ -31,6 +31,10 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Work Items](./discovery/README.md) - Local work-item tracker for MindNova.
 - [Evaluate Database Technology for MindNova](./discovery/spikes/database-technology-selection.md) - 📌 Background
 - [Sprint 1 - Platform Foundation](./discovery/sprints/sprint-1.md) - MN-12 is first: CI enables quality gates for all subsequent work.
+- [Availability CRUD Endpoints](./discovery/stories/calendar-planning-and-availability/availability-crud-endpoints.md) - 📌 Background
+- [Availability Domain Model and Migration](./discovery/stories/calendar-planning-and-availability/availability-domain-model.md) - 📌 Background
+- [Calendar Query Endpoint](./discovery/stories/calendar-planning-and-availability/calendar-query-endpoint.md) - 📌 Background
+- [Session Conflict Detection](./discovery/stories/calendar-planning-and-availability/session-conflict-detection.md) - 📌 Background
 - [Client CRUD API Endpoints](./discovery/stories/client-records-and-history/client-crud-endpoints.md) - 📌 Background
 - [Client Domain Model and Migration](./discovery/stories/client-records-and-history/client-domain-model.md) - 📌 Background
 - [Client Search and Pagination](./discovery/stories/client-records-and-history/client-search-and-pagination.md) - 📌 Background

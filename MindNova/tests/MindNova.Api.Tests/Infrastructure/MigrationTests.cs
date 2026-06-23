@@ -116,4 +116,44 @@ public class MigrationTests : IAsyncLifetime
         var appliedMigrations = (await context.Database.GetAppliedMigrationsAsync()).ToList();
         Assert.Contains(appliedMigrations, m => m.Contains("AddSessions"));
     }
+
+    [Fact]
+    [Trait("Story", "MN-20")]
+    [Trait("AC", "AC-6")]
+    public async Task AddAvailabilityBlocksMigration_CreatesTable()
+    {
+        var options = new DbContextOptionsBuilder<MindNovaDbContext>()
+            .UseSqlServer(_sqlContainer.GetConnectionString())
+            .Options;
+
+        await using var context = new MindNovaDbContext(options);
+        await context.Database.MigrateAsync();
+
+        await using var connection = context.Database.GetDbConnection();
+        await connection.OpenAsync();
+        await using var command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AvailabilityBlocks'";
+        var result = await command.ExecuteScalarAsync();
+
+        Assert.Equal(1, Convert.ToInt32(result));
+    }
+
+    [Fact]
+    [Trait("Story", "MN-20")]
+    [Trait("AC", "AC-7")]
+    public async Task AddAvailabilityBlocksMigration_AppliesCleanly()
+    {
+        var options = new DbContextOptionsBuilder<MindNovaDbContext>()
+            .UseSqlServer(_sqlContainer.GetConnectionString())
+            .Options;
+
+        await using var context = new MindNovaDbContext(options);
+        await context.Database.MigrateAsync();
+
+        var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+        Assert.Empty(pendingMigrations);
+
+        var appliedMigrations = (await context.Database.GetAppliedMigrationsAsync()).ToList();
+        Assert.Contains(appliedMigrations, m => m.Contains("AddAvailabilityBlocks"));
+    }
 }
