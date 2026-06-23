@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: MindNova Calendar API
+  description: Unified calendar view merging therapist availability and booked sessions.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /calendar:
+    get:
+      operationId: getCalendar
+      summary: Get merged calendar view for a therapist and date range
+      tags: [Calendar]
+      parameters:
+        - name: therapist_id
+          in: query
+          required: true
+          description: Therapist (ApplicationUser ID) to query
+          schema:
+            type: string
+        - name: date_from
+          in: query
+          required: true
+          description: Start of date range (inclusive)
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: true
+          description: End of date range (inclusive)
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: List of calendar entries (available slots and booked sessions)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CalendarEntry'
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CalendarEntry:
+      type: object
+      properties:
+        Date:
+          type: string
+          format: date
+        StartTime:
+          type: string
+          format: time
+        EndTime:
+          type: string
+          format: time
+        EntryType:
+          type: string
+          enum: [Available, Booked]
+        SessionId:
+          type: string
+          format: uuid
+          description: Present only when EntryType is Booked
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+        Type:
+          type: string
+        Instance:
+          type: string
