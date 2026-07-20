@@ -2,15 +2,15 @@
 
 Ordered by priority. Top items are next to pick up.
 
-## Sprint 1 (in-progress)
+## Sprint 1 (done)
 
 See [Sprint 1](sprints/sprint-1.md) for the full plan.
 
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
-| MN-12 | CI Pipeline (GitHub Actions) | story | in-progress | 3 | MN-1 |
-| MN-10 | ASP.NET Identity Setup | story | in-progress | 5 | MN-1 |
-| MN-11 | Azure Infrastructure (Bicep/azd) | story | in-progress | 5 | MN-1 |
+| MN-12 | CI Pipeline (GitHub Actions) | story | done | 3 | MN-1 |
+| MN-10 | ASP.NET Identity Setup | story | done | 5 | MN-1 |
+| MN-11 | Azure Infrastructure (Bicep/azd) | story | done | 5 | MN-1 |
 
 ## Done
 

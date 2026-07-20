@@ -1,7 +1,7 @@
 ---
 key: MN-14
 type: story
-status: in-progress
+status: done
 epic: MN-2
 points: 5
 priority: high
