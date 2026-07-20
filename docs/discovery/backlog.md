@@ -33,7 +33,7 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
 | MN-6 | Resource and Therapist Allocation | epic | in-progress | - | - |
-| MN-20 | Therapist Profile Domain Model and Migration | story | backlog | 3 | MN-6 |
+| MN-20 | Therapist Profile Domain Model and Migration | story | done | 3 | MN-6 |
 | MN-21 | Therapist Profile CRUD API Endpoints | story | backlog | 5 | MN-6 |
 | MN-22 | Client-Therapist Assignment | story | backlog | 5 | MN-6 |
 | MN-23 | Caseload Dashboard Query Endpoint | story | backlog | 3 | MN-6 |
