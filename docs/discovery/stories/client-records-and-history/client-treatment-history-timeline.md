@@ -111,3 +111,4 @@ Test trait mapping:
 * Session event source - src/MindNova.Infrastructure/Services/SessionTimelineEventSource.cs
 * Integration tests - tests/MindNova.Api.Tests/Clients/ClientTimelineEndpointTests.cs
 * Unit tests - tests/MindNova.Api.Tests/Timeline/TimelineServiceTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/16
