@@ -39,6 +39,10 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Azure Infrastructure (Bicep/azd)](./discovery/stories/platform-foundation/azure-infrastructure-bicep.md) - 📌 Background
 - [CI Pipeline (GitHub Actions)](./discovery/stories/platform-foundation/ci-pipeline.md) - 📌 Background
 - [.NET 10 Web API Project Scaffold](./discovery/stories/platform-foundation/dotnet-web-api-scaffold.md) - 📌 Background
+- [Caseload Dashboard Query Endpoint](./discovery/stories/resource-and-therapist-allocation/caseload-dashboard-query.md) - 📌 Background
+- [Client-Therapist Assignment](./discovery/stories/resource-and-therapist-allocation/client-therapist-assignment.md) - 📌 Background
+- [Therapist Profile CRUD API Endpoints](./discovery/stories/resource-and-therapist-allocation/therapist-profile-crud-endpoints.md) - 📌 Background
+- [Therapist Profile Domain Model and Migration](./discovery/stories/resource-and-therapist-allocation/therapist-profile-domain-model.md) - 📌 Background
 - [Session CRUD API Endpoints](./discovery/stories/therapy-sessions-and-visits/session-crud-endpoints.md) - 📌 Background
 - [Session Domain Model and Migration](./discovery/stories/therapy-sessions-and-visits/session-domain-model.md) - 📌 Background
 - [Session History and Filtering](./discovery/stories/therapy-sessions-and-visits/session-history-filtering.md) - 📌 Background
