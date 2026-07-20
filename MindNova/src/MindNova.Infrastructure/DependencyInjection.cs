@@ -30,6 +30,8 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IClientService, ClientService>();
         services.AddScoped<ISessionService, SessionService>();
+        services.AddScoped<ITimelineEventSource, SessionTimelineEventSource>();
+        services.AddScoped<ITimelineService, TimelineService>();
 
         return services;
     }

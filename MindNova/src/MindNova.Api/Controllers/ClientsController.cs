@@ -13,10 +13,12 @@ namespace MindNova.Api.Controllers;
 public class ClientsController : ControllerBase
 {
     private readonly IClientService _clientService;
+    private readonly ITimelineService _timelineService;
 
-    public ClientsController(IClientService clientService)
+    public ClientsController(IClientService clientService, ITimelineService timelineService)
     {
         _clientService = clientService;
+        _timelineService = timelineService;
     }
 
     [HttpPost]
@@ -121,6 +123,49 @@ public class ClientsController : ControllerBase
         }
 
         return Ok(MapToResponse(result));
+    }
+
+    [HttpGet("{id:guid}/timeline")]
+    public async Task<IActionResult> GetTimeline(
+        Guid id,
+        [FromQuery(Name = "page")] int page = 1,
+        [FromQuery(Name = "page_size")] int pageSize = 20)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 1;
+        if (pageSize > 100) pageSize = 100;
+
+        var client = await _clientService.GetByIdAsync(id);
+        if (client == null)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Client not found",
+                Detail = $"No client with ID {id} exists.",
+                Status = 404
+            });
+        }
+
+        var (items, totalCount) = await _timelineService.GetTimelineAsync(id, page, pageSize);
+
+        return Ok(new PagedResponse<TimelineEventResponse>
+        {
+            Items = items.Select(MapToTimelineResponse).ToList(),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        });
+    }
+
+    private static TimelineEventResponse MapToTimelineResponse(Domain.Entities.TimelineEvent e)
+    {
+        return new TimelineEventResponse
+        {
+            Date = e.Date,
+            EventType = e.EventType,
+            Summary = e.Summary,
+            SourceId = e.SourceId
+        };
     }
 
     private static Client MapFromCreateRequest(CreateClientRequest request)
