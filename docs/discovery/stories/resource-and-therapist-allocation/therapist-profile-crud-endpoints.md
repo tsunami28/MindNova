@@ -70,3 +70,4 @@ relates:
 * Service interface - src/MindNova.Infrastructure/Services/ITherapistService.cs
 * Service implementation - src/MindNova.Infrastructure/Services/TherapistService.cs
 * Integration tests - tests/MindNova.Api.Tests/Therapists/TherapistEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/19
