@@ -157,6 +157,41 @@ public class ClientsController : ControllerBase
         });
     }
 
+    [HttpPost("{id:guid}/therapist")]
+    public async Task<IActionResult> AssignTherapist(Guid id, [FromBody] AssignTherapistRequest request)
+    {
+        var (client, error) = await _clientService.AssignTherapistAsync(id, request.TherapistProfileId);
+        if (error != null)
+        {
+            var status = error.Contains("No client") ? 404 : 400;
+            return Ok(new ProblemDetails
+            {
+                Title = status == 404 ? "Client not found" : "Assignment failed",
+                Detail = error,
+                Status = status
+            });
+        }
+
+        return Ok(MapToResponse(client));
+    }
+
+    [HttpDelete("{id:guid}/therapist")]
+    public async Task<IActionResult> UnassignTherapist(Guid id)
+    {
+        var (client, error) = await _clientService.UnassignTherapistAsync(id);
+        if (error != null)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Client not found",
+                Detail = error,
+                Status = 404
+            });
+        }
+
+        return Ok(MapToResponse(client));
+    }
+
     private static TimelineEventResponse MapToTimelineResponse(Domain.Entities.TimelineEvent e)
     {
         return new TimelineEventResponse
@@ -213,7 +248,8 @@ public class ClientsController : ControllerBase
             Address = client.Address,
             CreatedAt = client.CreatedAt,
             UpdatedAt = client.UpdatedAt,
-            IsArchived = client.IsArchived
+            IsArchived = client.IsArchived,
+            AssignedTherapistId = client.AssignedTherapistId
         };
     }
 }

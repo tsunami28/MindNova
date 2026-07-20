@@ -14,4 +14,5 @@ public class Client
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public bool IsArchived { get; set; }
+    public Guid? AssignedTherapistId { get; set; }
 }

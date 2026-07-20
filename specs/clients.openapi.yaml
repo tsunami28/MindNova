@@ -177,6 +177,52 @@ paths:
         '401':
           description: Missing or invalid authentication token
 
+  /clients/{id}/therapist:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Client identifier
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: assignTherapist
+      summary: Assign or reassign a therapist to a client
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignTherapistRequest'
+      responses:
+        '200':
+          description: Updated client or error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ClientResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    delete:
+      operationId: unassignTherapist
+      summary: Remove therapist assignment from a client
+      tags: [Clients]
+      responses:
+        '200':
+          description: Updated client or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ClientResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
 components:
   securitySchemes:
     bearerAuth:
@@ -276,6 +322,20 @@ components:
           format: date-time
         IsArchived:
           type: boolean
+        AssignedTherapistId:
+          type: string
+          format: uuid
+          nullable: true
+          description: The assigned therapist profile ID (null if unassigned)
+
+    AssignTherapistRequest:
+      type: object
+      required: [TherapistProfileId]
+      properties:
+        TherapistProfileId:
+          type: string
+          format: uuid
+          description: The therapist profile to assign to this client
 
     PagedClientResponse:
       type: object
