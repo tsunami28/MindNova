@@ -1,7 +1,7 @@
 ---
 key: MN-24
 type: story
-status: backlog
+status: in-progress
 epic: MN-6
 points: 3
 priority: minor
@@ -53,3 +53,11 @@ relates:
 
 * Specialisations as JSON column requires EF Core value conversion. Alternative:
   separate TherapistSpecialisation join table (simpler queries but more tables).
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/TherapistProfile.cs
+* EF configuration - src/MindNova.Infrastructure/Data/TherapistProfileConfiguration.cs
+* DbContext registration - src/MindNova.Infrastructure/Data/MindNovaDbContext.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddTherapistProfiles)
+* Unit tests - tests/MindNova.Api.Tests/Infrastructure/TherapistProfileConfigurationTests.cs
