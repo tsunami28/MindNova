@@ -71,3 +71,4 @@ relates:
 * Entity change - src/MindNova.Domain/Entities/Client.cs (AssignedTherapistId)
 * Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddClientAssignedTherapistId)
 * Integration tests - tests/MindNova.Api.Tests/Clients/ClientTherapistAssignmentTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/20
