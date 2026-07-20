@@ -31,8 +31,12 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
-|-----|-------|------|--------|--------|---------|
-| MN-6 | Resource and Therapist Allocation | epic | backlog | - | MN-6 |
-| MN-4 | Calendar Planning and Availability | epic | backlog | - | MN-4 |
-| MN-5 | Treatment Notes and Progress | epic | backlog | - | MN-5 |
-| MN-7 | Reporting and Analytics | epic | backlog | - | MN-7 |
+|-----|-------|------|--------|--------|------|
+| MN-6 | Resource and Therapist Allocation | epic | in-progress | - | - |
+| MN-20 | Therapist Profile Domain Model and Migration | story | backlog | 3 | MN-6 |
+| MN-21 | Therapist Profile CRUD API Endpoints | story | backlog | 5 | MN-6 |
+| MN-22 | Client-Therapist Assignment | story | backlog | 5 | MN-6 |
+| MN-23 | Caseload Dashboard Query Endpoint | story | backlog | 3 | MN-6 |
+| MN-4 | Calendar Planning and Availability | epic | backlog | - | - |
+| MN-5 | Treatment Notes and Progress | epic | backlog | - | - |
+| MN-7 | Reporting and Analytics | epic | backlog | - | - |

@@ -1,10 +1,12 @@
 ---
 key: MN-6
 type: epic
-status: backlog
+status: in-progress
 priority: minor
 labels: [MindNova]
 relates:
+  - key: MN-8
+    why: "data model depends on database technology selection"
   - key: MN-2
     why: "therapist allocation targets client records"
 ---
