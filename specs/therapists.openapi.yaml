@@ -1,0 +1,222 @@
+openapi: 3.0.3
+info:
+  title: MindNova Therapists API
+  description: Therapist profile management for the MindNova psychotherapy consultancy platform.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /therapists:
+    post:
+      operationId: createTherapistProfile
+      summary: Create a new therapist profile
+      tags: [Therapists]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTherapistRequest'
+      responses:
+        '200':
+          description: Created profile or validation error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TherapistProfileResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    get:
+      operationId: listTherapistProfiles
+      summary: List therapist profiles with pagination
+      tags: [Therapists]
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-based)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: include_inactive
+          in: query
+          description: When true, includes inactive profiles in results
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Paged list of therapist profiles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedTherapistResponse'
+        '401':
+          description: Missing or invalid authentication token
+
+  /therapists/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Therapist profile identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getTherapistProfile
+      summary: Get a single therapist profile by ID
+      tags: [Therapists]
+      responses:
+        '200':
+          description: Profile data or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TherapistProfileResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    put:
+      operationId: updateTherapistProfile
+      summary: Update therapist profile (Specialisations and MaxCaseload)
+      tags: [Therapists]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTherapistRequest'
+      responses:
+        '200':
+          description: Updated profile or error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TherapistProfileResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    delete:
+      operationId: deactivateTherapistProfile
+      summary: Soft-deactivate a therapist profile (sets IsActive to false)
+      tags: [Therapists]
+      responses:
+        '200':
+          description: Deactivated profile or not-found error (ProblemDetails)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TherapistProfileResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateTherapistRequest:
+      type: object
+      required: [UserId, Specialisations, MaxCaseload]
+      properties:
+        UserId:
+          type: string
+          description: The ApplicationUser ID for this therapist
+        Specialisations:
+          type: array
+          items:
+            type: string
+          description: List of therapeutic specialisations
+        MaxCaseload:
+          type: integer
+          minimum: 1
+          description: Maximum number of clients this therapist can handle
+
+    UpdateTherapistRequest:
+      type: object
+      required: [Specialisations, MaxCaseload]
+      properties:
+        Specialisations:
+          type: array
+          items:
+            type: string
+        MaxCaseload:
+          type: integer
+          minimum: 1
+
+    TherapistProfileResponse:
+      type: object
+      properties:
+        Id:
+          type: string
+          format: uuid
+        UserId:
+          type: string
+        Specialisations:
+          type: array
+          items:
+            type: string
+        MaxCaseload:
+          type: integer
+        IsActive:
+          type: boolean
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+
+    PagedTherapistResponse:
+      type: object
+      properties:
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TherapistProfileResponse'
+        TotalCount:
+          type: integer
+        Page:
+          type: integer
+        PageSize:
+          type: integer
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+          description: Semantic status code (400 for validation, 404 for not found)
+        Type:
+          type: string
+        Instance:
+          type: string

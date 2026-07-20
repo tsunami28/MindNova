@@ -1,7 +1,7 @@
 ---
 key: MN-25
 type: story
-status: backlog
+status: in-progress
 epic: MN-6
 points: 5
 priority: minor
@@ -61,3 +61,13 @@ relates:
 * Depends on MN-20 (domain model).
 * Role-based restriction (only Admin can manage profiles) is out of scope for V1;
   all authenticated users can access.
+
+## Artifacts and references
+
+* API contract - specs/therapists.openapi.yaml
+* Controller - src/MindNova.Api/Controllers/TherapistsController.cs
+* DTOs - src/MindNova.Api/Contracts/CreateTherapistRequest.cs, UpdateTherapistRequest.cs, TherapistProfileResponse.cs
+* Service interface - src/MindNova.Infrastructure/Services/ITherapistService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/TherapistService.cs
+* Integration tests - tests/MindNova.Api.Tests/Therapists/TherapistEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/19
