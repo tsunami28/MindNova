@@ -92,4 +92,39 @@ public class ClientService : IClientService
 
         return client;
     }
+
+    public async Task<(Client Client, string Error)> AssignTherapistAsync(Guid clientId, Guid therapistProfileId)
+    {
+        var client = await _context.Clients.FindAsync(clientId);
+        if (client == null)
+            return (null, $"No client with ID {clientId} exists.");
+
+        var profile = await _context.TherapistProfiles.FindAsync(therapistProfileId);
+        if (profile == null || !profile.IsActive)
+            return (null, $"No active therapist profile with ID {therapistProfileId} exists.");
+
+        var currentCaseload = await _context.Clients.CountAsync(c => c.AssignedTherapistId == therapistProfileId);
+        var isReassignment = client.AssignedTherapistId == therapistProfileId;
+        if (!isReassignment && currentCaseload >= profile.MaxCaseload)
+            return (null, $"Therapist has reached maximum caseload ({profile.MaxCaseload}).");
+
+        client.AssignedTherapistId = therapistProfileId;
+        client.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+
+        return (client, null);
+    }
+
+    public async Task<(Client Client, string Error)> UnassignTherapistAsync(Guid clientId)
+    {
+        var client = await _context.Clients.FindAsync(clientId);
+        if (client == null)
+            return (null, $"No client with ID {clientId} exists.");
+
+        client.AssignedTherapistId = null;
+        client.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+
+        return (client, null);
+    }
 }

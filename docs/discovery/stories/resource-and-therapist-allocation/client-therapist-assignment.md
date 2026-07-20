@@ -1,7 +1,7 @@
 ---
 key: MN-26
 type: story
-status: backlog
+status: in-progress
 epic: MN-6
 points: 5
 priority: minor
@@ -61,3 +61,13 @@ relates:
 * Depends on MN-20 and MN-21 (therapist profiles must exist to assign).
 * Race condition on caseload check under concurrent requests; acceptable for V1
   (single-tenant, low concurrency).
+
+## Artifacts and references
+
+* API contract - specs/clients.openapi.yaml (paths: /clients/{id}/therapist)
+* Request DTO - src/MindNova.Api/Contracts/AssignTherapistRequest.cs
+* Controller actions - src/MindNova.Api/Controllers/ClientsController.cs (AssignTherapist, UnassignTherapist)
+* Service methods - src/MindNova.Infrastructure/Services/ClientService.cs (AssignTherapistAsync, UnassignTherapistAsync)
+* Entity change - src/MindNova.Domain/Entities/Client.cs (AssignedTherapistId)
+* Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddClientAssignedTherapistId)
+* Integration tests - tests/MindNova.Api.Tests/Clients/ClientTherapistAssignmentTests.cs
