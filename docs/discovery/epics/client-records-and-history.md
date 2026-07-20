@@ -1,7 +1,7 @@
 ---
 key: MN-2
 type: epic
-status: backlog
+status: done
 priority: high
 labels: [MindNova]
 relates:

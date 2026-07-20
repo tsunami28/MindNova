@@ -25,13 +25,13 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | MN-17 | Session Domain Model and Migration | story | done | 3 | MN-3 |
 | MN-18 | Session CRUD API Endpoints | story | done | 5 | MN-3 |
 | MN-19 | Session History and Filtering | story | done | 3 | MN-3 |
+| MN-2 | Client Records and History | epic | done | - | - |
+| MN-16 | Client Treatment History Timeline | story | done | 5 | MN-2 |
 
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
-|-----|-------|------|--------|--------|------|
-| MN-2 | Client Records and History | epic | in-progress | - | - |
-| MN-16 | Client Treatment History Timeline | story | backlog | 5 | MN-2 |
+|-----|-------|------|--------|--------|---------|
 | MN-6 | Resource and Therapist Allocation | epic | backlog | - | MN-6 |
 | MN-4 | Calendar Planning and Availability | epic | backlog | - | MN-4 |
 | MN-5 | Treatment Notes and Progress | epic | backlog | - | MN-5 |
