@@ -1,5 +1,5 @@
 ---
-key: MN-23
+key: MN-27
 type: story
 status: backlog
 epic: MN-6
@@ -7,7 +7,7 @@ points: 3
 priority: minor
 labels: [MindNova]
 relates:
-  - key: MN-22
+  - key: MN-26
     why: "requires client-therapist assignments to exist for counting"
   - key: MN-19
     why: "follows the same read-only query endpoint pattern"

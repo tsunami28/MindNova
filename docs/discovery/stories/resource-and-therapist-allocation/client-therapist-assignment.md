@@ -1,5 +1,5 @@
 ---
-key: MN-22
+key: MN-26
 type: story
 status: backlog
 epic: MN-6
@@ -7,9 +7,9 @@ points: 5
 priority: minor
 labels: [MindNova]
 relates:
-  - key: MN-20
+  - key: MN-24
     why: "requires TherapistProfile entity to exist"
-  - key: MN-21
+  - key: MN-25
     why: "requires therapist profiles to be created via CRUD"
   - key: MN-14
     why: "extends the Client entity with an assignment field"

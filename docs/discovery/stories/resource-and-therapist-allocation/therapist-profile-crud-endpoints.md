@@ -1,5 +1,5 @@
 ---
-key: MN-21
+key: MN-25
 type: story
 status: backlog
 epic: MN-6
@@ -7,7 +7,7 @@ points: 5
 priority: minor
 labels: [MindNova]
 relates:
-  - key: MN-20
+  - key: MN-24
     why: "depends on the TherapistProfile entity and migration"
   - key: MN-14
     why: "follows the same CRUD endpoint pattern (controller, service, DTOs)"
