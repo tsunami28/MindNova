@@ -13,8 +13,16 @@ public class SessionService : ISessionService
         _context = context;
     }
 
-    public async Task<Session> CreateAsync(Session session)
+    public async Task<(Session Session, string Error)> CreateAsync(Session session)
     {
+        var conflicting = await FindConflictingSessionAsync(session.TherapistUserId, session.ScheduledAt, session.DurationMinutes, excludeId: null);
+        if (conflicting != null)
+            return (null, FormatConflictError(conflicting));
+
+        var hasCoverage = await CheckAvailabilityCoverageAsync(session.TherapistUserId, session.ScheduledAt, session.DurationMinutes);
+        if (!hasCoverage)
+            return (null, "outside-availability");
+
         session.Id = Guid.NewGuid();
         session.Status = SessionStatus.Scheduled;
         session.CreatedAt = DateTime.UtcNow;
@@ -23,7 +31,7 @@ public class SessionService : ISessionService
         _context.Sessions.Add(session);
         await _context.SaveChangesAsync();
 
-        return session;
+        return (session, null);
     }
 
     public async Task<Session> GetByIdAsync(Guid id)
@@ -78,6 +86,18 @@ public class SessionService : ISessionService
             session.Status = newStatus.Value;
         }
 
+        var timeChanged = updated.ScheduledAt != session.ScheduledAt || updated.DurationMinutes != session.DurationMinutes;
+        if (timeChanged)
+        {
+            var conflicting = await FindConflictingSessionAsync(session.TherapistUserId, updated.ScheduledAt, updated.DurationMinutes, excludeId: id);
+            if (conflicting != null)
+                return (null, FormatConflictError(conflicting));
+
+            var hasCoverage = await CheckAvailabilityCoverageAsync(session.TherapistUserId, updated.ScheduledAt, updated.DurationMinutes);
+            if (!hasCoverage)
+                return (null, "outside-availability");
+        }
+
         session.ScheduledAt = updated.ScheduledAt;
         session.DurationMinutes = updated.DurationMinutes;
         session.SessionType = updated.SessionType;
@@ -104,5 +124,54 @@ public class SessionService : ISessionService
             return "Cannot transition from NoShow; it is a terminal state.";
 
         return $"Invalid status transition from {current} to {target}.";
+    }
+
+    private async Task<Session> FindConflictingSessionAsync(string therapistUserId, DateTime scheduledAt, int durationMinutes, Guid? excludeId)
+    {
+        var proposedEnd = scheduledAt.AddMinutes(durationMinutes);
+
+        var query = _context.Sessions
+            .Where(s => s.TherapistUserId == therapistUserId)
+            .Where(s => s.Status == SessionStatus.Scheduled);
+
+        if (excludeId.HasValue)
+            query = query.Where(s => s.Id != excludeId.Value);
+
+        return await query
+            .Where(s => s.ScheduledAt < proposedEnd && scheduledAt < s.ScheduledAt.AddMinutes(s.DurationMinutes))
+            .FirstOrDefaultAsync();
+    }
+
+    private async Task<bool> CheckAvailabilityCoverageAsync(string therapistUserId, DateTime scheduledAt, int durationMinutes)
+    {
+        var profile = await _context.TherapistProfiles
+            .FirstOrDefaultAsync(p => p.UserId == therapistUserId);
+
+        if (profile == null)
+            return true;
+
+        var hasAnySlots = await _context.AvailabilitySlots
+            .AnyAsync(a => a.TherapistProfileId == profile.Id);
+
+        if (!hasAnySlots)
+            return true;
+
+        var proposedStart = scheduledAt.TimeOfDay;
+        var proposedEnd = scheduledAt.AddMinutes(durationMinutes).TimeOfDay;
+        var proposedDayOfWeek = (int)scheduledAt.DayOfWeek;
+        var proposedDate = scheduledAt.Date;
+
+        return await _context.AvailabilitySlots
+            .Where(a => a.TherapistProfileId == profile.Id)
+            .Where(a =>
+                (a.IsRecurring && a.DayOfWeek == proposedDayOfWeek) ||
+                (!a.IsRecurring && a.SpecificDate.HasValue && a.SpecificDate.Value.Date == proposedDate))
+            .AnyAsync(a => a.StartTime <= proposedStart && a.EndTime >= proposedEnd);
+    }
+
+    private static string FormatConflictError(Session conflicting)
+    {
+        var conflictEnd = conflicting.ScheduledAt.AddMinutes(conflicting.DurationMinutes);
+        return $"session-conflict|{conflicting.Id}|{conflicting.ScheduledAt:O}|{conflictEnd:O}";
     }
 }

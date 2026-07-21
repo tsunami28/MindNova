@@ -1,7 +1,7 @@
 ---
 key: MN-30
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 5
 priority: minor
@@ -13,6 +13,8 @@ relates:
     why: "requires availability slots to exist for validation"
   - key: MN-18
     why: "modifies session creation/update logic in SessionService"
+  - spec: specs/sessions.openapi.yaml
+    why: "contract for conflict and availability validation on session create/update"
 ---
 
 # Session Conflict Detection
@@ -55,3 +57,22 @@ relates:
 
 * Depends on MN-28 (availability model) and MN-29 (slots must exist to validate against).
 * Modifying SessionService changes an existing, tested component; run full regression.
+
+## Decisions and ADRs
+
+* 2026-07-21: API contract defines two distinct ProblemDetails error types for conflict detection -
+  "urn:mindnova:error:session-conflict" (with ConflictDetail payload carrying the conflicting
+  session's ID and time window) and "urn:mindnova:error:outside-availability" - on the existing
+  POST /sessions and PUT /sessions/{id} operations. No new endpoints; validation is internal to
+  the sessions domain. Spec version bumped to 1.1.0.
+* 2026-07-21: Availability check is graceful - skipped when no TherapistProfile or no
+  AvailabilitySlots exist for the therapist. This makes the feature additive (only enforced
+  when availability is configured) and avoids breaking existing session creation flows.
+
+## Artifacts and references
+
+* API contract - specs/sessions.openapi.yaml (v1.1.0, conflict detection additions)
+* Service implementation - src/MindNova.Infrastructure/Services/SessionService.cs (CreateAsync, UpdateAsync, FindConflictingSessionAsync, CheckAvailabilityCoverageAsync)
+* Controller updates - src/MindNova.Api/Controllers/SessionsController.cs (MapConflictError)
+* Interface change - src/MindNova.Infrastructure/Services/ISessionService.cs (CreateAsync return type)
+* Tests - tests/MindNova.Api.Tests/Sessions/SessionConflictTests.cs

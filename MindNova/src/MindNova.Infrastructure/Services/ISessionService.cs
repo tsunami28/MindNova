@@ -4,7 +4,7 @@ namespace MindNova.Infrastructure.Services;
 
 public interface ISessionService
 {
-    Task<Session> CreateAsync(Session session);
+    Task<(Session Session, string Error)> CreateAsync(Session session);
     Task<Session> GetByIdAsync(Guid id);
     Task<(List<Session> Items, int TotalCount)> ListAsync(
         Guid? clientId, string therapistId, SessionStatus? status,

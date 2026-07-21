@@ -1,8 +1,11 @@
 openapi: 3.0.3
 info:
   title: MindNova Sessions API
-  description: Therapy session management for the MindNova psychotherapy consultancy platform.
-  version: 1.0.0
+  description: >
+    Therapy session management for the MindNova psychotherapy consultancy platform.
+    Includes conflict detection: session creation and updates are validated against
+    existing bookings and therapist availability slots.
+  version: 1.1.0
 
 servers:
   - url: /api
@@ -16,6 +19,10 @@ paths:
     post:
       operationId: createSession
       summary: Create a new therapy session (status defaults to Scheduled)
+      description: >
+        Creates a session after validating that the proposed time (ScheduledAt + DurationMinutes)
+        does not overlap an existing session for the same therapist, and falls within a defined
+        availability slot. Returns ProblemDetails on conflict or missing availability.
       tags: [Sessions]
       requestBody:
         required: true
@@ -25,12 +32,18 @@ paths:
               $ref: '#/components/schemas/CreateSessionRequest'
       responses:
         '200':
-          description: Created session or validation error (ProblemDetails)
+          description: >
+            Created session on success, or ProblemDetails on validation failure.
+            Conflict errors use Type "urn:mindnova:error:session-conflict" and include
+            ConflictDetail in the Conflict property. Availability errors use
+            Type "urn:mindnova:error:outside-availability".
           content:
             application/json:
               schema:
                 oneOf:
                   - $ref: '#/components/schemas/SessionResponse'
+                  - $ref: '#/components/schemas/SessionConflictProblemDetails'
+                  - $ref: '#/components/schemas/OutsideAvailabilityProblemDetails'
                   - $ref: '#/components/schemas/ProblemDetails'
         '401':
           description: Missing or invalid authentication token
@@ -120,6 +133,10 @@ paths:
     put:
       operationId: updateSession
       summary: Update session details or transition status
+      description: >
+        Updates a session. When ScheduledAt or DurationMinutes change, the new time is
+        validated against existing bookings and therapist availability (same rules as
+        createSession). Returns ProblemDetails on conflict or missing availability.
       tags: [Sessions]
       requestBody:
         required: true
@@ -129,12 +146,16 @@ paths:
               $ref: '#/components/schemas/UpdateSessionRequest'
       responses:
         '200':
-          description: Updated session or error (ProblemDetails)
+          description: >
+            Updated session on success, or ProblemDetails on validation failure.
+            Conflict and availability errors use the same Type URIs as createSession.
           content:
             application/json:
               schema:
                 oneOf:
                   - $ref: '#/components/schemas/SessionResponse'
+                  - $ref: '#/components/schemas/SessionConflictProblemDetails'
+                  - $ref: '#/components/schemas/OutsideAvailabilityProblemDetails'
                   - $ref: '#/components/schemas/ProblemDetails'
         '401':
           description: Missing or invalid authentication token
@@ -233,6 +254,63 @@ components:
           type: integer
         PageSize:
           type: integer
+
+    ConflictDetail:
+      type: object
+      description: >
+        Details of the existing session that conflicts with the proposed time.
+        Included in the Conflict property of SessionConflictProblemDetails.
+      properties:
+        ConflictingSessionId:
+          type: string
+          format: uuid
+          description: ID of the existing session that overlaps
+        ConflictingStart:
+          type: string
+          format: date-time
+          description: Start time of the conflicting session
+        ConflictingEnd:
+          type: string
+          format: date-time
+          description: End time of the conflicting session (ScheduledAt + DurationMinutes)
+
+    SessionConflictProblemDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+      type: object
+      description: >
+        Returned when the proposed session time overlaps an existing booking
+        for the same therapist.
+      properties:
+        Type:
+          type: string
+          example: "urn:mindnova:error:session-conflict"
+        Title:
+          type: string
+          example: "Session conflict"
+        Detail:
+          type: string
+          example: "The proposed time overlaps an existing session for this therapist."
+        Conflict:
+          $ref: '#/components/schemas/ConflictDetail'
+
+    OutsideAvailabilityProblemDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+      type: object
+      description: >
+        Returned when the proposed session time does not fall within any of the
+        therapist's defined availability slots.
+      properties:
+        Type:
+          type: string
+          example: "urn:mindnova:error:outside-availability"
+        Title:
+          type: string
+          example: "Outside availability"
+        Detail:
+          type: string
+          example: "The proposed time is not covered by any availability slot for this therapist."
 
     ProblemDetails:
       type: object
