@@ -1,7 +1,7 @@
 ---
 key: MN-28
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 3
 priority: minor
@@ -55,3 +55,12 @@ relates:
 
 * Recurring availability with exceptions (e.g. holiday overrides) could be complex.
   V1 models slots independently; a "blocked" slot type can override a recurring one.
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/AvailabilitySlot.cs
+* EF configuration - src/MindNova.Infrastructure/Data/AvailabilitySlotConfiguration.cs
+* DbContext registration - src/MindNova.Infrastructure/Data/MindNovaDbContext.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddAvailabilitySlots)
+* Unit tests - tests/MindNova.Api.Tests/Infrastructure/AvailabilitySlotConfigurationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/23

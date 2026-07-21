@@ -14,6 +14,7 @@ public class MindNovaDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Client> Clients { get; set; }
     public DbSet<Session> Sessions { get; set; }
     public DbSet<TherapistProfile> TherapistProfiles { get; set; }
+    public DbSet<AvailabilitySlot> AvailabilitySlots { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,5 +22,6 @@ public class MindNovaDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
         modelBuilder.ApplyConfiguration(new SessionConfiguration());
         modelBuilder.ApplyConfiguration(new TherapistProfileConfiguration());
+        modelBuilder.ApplyConfiguration(new AvailabilitySlotConfiguration());
     }
 }
