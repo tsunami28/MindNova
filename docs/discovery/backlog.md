@@ -27,16 +27,16 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | MN-19 | Session History and Filtering | story | done | 3 | MN-3 |
 | MN-2 | Client Records and History | epic | done | - | - |
 | MN-16 | Client Treatment History Timeline | story | done | 5 | MN-2 |
+| MN-6 | Resource and Therapist Allocation | epic | done | - | - |
+| MN-24 | Therapist Profile Domain Model and Migration | story | done | 3 | MN-6 |
+| MN-25 | Therapist Profile CRUD API Endpoints | story | done | 5 | MN-6 |
+| MN-26 | Client-Therapist Assignment | story | done | 5 | MN-6 |
+| MN-27 | Caseload Dashboard Query Endpoint | story | done | 3 | MN-6 |
 
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
-| MN-6 | Resource and Therapist Allocation | epic | in-progress | - | - |
-| MN-24 | Therapist Profile Domain Model and Migration | story | backlog | 3 | MN-6 |
-| MN-25 | Therapist Profile CRUD API Endpoints | story | backlog | 5 | MN-6 |
-| MN-26 | Client-Therapist Assignment | story | backlog | 5 | MN-6 |
-| MN-27 | Caseload Dashboard Query Endpoint | story | backlog | 3 | MN-6 |
 | MN-4 | Calendar Planning and Availability | epic | backlog | - | - |
 | MN-5 | Treatment Notes and Progress | epic | backlog | - | - |
 | MN-7 | Reporting and Analytics | epic | backlog | - | - |

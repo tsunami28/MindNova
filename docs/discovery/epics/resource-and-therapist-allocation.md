@@ -1,7 +1,7 @@
 ---
 key: MN-6
 type: epic
-status: in-progress
+status: done
 priority: minor
 labels: [MindNova]
 relates:
