@@ -111,6 +111,21 @@ public class TherapistsController : ControllerBase
         return Ok(MapToResponse(profile));
     }
 
+    [HttpGet("caseload")]
+    public async Task<IActionResult> GetCaseload()
+    {
+        var summaries = await _therapistService.GetCaseloadAsync();
+
+        return Ok(summaries.Select(s => new CaseloadSummaryResponse
+        {
+            TherapistProfileId = s.TherapistProfileId,
+            TherapistName = s.TherapistName,
+            MaxCaseload = s.MaxCaseload,
+            CurrentCaseload = s.CurrentCaseload,
+            AvailableCapacity = s.AvailableCapacity
+        }).ToList());
+    }
+
     private static TherapistProfileResponse MapToResponse(TherapistProfile profile)
     {
         return new TherapistProfileResponse

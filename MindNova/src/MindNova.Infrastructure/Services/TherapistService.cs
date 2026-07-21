@@ -103,4 +103,30 @@ public class TherapistService : ITherapistService
 
         return profile;
     }
+
+    public async Task<List<CaseloadSummary>> GetCaseloadAsync()
+    {
+        var activeProfiles = await _context.TherapistProfiles
+            .Where(t => t.IsActive)
+            .ToListAsync();
+
+        var summaries = new List<CaseloadSummary>();
+
+        foreach (var profile in activeProfiles)
+        {
+            var currentCaseload = await _context.Clients.CountAsync(c => c.AssignedTherapistId == profile.Id);
+            var user = await _userManager.FindByIdAsync(profile.UserId);
+
+            summaries.Add(new CaseloadSummary
+            {
+                TherapistProfileId = profile.Id,
+                TherapistName = user?.Email ?? string.Empty,
+                MaxCaseload = profile.MaxCaseload,
+                CurrentCaseload = currentCaseload,
+                AvailableCapacity = profile.MaxCaseload - currentCaseload
+            });
+        }
+
+        return summaries;
+    }
 }
