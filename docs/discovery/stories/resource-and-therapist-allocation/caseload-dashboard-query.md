@@ -59,6 +59,7 @@ relates:
 * Controller action - src/MindNova.Api/Controllers/TherapistsController.cs (GetCaseload)
 * Service method - src/MindNova.Infrastructure/Services/TherapistService.cs (GetCaseloadAsync)
 * Integration tests - tests/MindNova.Api.Tests/Therapists/CaseloadEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/21
 
 ⚠️ Risks & Blockers
 
