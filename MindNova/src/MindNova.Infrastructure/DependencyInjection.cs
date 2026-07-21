@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<ITimelineEventSource, SessionTimelineEventSource>();
         services.AddScoped<ITimelineService, TimelineService>();
         services.AddScoped<ITherapistService, TherapistService>();
+        services.AddScoped<IAvailabilityService, AvailabilityService>();
 
         return services;
     }
