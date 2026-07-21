@@ -76,3 +76,4 @@ relates:
 * Controller updates - src/MindNova.Api/Controllers/SessionsController.cs (MapConflictError)
 * Interface change - src/MindNova.Infrastructure/Services/ISessionService.cs (CreateAsync return type)
 * Tests - tests/MindNova.Api.Tests/Sessions/SessionConflictTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/25
