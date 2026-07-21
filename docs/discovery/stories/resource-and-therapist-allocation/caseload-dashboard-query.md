@@ -1,7 +1,7 @@
 ---
 key: MN-27
 type: story
-status: backlog
+status: in-progress
 epic: MN-6
 points: 3
 priority: minor
@@ -47,6 +47,18 @@ relates:
 * Query joins TherapistProfiles with a count of assigned Clients grouped by therapist.
 * CaseloadSummaryResponse DTO in src/MindNova.Api/Contracts/.
 * No pagination needed (therapist count per consultancy is small, under 50).
+
+⚠️ Risks & Blockers
+
+* Depends on MN-26 (assignment must exist to count).
+
+## Artifacts and references
+
+* Response DTO - src/MindNova.Api/Contracts/CaseloadSummaryResponse.cs
+* Domain model - src/MindNova.Domain/Entities/CaseloadSummary.cs
+* Controller action - src/MindNova.Api/Controllers/TherapistsController.cs (GetCaseload)
+* Service method - src/MindNova.Infrastructure/Services/TherapistService.cs (GetCaseloadAsync)
+* Integration tests - tests/MindNova.Api.Tests/Therapists/CaseloadEndpointTests.cs
 
 ⚠️ Risks & Blockers
 
