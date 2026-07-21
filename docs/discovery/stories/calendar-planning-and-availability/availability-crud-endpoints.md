@@ -1,7 +1,7 @@
 ---
 key: MN-29
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 5
 priority: minor
@@ -53,3 +53,11 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-28 (domain model).
+
+## Artifacts and references
+
+* Controller - src/MindNova.Api/Controllers/AvailabilityController.cs
+* DTOs - src/MindNova.Api/Contracts/CreateAvailabilityRequest.cs, UpdateAvailabilityRequest.cs, AvailabilitySlotResponse.cs
+* Service interface - src/MindNova.Infrastructure/Services/IAvailabilityService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/AvailabilityService.cs
+* Integration tests - tests/MindNova.Api.Tests/Availability/AvailabilityEndpointTests.cs
