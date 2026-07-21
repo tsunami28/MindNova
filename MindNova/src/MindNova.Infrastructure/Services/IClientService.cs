@@ -9,4 +9,6 @@ public interface IClientService
     Task<(List<Client> Items, int TotalCount)> ListAsync(string search, int page, int pageSize, bool includeArchived);
     Task<Client> UpdateAsync(Guid id, Client updated);
     Task<Client> ArchiveAsync(Guid id);
+    Task<(Client Client, string Error)> AssignTherapistAsync(Guid clientId, Guid therapistProfileId);
+    Task<(Client Client, string Error)> UnassignTherapistAsync(Guid clientId);
 }
