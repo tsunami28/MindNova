@@ -63,3 +63,4 @@ relates:
 * DbContext registration - src/MindNova.Infrastructure/Data/MindNovaDbContext.cs
 * Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddAvailabilitySlots)
 * Unit tests - tests/MindNova.Api.Tests/Infrastructure/AvailabilitySlotConfigurationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/23
