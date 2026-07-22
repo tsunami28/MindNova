@@ -83,7 +83,11 @@ public class SessionsController : ControllerBase
             });
         }
 
-        var created = await _sessionService.CreateAsync(session);
+        var (created, createError) = await _sessionService.CreateAsync(session);
+
+        if (createError != null)
+            return Ok(MapConflictError(createError));
+
         return Ok(MapToResponse(created));
     }
 
@@ -182,6 +186,9 @@ public class SessionsController : ControllerBase
             });
         }
 
+        if (error != null && (error.StartsWith("session-conflict") || error == "outside-availability"))
+            return Ok(MapConflictError(error));
+
         if (error != null)
         {
             return Ok(new ProblemDetails
@@ -209,6 +216,33 @@ public class SessionsController : ControllerBase
             Notes = session.Notes,
             CreatedAt = session.CreatedAt,
             UpdatedAt = session.UpdatedAt
+        };
+    }
+
+    private static object MapConflictError(string error)
+    {
+        if (error == "outside-availability")
+        {
+            return new
+            {
+                Type = "urn:mindnova:error:outside-availability",
+                Title = "Outside availability",
+                Detail = "The proposed time is not covered by any availability slot for this therapist.",
+                Status = 409
+            };
+        }
+
+        // session-conflict|{id}|{start}|{end}
+        var parts = error.Split('|');
+        return new
+        {
+            Type = "urn:mindnova:error:session-conflict",
+            Title = "Session conflict",
+            Detail = "The proposed time overlaps an existing session for this therapist.",
+            Status = 409,
+            ConflictingSessionId = parts[1],
+            ConflictingStart = parts[2],
+            ConflictingEnd = parts[3]
         };
     }
 }

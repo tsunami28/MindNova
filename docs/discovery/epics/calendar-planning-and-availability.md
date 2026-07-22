@@ -1,7 +1,7 @@
 ---
 key: MN-4
 type: epic
-status: backlog
+status: done
 priority: minor
 labels: [MindNova]
 relates:
