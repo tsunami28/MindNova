@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<ITimelineService, TimelineService>();
         services.AddScoped<ITherapistService, TherapistService>();
         services.AddScoped<IAvailabilityService, AvailabilityService>();
+        services.AddScoped<ICalendarService, CalendarService>();
 
         return services;
     }

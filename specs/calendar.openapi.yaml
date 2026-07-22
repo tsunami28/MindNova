@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: MindNova Calendar API
+  description: >
+    Unified calendar view for therapists. Merges expanded availability slots and
+    booked sessions into a single sorted list for a given date range.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /therapists/{therapist_id}/calendar:
+    parameters:
+      - name: therapist_id
+        in: path
+        required: true
+        description: Therapist profile identifier (TherapistProfile.Id)
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getTherapistCalendar
+      summary: Get merged calendar (availability + sessions) for a therapist over a date range
+      description: >
+        Returns a flat list of CalendarEntry objects combining expanded availability slots
+        and booked sessions for the specified therapist within the requested date range.
+        Recurring availability rules are expanded into concrete date entries. The date range
+        is capped at 90 days maximum.
+      tags: [Calendar]
+      parameters:
+        - name: date_from
+          in: query
+          required: true
+          description: Start of the date range (inclusive)
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: true
+          description: End of the date range (inclusive, max 90 days from date_from)
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: >
+            List of calendar entries sorted by Date then StartTime, or ProblemDetails
+            on validation failure (e.g. therapist not found, range exceeds 90 days).
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/CalendarResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CalendarEntry:
+      type: object
+      description: >
+        A single time block on the therapist's calendar, either an availability
+        slot (expanded from recurring or one-off) or a booked session.
+      properties:
+        Date:
+          type: string
+          format: date
+          description: The concrete date this entry falls on
+        StartTime:
+          type: string
+          description: Start time on that date (HH:mm:ss format)
+          example: "09:00:00"
+        EndTime:
+          type: string
+          description: End time on that date (HH:mm:ss format)
+          example: "12:00:00"
+        EntryType:
+          type: string
+          enum: [Availability, Session]
+          description: Whether this entry represents an availability slot or a booked session
+        SourceId:
+          type: string
+          format: uuid
+          description: >
+            The ID of the source record: AvailabilitySlot.Id for Availability entries,
+            Session.Id for Session entries
+
+    CalendarResponse:
+      type: object
+      properties:
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarEntry'
+        TherapistProfileId:
+          type: string
+          format: uuid
+        DateFrom:
+          type: string
+          format: date
+        DateTo:
+          type: string
+          format: date
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+          description: Semantic status code (400 for validation, 404 for not found)
+        Type:
+          type: string
+        Instance:
+          type: string
