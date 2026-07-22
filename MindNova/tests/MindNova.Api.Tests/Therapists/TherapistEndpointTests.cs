@@ -170,7 +170,7 @@ public class TherapistEndpointTests
 
         await client.DeleteAsync($"/api/therapists/{created.Id}");
 
-        var response = await client.GetAsync("/api/therapists?include_inactive=true");
+        var response = await client.GetAsync("/api/therapists?include_inactive=true&page_size=100");
         var body = await response.Content.ReadFromJsonAsync<PagedResponse<TherapistProfileResponse>>(JsonOptions);
 
         Assert.Contains(body.Items, t => t.Id == created.Id && !t.IsActive);
