@@ -32,15 +32,16 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | MN-25 | Therapist Profile CRUD API Endpoints | story | done | 5 | MN-6 |
 | MN-26 | Client-Therapist Assignment | story | done | 5 | MN-6 |
 | MN-27 | Caseload Dashboard Query Endpoint | story | done | 3 | MN-6 |
+| MN-3 | Therapy Sessions and Visits | epic | done | - | - |
+| MN-4 | Calendar Planning and Availability | epic | done | - | - |
+| MN-28 | Availability Slot Domain Model and Migration | story | done | 3 | MN-4 |
+| MN-29 | Availability CRUD API Endpoints | story | done | 5 | MN-4 |
+| MN-30 | Session Conflict Detection | story | done | 5 | MN-4 |
+| MN-31 | Calendar Query Endpoint | story | done | 5 | MN-4 |
 
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
-| MN-4 | Calendar Planning and Availability | epic | in-progress | - | - |
-| MN-28 | Availability Slot Domain Model and Migration | story | backlog | 3 | MN-4 |
-| MN-29 | Availability CRUD API Endpoints | story | backlog | 5 | MN-4 |
-| MN-30 | Session Conflict Detection | story | backlog | 5 | MN-4 |
-| MN-31 | Calendar Query Endpoint | story | backlog | 5 | MN-4 |
 | MN-5 | Treatment Notes and Progress | epic | backlog | - | - |
 | MN-7 | Reporting and Analytics | epic | backlog | - | - |
