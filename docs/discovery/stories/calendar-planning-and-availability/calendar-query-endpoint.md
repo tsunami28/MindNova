@@ -1,7 +1,7 @@
 ---
 key: MN-31
 type: story
-status: backlog
+status: in-progress
 epic: MN-4
 points: 5
 priority: minor
@@ -11,6 +11,8 @@ relates:
     why: "requires availability slots to expand into date entries"
   - key: MN-16
     why: "follows the same aggregation query pattern (timeline)"
+  - spec: specs/calendar.openapi.yaml
+    why: "contract for the merged calendar query endpoint"
 ---
 
 # Calendar Query Endpoint
@@ -54,3 +56,25 @@ relates:
 
 * Depends on MN-28 and MN-29 (availability) plus MN-3 (sessions, done).
 * Expanding recurring slots for large date ranges needs sensible defaults (max 90 days).
+
+## Decisions and ADRs
+
+* 2026-07-21: Dedicated CalendarController and spec (specs/calendar.openapi.yaml) rather than
+  adding to TherapistsController - calendar is a read-only aggregation crossing sessions and
+  availability, warranting its own domain per C07.
+* 2026-07-21: CalendarEntry is a flat shape with EntryType enum (Availability, Session) and
+  SourceId linking back to the source record. No nested types per entry type.
+* 2026-07-21: Both date_from and date_to are required; range capped at 90 days server-side.
+  No pagination (bounded response size).
+
+## Artifacts and references
+
+* API contract - specs/calendar.openapi.yaml
+* Domain model - src/MindNova.Domain/Entities/CalendarEntry.cs
+* Service interface - src/MindNova.Infrastructure/Services/ICalendarService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/CalendarService.cs
+* Controller - src/MindNova.Api/Controllers/CalendarController.cs
+* DTOs - src/MindNova.Api/Contracts/CalendarEntryResponse.cs, CalendarResponse.cs
+* DI registration - src/MindNova.Infrastructure/DependencyInjection.cs
+* Tests - tests/MindNova.Api.Tests/Calendar/CalendarEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/26
