@@ -44,4 +44,8 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
 | MN-5 | Treatment Notes and Progress | epic | backlog | - | - |
+| MN-32 | Treatment Note Domain Model and Migration | story | backlog | 3 | MN-5 |
+| MN-33 | Treatment Note CRUD Endpoints | story | backlog | 5 | MN-5 |
+| MN-34 | Treatment Note Query Endpoints | story | backlog | 3 | MN-5 |
+| MN-35 | Treatment Note Soft-Delete and Audit | story | backlog | 3 | MN-5 |
 | MN-7 | Reporting and Analytics | epic | backlog | - | - |
