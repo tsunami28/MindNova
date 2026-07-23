@@ -1,7 +1,7 @@
 ---
 key: MN-32
 type: story
-status: backlog
+status: in-progress
 epic: MN-5
 points: 3
 priority: minor
@@ -55,3 +55,12 @@ relates:
 ⚠️ Risks & Blockers
 
 * None - follows established pattern from MN-17, MN-24, MN-28.
+
+## Artifacts and references
+
+* Entity - src/MindNova.Domain/Entities/TreatmentNote.cs
+* EF configuration - src/MindNova.Infrastructure/Data/TreatmentNoteConfiguration.cs
+* DbContext registration - src/MindNova.Infrastructure/Data/MindNovaDbContext.cs
+* Migration - src/MindNova.Infrastructure/Data/Migrations/ (AddTreatmentNotes)
+* Tests - tests/MindNova.Api.Tests/Infrastructure/TreatmentNoteConfigurationTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/28
