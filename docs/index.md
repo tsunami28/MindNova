@@ -50,6 +50,10 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Session CRUD API Endpoints](./discovery/stories/therapy-sessions-and-visits/session-crud-endpoints.md) - 📌 Background
 - [Session Domain Model and Migration](./discovery/stories/therapy-sessions-and-visits/session-domain-model.md) - 📌 Background
 - [Session History and Filtering](./discovery/stories/therapy-sessions-and-visits/session-history-filtering.md) - 📌 Background
+- [Treatment Note CRUD Endpoints](./discovery/stories/treatment-notes-and-progress/treatment-note-crud-endpoints.md) - 📌 Background
+- [Treatment Note Domain Model and Migration](./discovery/stories/treatment-notes-and-progress/treatment-note-domain-model.md) - 📌 Background
+- [Treatment Note Query Endpoints](./discovery/stories/treatment-notes-and-progress/treatment-note-query-endpoints.md) - 📌 Background
+- [Treatment Note Soft-Delete and Audit](./discovery/stories/treatment-notes-and-progress/treatment-note-soft-delete-audit.md) - 📌 Background
 
 ## General
 
