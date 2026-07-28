@@ -70,3 +70,4 @@ relates:
 * Interface addition - src/MindNova.Infrastructure/Services/ITreatmentNoteService.cs
 * Controller action - src/MindNova.Api/Controllers/NotesController.cs (ListByClient)
 * Tests - tests/MindNova.Api.Tests/Notes/NoteQueryTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/31
