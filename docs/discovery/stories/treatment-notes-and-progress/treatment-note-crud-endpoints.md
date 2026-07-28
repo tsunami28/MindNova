@@ -79,3 +79,4 @@ relates:
 * DTOs - src/MindNova.Api/Contracts/CreateNoteRequest.cs, UpdateNoteRequest.cs, TreatmentNoteResponse.cs
 * DI registration - src/MindNova.Infrastructure/DependencyInjection.cs
 * Tests - tests/MindNova.Api.Tests/Notes/NoteEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/30
