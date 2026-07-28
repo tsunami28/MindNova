@@ -48,5 +48,8 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
-|-----|-------|------|--------|--------|----- |
+|-----|-------|------|--------|--------|------|
 | MN-7 | Reporting and Analytics | epic | backlog | - | - |
+| MN-36 | Practice Statistics Endpoint | story | backlog | 5 | MN-7 |
+| MN-37 | Session Statistics by Therapist Endpoint | story | backlog | 3 | MN-7 |
+| MN-38 | Report CSV Export | story | backlog | 3 | MN-7 |
