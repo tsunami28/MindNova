@@ -38,14 +38,15 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | MN-29 | Availability CRUD API Endpoints | story | done | 5 | MN-4 |
 | MN-30 | Session Conflict Detection | story | done | 5 | MN-4 |
 | MN-31 | Calendar Query Endpoint | story | done | 5 | MN-4 |
+| MN-3 | Therapy Sessions and Visits | epic | done | - | - |
+| MN-5 | Treatment Notes and Progress | epic | done | - | - |
+| MN-32 | Treatment Note Domain Model and Migration | story | done | 3 | MN-5 |
+| MN-33 | Treatment Note CRUD Endpoints | story | done | 5 | MN-5 |
+| MN-34 | Treatment Note Query Endpoints | story | done | 3 | MN-5 |
+| MN-35 | Treatment Note Soft-Delete and Audit | story | done | 3 | MN-5 |
 
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
-|-----|-------|------|--------|--------|------|
-| MN-5 | Treatment Notes and Progress | epic | backlog | - | - |
-| MN-32 | Treatment Note Domain Model and Migration | story | backlog | 3 | MN-5 |
-| MN-33 | Treatment Note CRUD Endpoints | story | backlog | 5 | MN-5 |
-| MN-34 | Treatment Note Query Endpoints | story | backlog | 3 | MN-5 |
-| MN-35 | Treatment Note Soft-Delete and Audit | story | backlog | 3 | MN-5 |
+|-----|-------|------|--------|--------|----- |
 | MN-7 | Reporting and Analytics | epic | backlog | - | - |
