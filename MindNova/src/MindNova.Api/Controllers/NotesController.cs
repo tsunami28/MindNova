@@ -103,6 +103,38 @@ public class NotesController : ControllerBase
         return HandleResult(note, error);
     }
 
+    [HttpGet("api/clients/{client_id:guid}/notes")]
+    public async Task<IActionResult> ListByClient(
+        Guid client_id,
+        [FromQuery(Name = "date_from")] DateTime? dateFrom = null,
+        [FromQuery(Name = "date_to")] DateTime? dateTo = null,
+        [FromQuery(Name = "page")] int page = 1,
+        [FromQuery(Name = "page_size")] int pageSize = 20)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 1;
+        if (pageSize > 100) pageSize = 100;
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isAdmin = User.IsInRole("Admin");
+
+        var (notes, totalCount, error) = await _noteService.ListByClientAsync(client_id, userId, isAdmin, dateFrom, dateTo, page, pageSize);
+
+        if (error == "not found")
+            return Ok(new ProblemDetails { Title = "Client not found", Detail = $"No client with ID {client_id} exists.", Status = 404 });
+
+        if (error == "forbidden")
+            return Ok(new ProblemDetails { Title = "Access denied", Detail = "You are not authorised to view notes for this client.", Status = 403 });
+
+        return Ok(new PagedResponse<TreatmentNoteResponse>
+        {
+            Items = notes.Select(MapToResponse).ToList(),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        });
+    }
+
     private IActionResult HandleResult(TreatmentNote note, string error)
     {
         if (error == "not found")
