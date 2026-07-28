@@ -1,7 +1,7 @@
 ---
 key: MN-33
 type: story
-status: backlog
+status: in-progress
 epic: MN-5
 points: 5
 priority: minor
@@ -11,6 +11,8 @@ relates:
     why: "depends on the TreatmentNote entity and migration"
   - key: MN-25
     why: "follows the same CRUD endpoint pattern (controller, service, DTOs)"
+  - spec: specs/notes.openapi.yaml
+    why: "contract for treatment note CRUD endpoints"
 ---
 
 # Treatment Note CRUD Endpoints
@@ -57,4 +59,24 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-32 (domain model).
-* Role "Supervisor" must exist in the identity system (seeded by RoleSeeder, already present).
+* "Supervisor" access maps to the existing Admin role (no new role needed).
+
+## Decisions and ADRs
+
+* 2026-07-23: "Supervisor" role in ACs maps to existing Admin role (RoleSeeder seeds
+  Admin, Therapist, Receptionist; no Supervisor role exists). Access rule: session's
+  therapist OR user in Admin role.
+* 2026-07-23: Sub-resource + top-level hybrid routing: create/list/get under
+  /sessions/{session_id}/notes, update at /notes/{id} (caller already has the note ID).
+* 2026-07-23: Forbidden access returns ProblemDetails with Status 403 via HTTP 200 (per C07).
+
+## Artifacts and references
+
+* API contract - specs/notes.openapi.yaml
+* Controller - src/MindNova.Api/Controllers/NotesController.cs
+* Service interface - src/MindNova.Infrastructure/Services/ITreatmentNoteService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/TreatmentNoteService.cs
+* DTOs - src/MindNova.Api/Contracts/CreateNoteRequest.cs, UpdateNoteRequest.cs, TreatmentNoteResponse.cs
+* DI registration - src/MindNova.Infrastructure/DependencyInjection.cs
+* Tests - tests/MindNova.Api.Tests/Notes/NoteEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/30
