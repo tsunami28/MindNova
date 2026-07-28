@@ -1,0 +1,349 @@
+openapi: 3.0.3
+info:
+  title: MindNova Treatment Notes API
+  description: >
+    Treatment note management for the MindNova psychotherapy consultancy platform.
+    Notes are linked to sessions and access-controlled: only the session's therapist
+    or an Admin can create, read, or update notes.
+  version: 1.2.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /sessions/{session_id}/notes:
+    parameters:
+      - name: session_id
+        in: path
+        required: true
+        description: Session identifier
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: createNote
+      summary: Create a treatment note for a session
+      description: >
+        Creates a note linked to the specified session. TherapistUserId is set from
+        the authenticated user. Only the session's therapist or an Admin can create.
+      tags: [Notes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoteRequest'
+      responses:
+        '200':
+          description: >
+            Created note on success, or ProblemDetails on validation/access failure.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    get:
+      operationId: listSessionNotes
+      summary: List treatment notes for a session
+      description: >
+        Returns notes for the specified session. Only the session's
+        therapist or an Admin can access. Deleted notes excluded by default.
+      tags: [Notes]
+      parameters:
+        - name: include_deleted
+          in: query
+          description: When true (Admin only), includes soft-deleted notes in results
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: List of notes or ProblemDetails on access failure.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+  /sessions/{session_id}/notes/{id}:
+    parameters:
+      - name: session_id
+        in: path
+        required: true
+        description: Session identifier
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        description: Treatment note identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getNote
+      summary: Get a single treatment note by ID
+      description: >
+        Returns the note if the authenticated user is the session's therapist or an Admin.
+      tags: [Notes]
+      responses:
+        '200':
+          description: Note data or ProblemDetails (not found or access denied).
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+  /notes/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Treatment note identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getNoteById
+      summary: Get a treatment note by ID (Admin can see deleted notes)
+      description: >
+        Returns the note. Admin users can retrieve deleted notes (IsDeleted flag
+        indicates deletion status). Non-Admin users cannot access deleted notes.
+      tags: [Notes]
+      responses:
+        '200':
+          description: Note data or ProblemDetails.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    put:
+      operationId: updateNote
+      summary: Update a treatment note's content fields
+      description: >
+        Updates PresentingIssue, Interventions, Homework, ProgressRating, and FreeText.
+        Only the owning therapist or an Admin can update. Cannot update a deleted note.
+      tags: [Notes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNoteRequest'
+      responses:
+        '200':
+          description: Updated note or ProblemDetails on failure.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    delete:
+      operationId: deleteNote
+      summary: Soft-delete a treatment note (preserves audit trail)
+      description: >
+        Sets IsDeleted=true, DeletedAt=now, DeletedByUserId to the authenticated user.
+        Does not remove the row. Only the owning therapist or an Admin can delete.
+      tags: [Notes]
+      responses:
+        '200':
+          description: Soft-deleted note confirmation or ProblemDetails.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+  /clients/{client_id}/notes:
+    parameters:
+      - name: client_id
+        in: path
+        required: true
+        description: Client identifier
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: listClientNotes
+      summary: List treatment notes across all sessions for a client
+      description: >
+        Returns notes for all sessions belonging to the specified client, sorted by
+        session date descending. Only the treating therapist(s) or an Admin can access.
+        Deleted notes are excluded by default.
+      tags: [Notes]
+      parameters:
+        - name: date_from
+          in: query
+          description: Filter notes for sessions scheduled on or after this date
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          description: Filter notes for sessions scheduled on or before this date
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          description: Page number (1-based)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: >
+            Paged list of notes or ProblemDetails on access failure.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PagedNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateNoteRequest:
+      type: object
+      required: [PresentingIssue, ProgressRating]
+      properties:
+        PresentingIssue:
+          type: string
+          maxLength: 4000
+        Interventions:
+          type: string
+          maxLength: 4000
+        Homework:
+          type: string
+          maxLength: 2000
+        ProgressRating:
+          type: integer
+          minimum: 1
+          maximum: 10
+        FreeText:
+          type: string
+          maxLength: 8000
+
+    UpdateNoteRequest:
+      type: object
+      properties:
+        PresentingIssue:
+          type: string
+          maxLength: 4000
+        Interventions:
+          type: string
+          maxLength: 4000
+        Homework:
+          type: string
+          maxLength: 2000
+        ProgressRating:
+          type: integer
+          minimum: 1
+          maximum: 10
+        FreeText:
+          type: string
+          maxLength: 8000
+
+    TreatmentNoteResponse:
+      type: object
+      properties:
+        Id:
+          type: string
+          format: uuid
+        SessionId:
+          type: string
+          format: uuid
+        TherapistUserId:
+          type: string
+        PresentingIssue:
+          type: string
+        Interventions:
+          type: string
+        Homework:
+          type: string
+        ProgressRating:
+          type: integer
+        FreeText:
+          type: string
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+        IsDeleted:
+          type: boolean
+
+    PagedNoteResponse:
+      type: object
+      properties:
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TreatmentNoteResponse'
+        TotalCount:
+          type: integer
+        Page:
+          type: integer
+        PageSize:
+          type: integer
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+          description: Semantic status code (400 validation, 403 access denied, 404 not found)
+        Type:
+          type: string
+        Instance:
+          type: string
