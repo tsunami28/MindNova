@@ -58,12 +58,14 @@ public class NotesController : ControllerBase
     }
 
     [HttpGet("api/sessions/{session_id:guid}/notes")]
-    public async Task<IActionResult> ListBySession(Guid session_id)
+    public async Task<IActionResult> ListBySession(
+        Guid session_id,
+        [FromQuery(Name = "include_deleted")] bool includeDeleted = false)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var isAdmin = User.IsInRole("Admin");
 
-        var (notes, error) = await _noteService.ListBySessionAsync(session_id, userId, isAdmin);
+        var (notes, error) = await _noteService.ListBySessionAsync(session_id, userId, isAdmin, includeDeleted);
 
         if (error == "not found")
             return Ok(new ProblemDetails { Title = "Session not found", Detail = $"No session with ID {session_id} exists.", Status = 404 });
@@ -100,6 +102,26 @@ public class NotesController : ControllerBase
         };
 
         var (note, error) = await _noteService.UpdateAsync(id, updated, userId, isAdmin);
+        return HandleResult(note, error);
+    }
+
+    [HttpDelete("api/notes/{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isAdmin = User.IsInRole("Admin");
+
+        var (note, error) = await _noteService.DeleteAsync(id, userId, isAdmin);
+        return HandleResult(note, error);
+    }
+
+    [HttpGet("api/notes/{id:guid}")]
+    public async Task<IActionResult> GetByNoteId(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isAdmin = User.IsInRole("Admin");
+
+        var (note, error) = await _noteService.GetByNoteIdAsync(id, userId, isAdmin);
         return HandleResult(note, error);
     }
 

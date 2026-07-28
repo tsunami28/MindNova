@@ -55,6 +55,11 @@ public class TreatmentNoteService : ITreatmentNoteService
 
     public async Task<(List<TreatmentNote> Notes, string Error)> ListBySessionAsync(Guid sessionId, string authenticatedUserId, bool isAdmin)
     {
+        return await ListBySessionAsync(sessionId, authenticatedUserId, isAdmin, false);
+    }
+
+    public async Task<(List<TreatmentNote> Notes, string Error)> ListBySessionAsync(Guid sessionId, string authenticatedUserId, bool isAdmin, bool includeDeleted)
+    {
         var session = await _context.Sessions.FindAsync(sessionId);
         if (session == null)
             return (null, "not found");
@@ -62,8 +67,13 @@ public class TreatmentNoteService : ITreatmentNoteService
         if (!isAdmin && session.TherapistUserId != authenticatedUserId)
             return (null, "forbidden");
 
-        var notes = await _context.TreatmentNotes
-            .Where(n => n.SessionId == sessionId && !n.IsDeleted)
+        var query = _context.TreatmentNotes
+            .Where(n => n.SessionId == sessionId);
+
+        if (!(includeDeleted && isAdmin))
+            query = query.Where(n => !n.IsDeleted);
+
+        var notes = await query
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
 
@@ -94,6 +104,50 @@ public class TreatmentNoteService : ITreatmentNoteService
         note.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+
+        return (note, null);
+    }
+
+    public async Task<(TreatmentNote Note, string Error)> DeleteAsync(Guid noteId, string authenticatedUserId, bool isAdmin)
+    {
+        var note = await _context.TreatmentNotes.FindAsync(noteId);
+        if (note == null)
+            return (null, "not found");
+
+        if (note.IsDeleted)
+            return (null, "Note is already deleted.");
+
+        var session = await _context.Sessions.FindAsync(note.SessionId);
+        if (session == null)
+            return (null, "not found");
+
+        if (!isAdmin && session.TherapistUserId != authenticatedUserId)
+            return (null, "forbidden");
+
+        note.IsDeleted = true;
+        note.DeletedAt = DateTime.UtcNow;
+        note.DeletedByUserId = authenticatedUserId;
+
+        await _context.SaveChangesAsync();
+
+        return (note, null);
+    }
+
+    public async Task<(TreatmentNote Note, string Error)> GetByNoteIdAsync(Guid noteId, string authenticatedUserId, bool isAdmin)
+    {
+        var note = await _context.TreatmentNotes.FindAsync(noteId);
+        if (note == null)
+            return (null, "not found");
+
+        var session = await _context.Sessions.FindAsync(note.SessionId);
+        if (session == null)
+            return (null, "not found");
+
+        if (!isAdmin && session.TherapistUserId != authenticatedUserId)
+            return (null, "forbidden");
+
+        if (note.IsDeleted && !isAdmin)
+            return (null, "not found");
 
         return (note, null);
     }

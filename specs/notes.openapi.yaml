@@ -5,7 +5,7 @@ info:
     Treatment note management for the MindNova psychotherapy consultancy platform.
     Notes are linked to sessions and access-controlled: only the session's therapist
     or an Admin can create, read, or update notes.
-  version: 1.1.0
+  version: 1.2.0
 
 servers:
   - url: /api
@@ -53,9 +53,16 @@ paths:
       operationId: listSessionNotes
       summary: List treatment notes for a session
       description: >
-        Returns all non-deleted notes for the specified session. Only the session's
-        therapist or an Admin can access.
+        Returns notes for the specified session. Only the session's
+        therapist or an Admin can access. Deleted notes excluded by default.
       tags: [Notes]
+      parameters:
+        - name: include_deleted
+          in: query
+          description: When true (Admin only), includes soft-deleted notes in results
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: List of notes or ProblemDetails on access failure.
@@ -113,6 +120,24 @@ paths:
         schema:
           type: string
           format: uuid
+    get:
+      operationId: getNoteById
+      summary: Get a treatment note by ID (Admin can see deleted notes)
+      description: >
+        Returns the note. Admin users can retrieve deleted notes (IsDeleted flag
+        indicates deletion status). Non-Admin users cannot access deleted notes.
+      tags: [Notes]
+      responses:
+        '200':
+          description: Note data or ProblemDetails.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
     put:
       operationId: updateNote
       summary: Update a treatment note's content fields
@@ -129,6 +154,24 @@ paths:
       responses:
         '200':
           description: Updated note or ProblemDetails on failure.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TreatmentNoteResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+    delete:
+      operationId: deleteNote
+      summary: Soft-delete a treatment note (preserves audit trail)
+      description: >
+        Sets IsDeleted=true, DeletedAt=now, DeletedByUserId to the authenticated user.
+        Does not remove the row. Only the owning therapist or an Admin can delete.
+      tags: [Notes]
+      responses:
+        '200':
+          description: Soft-deleted note confirmation or ProblemDetails.
           content:
             application/json:
               schema:

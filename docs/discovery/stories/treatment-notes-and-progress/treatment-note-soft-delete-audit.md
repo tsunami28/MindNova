@@ -1,7 +1,7 @@
 ---
 key: MN-35
 type: story
-status: backlog
+status: in-progress
 epic: MN-5
 points: 3
 priority: minor
@@ -11,6 +11,8 @@ relates:
     why: "soft-delete is exercised through the CRUD endpoints"
   - key: MN-34
     why: "query endpoints must respect soft-delete by default"
+  - spec: specs/notes.openapi.yaml
+    why: "contract for soft-delete and include_deleted additions (v1.2.0)"
 ---
 
 # Treatment Note Soft-Delete and Audit
@@ -53,3 +55,23 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-33 (CRUD) and MN-34 (query endpoints).
+
+## Decisions and ADRs
+
+* 2026-07-28: "Supervisor" maps to Admin role (consistent with MN-33 decision).
+* 2026-07-28: Soft-delete returns the note with IsDeleted=true in the response body (so
+  the caller sees confirmation of what happened).
+* 2026-07-28: GET /notes/{id} for Admin returns deleted notes with IsDeleted flag visible;
+  non-Admin users get a 404 for deleted notes.
+* 2026-07-28: include_deleted param is Admin-gated: non-Admin users always get filtered results
+  regardless of the param value.
+* 2026-07-28: AC-3 (exclude deleted from queries) and AC-6 (block update on deleted) are
+  already implemented in MN-33/MN-34; this story adds the DELETE action and include_deleted param.
+
+## Artifacts and references
+
+* API contract - specs/notes.openapi.yaml (v1.2.0, soft-delete and include_deleted additions)
+* Service methods - src/MindNova.Infrastructure/Services/TreatmentNoteService.cs (DeleteAsync, GetByNoteIdAsync, ListBySessionAsync overload)
+* Interface additions - src/MindNova.Infrastructure/Services/ITreatmentNoteService.cs
+* Controller actions - src/MindNova.Api/Controllers/NotesController.cs (Delete, GetByNoteId, ListBySession include_deleted)
+* Tests - tests/MindNova.Api.Tests/Notes/NoteSoftDeleteTests.cs
