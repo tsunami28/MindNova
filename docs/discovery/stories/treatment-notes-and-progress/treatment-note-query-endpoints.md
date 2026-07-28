@@ -1,7 +1,7 @@
 ---
 key: MN-34
 type: story
-status: backlog
+status: in-progress
 epic: MN-5
 points: 3
 priority: minor
@@ -11,6 +11,8 @@ relates:
     why: "depends on note CRUD (notes must exist to query)"
   - key: MN-19
     why: "follows the same query/filtering pattern (session history)"
+  - spec: specs/notes.openapi.yaml
+    why: "contract for client-scoped notes query endpoint (v1.1.0)"
 ---
 
 # Treatment Note Query Endpoints
@@ -52,3 +54,19 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-33 (note CRUD must exist first).
+
+## Decisions and ADRs
+
+* 2026-07-28: Client-scoped query lives in the notes domain (specs/notes.openapi.yaml v1.1.0),
+  not the clients domain, since it returns notes and the access control is the notes pattern
+  (therapist or Admin).
+* 2026-07-28: Paged response (PagedNoteResponse) with the same defaults as all list endpoints
+  (page=1, page_size=20, max 100).
+
+## Artifacts and references
+
+* API contract - specs/notes.openapi.yaml (v1.1.0, client-scoped query addition)
+* Service method - src/MindNova.Infrastructure/Services/TreatmentNoteService.cs (ListByClientAsync)
+* Interface addition - src/MindNova.Infrastructure/Services/ITreatmentNoteService.cs
+* Controller action - src/MindNova.Api/Controllers/NotesController.cs (ListByClient)
+* Tests - tests/MindNova.Api.Tests/Notes/NoteQueryTests.cs

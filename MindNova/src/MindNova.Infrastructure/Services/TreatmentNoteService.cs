@@ -97,4 +97,40 @@ public class TreatmentNoteService : ITreatmentNoteService
 
         return (note, null);
     }
+
+    public async Task<(List<TreatmentNote> Notes, int TotalCount, string Error)> ListByClientAsync(Guid clientId, string authenticatedUserId, bool isAdmin, DateTime? dateFrom, DateTime? dateTo, int page, int pageSize)
+    {
+        var client = await _context.Clients.FindAsync(clientId);
+        if (client == null)
+            return (null, 0, "not found");
+
+        if (!isAdmin)
+        {
+            var hasAccess = await _context.Sessions
+                .AnyAsync(s => s.ClientId == clientId && s.TherapistUserId == authenticatedUserId);
+            if (!hasAccess)
+                return (null, 0, "forbidden");
+        }
+
+        var query = _context.TreatmentNotes
+            .Join(_context.Sessions, n => n.SessionId, s => s.Id, (n, s) => new { Note = n, Session = s })
+            .Where(x => x.Session.ClientId == clientId && !x.Note.IsDeleted);
+
+        if (dateFrom.HasValue)
+            query = query.Where(x => x.Session.ScheduledAt >= dateFrom.Value);
+
+        if (dateTo.HasValue)
+            query = query.Where(x => x.Session.ScheduledAt <= dateTo.Value.AddDays(1));
+
+        var totalCount = await query.CountAsync();
+
+        var notes = await query
+            .OrderByDescending(x => x.Session.ScheduledAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(x => x.Note)
+            .ToListAsync();
+
+        return (notes, totalCount, null);
+    }
 }
