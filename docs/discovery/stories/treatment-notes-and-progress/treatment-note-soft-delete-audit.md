@@ -75,3 +75,4 @@ relates:
 * Interface additions - src/MindNova.Infrastructure/Services/ITreatmentNoteService.cs
 * Controller actions - src/MindNova.Api/Controllers/NotesController.cs (Delete, GetByNoteId, ListBySession include_deleted)
 * Tests - tests/MindNova.Api.Tests/Notes/NoteSoftDeleteTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/32
