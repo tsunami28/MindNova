@@ -1,0 +1,63 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MindNova.Api.Contracts;
+using MindNova.Infrastructure.Services;
+
+namespace MindNova.Api.Controllers;
+
+[ApiController]
+[Authorize]
+public class ReportsController : ControllerBase
+{
+    private readonly IReportService _reportService;
+
+    public ReportsController(IReportService reportService)
+    {
+        _reportService = reportService;
+    }
+
+    [HttpGet("api/reports/practice-stats")]
+    public async Task<IActionResult> GetPracticeStats(
+        [FromQuery(Name = "date_from")] DateTime dateFrom,
+        [FromQuery(Name = "date_to")] DateTime dateTo)
+    {
+        if (dateFrom == default || dateTo == default)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Validation failed",
+                Detail = "Both date_from and date_to query parameters are required.",
+                Status = 400
+            });
+        }
+
+        if (dateTo < dateFrom)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Validation failed",
+                Detail = "date_to must be on or after date_from.",
+                Status = 400
+            });
+        }
+
+        var stats = await _reportService.GetPracticeStatsAsync(dateFrom, dateTo);
+
+        return Ok(new PracticeStatsResponse
+        {
+            DateFrom = stats.DateFrom,
+            DateTo = stats.DateTo,
+            TotalSessions = stats.TotalSessions,
+            CompletedCount = stats.CompletedCount,
+            CancelledCount = stats.CancelledCount,
+            NoShowCount = stats.NoShowCount,
+            NoShowRate = stats.NoShowRate,
+            NewClientsCount = stats.NewClientsCount,
+            TherapistUtilisation = stats.TherapistUtilisation.Select(t => new TherapistUtilisationEntry
+            {
+                TherapistUserId = t.TherapistUserId,
+                SessionCount = t.SessionCount
+            }).ToList()
+        });
+    }
+}

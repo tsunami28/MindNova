@@ -1,7 +1,7 @@
 ---
 key: MN-36
 type: story
-status: backlog
+status: in-progress
 epic: MN-7
 points: 5
 priority: minor
@@ -13,6 +13,8 @@ relates:
     why: "aggregates session data (counts, statuses)"
   - key: MN-14
     why: "aggregates client intake data (new clients per period)"
+  - spec: specs/reports.openapi.yaml
+    why: "contract for practice statistics endpoint"
 ---
 
 # Practice Statistics Endpoint
@@ -57,3 +59,14 @@ relates:
 ⚠️ Risks & Blockers
 
 * None - all source data entities are in place.
+
+## Artifacts and references
+
+* API contract - specs/reports.openapi.yaml
+* Domain model - src/MindNova.Domain/Entities/PracticeStats.cs
+* Service interface - src/MindNova.Infrastructure/Services/IReportService.cs
+* Service implementation - src/MindNova.Infrastructure/Services/ReportService.cs
+* Controller - src/MindNova.Api/Controllers/ReportsController.cs
+* DTOs - src/MindNova.Api/Contracts/PracticeStatsResponse.cs, TherapistUtilisationEntry.cs
+* DI registration - src/MindNova.Infrastructure/DependencyInjection.cs
+* Tests - tests/MindNova.Api.Tests/Reports/ReportEndpointTests.cs
