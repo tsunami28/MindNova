@@ -1,7 +1,7 @@
 ---
 key: MN-39
 type: spike
-status: backlog
+status: done
 priority: minor
 labels: [MindNova]
 relates:
@@ -54,3 +54,45 @@ relates:
   for the learning curve in its recommendation.
 * If Blazor is chosen, decide between Server and WASM hosting models (each
   has different deployment and latency characteristics).
+
+## Key findings
+
+* Blazor Server is the fastest path for a C#-only team: no client download,
+  no new language, same debugging tools. SignalR dependency is acceptable for
+  an internal practice management tool with a small user base.
+* Blazor WASM removes SignalR but adds a 5-10 MB initial download with no
+  clear benefit over Server for V1.
+* React offers the richest component ecosystem but introduces TypeScript, a
+  second build pipeline, and a separate deployment model. No existing team
+  expertise.
+* Blazor Server deploys as part of the existing ASP.NET app (single azure.yaml
+  service entry, no Bicep changes). WASM and React both need embedding or
+  separate static hosting.
+* All three support JWT auth. Blazor uses AuthenticationStateProvider natively;
+  React requires manual token handling.
+
+## Implications
+
+* Recommend Blazor Server for V1. Minimal new tooling, deploys with the existing
+  API, team stays in C#. MudBlazor provides tables, forms, dialogs, and charts
+  covering all MN-8 success criteria.
+* Migration from Blazor Server to WASM is straightforward later (same component
+  code, different hosting model) if offline or richer client experience is needed.
+* Prototype should confirm: login flow, client list with search, create client
+  form, all consuming the REST API with JWT.
+
+## Open questions
+
+* Blazor UI as a separate project (MindNova.Web) or embedded in the API project?
+  Separate is cleaner for build isolation.
+* Component library: MudBlazor vs Radzen? MudBlazor has broader community
+  adoption and Material Design alignment.
+* SignalR transport: WebSockets or Long Polling fallback in Azure App Service?
+
+## Decisions and ADRs
+
+* 2026-07-29: Blazor Server with MudBlazor selected for the web UI - see docs/adrs/0010-blazor-server-for-web-ui.md
+
+## Artifacts and references
+
+* ADR - docs/adrs/0010-blazor-server-for-web-ui.md

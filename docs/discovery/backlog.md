@@ -54,4 +54,10 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
 | MN-8 | Web Application UI | epic | backlog | - | - |
-| MN-39 | UI Technology Selection | spike | backlog | - | MN-8 |
+| MN-39 | UI Technology Selection | spike | done | - | MN-8 |
+| MN-40 | Blazor Server Project Scaffold and Auth | story | backlog | 8 | MN-8 |
+| MN-41 | Client Management Pages | story | backlog | 5 | MN-8 |
+| MN-42 | Session Scheduling Pages | story | backlog | 5 | MN-8 |
+| MN-43 | Treatment Notes Pages | story | backlog | 5 | MN-8 |
+| MN-44 | Reports Dashboard | story | backlog | 3 | MN-8 |
+| MN-45 | Therapist and Availability Management Pages | story | backlog | 5 | MN-8 |
