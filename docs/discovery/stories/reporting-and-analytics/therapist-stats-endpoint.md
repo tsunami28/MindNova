@@ -1,7 +1,7 @@
 ---
 key: MN-37
 type: story
-status: backlog
+status: in-progress
 epic: MN-7
 points: 3
 priority: minor
@@ -58,3 +58,9 @@ relates:
 ## Artifacts and references
 
 * API contract - specs/reports.openapi.yaml
+* Domain model - src/MindNova.Domain/Entities/TherapistStatsResult.cs
+* Service method - src/MindNova.Infrastructure/Services/ReportService.cs (GetTherapistStatsAsync)
+* Controller action - src/MindNova.Api/Controllers/ReportsController.cs (GetTherapistStats)
+* DTOs - src/MindNova.Api/Contracts/TherapistStatsResponse.cs
+* Tests - tests/MindNova.Api.Tests/Reports/TherapistStatsEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/35
