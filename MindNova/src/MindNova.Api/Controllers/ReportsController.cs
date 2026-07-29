@@ -60,4 +60,49 @@ public class ReportsController : ControllerBase
             }).ToList()
         });
     }
+
+    [HttpGet("api/reports/therapist-stats")]
+    public async Task<IActionResult> GetTherapistStats(
+        [FromQuery(Name = "date_from")] DateTime dateFrom,
+        [FromQuery(Name = "date_to")] DateTime dateTo)
+    {
+        if (dateFrom == default || dateTo == default)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Validation failed",
+                Detail = "Both date_from and date_to query parameters are required.",
+                Status = 400
+            });
+        }
+
+        if (dateTo < dateFrom)
+        {
+            return Ok(new ProblemDetails
+            {
+                Title = "Validation failed",
+                Detail = "date_to must be on or after date_from.",
+                Status = 400
+            });
+        }
+
+        var result = await _reportService.GetTherapistStatsAsync(dateFrom, dateTo);
+
+        return Ok(new TherapistStatsResponse
+        {
+            DateFrom = result.DateFrom,
+            DateTo = result.DateTo,
+            Items = result.Items.Select(e => new TherapistStatEntryResponse
+            {
+                TherapistUserId = e.TherapistUserId,
+                TherapistName = e.TherapistName,
+                TotalSessions = e.TotalSessions,
+                CompletedCount = e.CompletedCount,
+                NoShowCount = e.NoShowCount,
+                CancelledCount = e.CancelledCount,
+                AvailableSlotCount = e.AvailableSlotCount,
+                UtilisationRate = e.UtilisationRate
+            }).ToList()
+        });
+    }
 }
