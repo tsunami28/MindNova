@@ -63,3 +63,4 @@ relates:
 * Controller action - src/MindNova.Api/Controllers/ReportsController.cs (GetTherapistStats)
 * DTOs - src/MindNova.Api/Contracts/TherapistStatsResponse.cs
 * Tests - tests/MindNova.Api.Tests/Reports/TherapistStatsEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/35
