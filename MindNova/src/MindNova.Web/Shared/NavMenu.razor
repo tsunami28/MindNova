@@ -1,0 +1,33 @@
+<AuthorizeView>
+    <Authorized Context="navAuth">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">
+                Dashboard
+            </MudNavLink>
+
+            <MudNavLink Href="/clients" Icon="@Icons.Material.Filled.People">
+                Clients
+            </MudNavLink>
+
+            <MudNavLink Href="/sessions" Icon="@Icons.Material.Filled.Event">
+                Sessions
+            </MudNavLink>
+
+            <AuthorizeView Roles="Admin,Therapist" Context="notesAuth">
+                <MudNavLink Href="/notes" Icon="@Icons.Material.Filled.Notes">
+                    Notes
+                </MudNavLink>
+            </AuthorizeView>
+
+            <MudNavLink Href="/reports" Icon="@Icons.Material.Filled.Assessment">
+                Reports
+            </MudNavLink>
+
+            <AuthorizeView Roles="Admin" Context="adminAuth">
+                <MudNavLink Href="/therapists" Icon="@Icons.Material.Filled.MedicalServices">
+                    Therapists
+                </MudNavLink>
+            </AuthorizeView>
+        </MudNavMenu>
+    </Authorized>
+</AuthorizeView>

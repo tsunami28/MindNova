@@ -3,6 +3,7 @@
     <Project Path="src/MindNova.Api/MindNova.Api.csproj" />
     <Project Path="src/MindNova.Domain/MindNova.Domain.csproj" />
     <Project Path="src/MindNova.Infrastructure/MindNova.Infrastructure.csproj" />
+    <Project Path="src/MindNova.Web/MindNova.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MindNova.Api.Tests/MindNova.Api.Tests.csproj" />

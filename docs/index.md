@@ -8,6 +8,7 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 
 - [ADR 0008: Azure SQL Database (serverless) as the MindNova backend database](./adrs/0008-azure-sql-database-serverless.md) - MindNova requires a backend database to persist client records, therapy sessions, treatment notes, therapist profiles, calendar availability, and reporting aggregates.
 - [ADR 0009: Use Azure Verified Modules from the Bicep public registry](./adrs/0009-avm-registry-modules-for-bicep.md) - MN-11 (Azure Infrastructure - Bicep/azd) requires Bicep modules for App Service, Azure SQL Server, and Key Vault.
+- [ADR 0010: Blazor Server for Web Application UI](./adrs/0010-blazor-server-for-web-ui.md) - MindNova's API surface is complete (7 epics, 215 tests).
 - [Architecture Decision Records](./adrs/README.md) - This folder records load-bearing technical decisions for MindNova.
 
 ## ai-sdlc
@@ -28,8 +29,10 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Resource and Therapist Allocation](./discovery/epics/resource-and-therapist-allocation.md) - 📌 Background
 - [Therapy Sessions and Visits](./discovery/epics/therapy-sessions-and-visits.md) - 📌 Background
 - [Treatment Notes and Progress](./discovery/epics/treatment-notes-and-progress.md) - 📌 Background
+- [Web Application UI](./discovery/epics/web-application-ui.md) - 📌 Background
 - [Work Items](./discovery/README.md) - Local work-item tracker for MindNova.
 - [Evaluate Database Technology for MindNova](./discovery/spikes/database-technology-selection.md) - 📌 Background
+- [UI Technology Selection](./discovery/spikes/ui-technology-selection.md) - 📌 Background
 - [Sprint 1 - Platform Foundation](./discovery/sprints/sprint-1.md) - MN-12 is first: CI enables quality gates for all subsequent work.
 - [Availability CRUD API Endpoints](./discovery/stories/calendar-planning-and-availability/availability-crud-endpoints.md) - 📌 Background
 - [Availability Slot Domain Model and Migration](./discovery/stories/calendar-planning-and-availability/availability-slot-domain-model.md) - 📌 Background
@@ -57,6 +60,12 @@ One entry per page (relative link plus a one-sentence summary), grouped by area.
 - [Treatment Note Domain Model and Migration](./discovery/stories/treatment-notes-and-progress/treatment-note-domain-model.md) - 📌 Background
 - [Treatment Note Query Endpoints](./discovery/stories/treatment-notes-and-progress/treatment-note-query-endpoints.md) - 📌 Background
 - [Treatment Note Soft-Delete and Audit](./discovery/stories/treatment-notes-and-progress/treatment-note-soft-delete-audit.md) - 📌 Background
+- [Blazor Server Project Scaffold and Auth](./discovery/stories/web-application-ui/blazor-scaffold-and-auth.md) - 📌 Background
+- [Client Management Pages](./discovery/stories/web-application-ui/client-management-pages.md) - 📌 Background
+- [Reports Dashboard](./discovery/stories/web-application-ui/reports-dashboard.md) - 📌 Background
+- [Session Scheduling Pages](./discovery/stories/web-application-ui/session-scheduling-pages.md) - 📌 Background
+- [Therapist and Availability Management Pages](./discovery/stories/web-application-ui/therapist-availability-pages.md) - 📌 Background
+- [Treatment Notes Pages](./discovery/stories/web-application-ui/treatment-notes-pages.md) - 📌 Background
 
 ## General
 
