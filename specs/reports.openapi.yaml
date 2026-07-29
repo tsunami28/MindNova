@@ -1,0 +1,238 @@
+openapi: 3.0.3
+info:
+  title: MindNova Reports API
+  description: >
+    Reporting and analytics endpoints for the MindNova psychotherapy consultancy platform.
+    Provides aggregate practice statistics, per-therapist breakdowns, and CSV export.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Relative base path
+
+security:
+  - bearerAuth: []
+
+paths:
+  /reports/practice-stats:
+    get:
+      operationId: getPracticeStats
+      summary: Get aggregate practice statistics for a date range
+      tags: [Reports]
+      parameters:
+        - name: date_from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Practice statistics or ProblemDetails on validation failure.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PracticeStatsResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+  /reports/therapist-stats:
+    get:
+      operationId: getTherapistStats
+      summary: Get per-therapist session statistics for a date range
+      tags: [Reports]
+      parameters:
+        - name: date_from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: List of per-therapist statistics or ProblemDetails.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TherapistStatsResponse'
+                  - $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Missing or invalid authentication token
+
+  /reports/practice-stats/export:
+    get:
+      operationId: exportPracticeStats
+      summary: Export practice statistics as CSV
+      tags: [Reports]
+      parameters:
+        - name: date_from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: CSV file download.
+          content:
+            text/csv:
+              schema:
+                type: string
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: "attachment; filename=practice-stats-2026-07-01-to-2026-07-28.csv"
+        '401':
+          description: Missing or invalid authentication token
+
+  /reports/therapist-stats/export:
+    get:
+      operationId: exportTherapistStats
+      summary: Export therapist statistics as CSV
+      tags: [Reports]
+      parameters:
+        - name: date_from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: CSV file download.
+          content:
+            text/csv:
+              schema:
+                type: string
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: "attachment; filename=therapist-stats-2026-07-01-to-2026-07-28.csv"
+        '401':
+          description: Missing or invalid authentication token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    PracticeStatsResponse:
+      type: object
+      properties:
+        DateFrom:
+          type: string
+          format: date
+        DateTo:
+          type: string
+          format: date
+        TotalSessions:
+          type: integer
+        CompletedCount:
+          type: integer
+        CancelledCount:
+          type: integer
+        NoShowCount:
+          type: integer
+        NoShowRate:
+          type: number
+          format: double
+          description: No-show percentage (NoShowCount / TotalSessions * 100)
+        NewClientsCount:
+          type: integer
+          description: Clients with CreatedAt within the date range
+        TherapistUtilisation:
+          type: array
+          items:
+            $ref: '#/components/schemas/TherapistUtilisationEntry'
+
+    TherapistUtilisationEntry:
+      type: object
+      properties:
+        TherapistUserId:
+          type: string
+        SessionCount:
+          type: integer
+
+    TherapistStatsResponse:
+      type: object
+      properties:
+        DateFrom:
+          type: string
+          format: date
+        DateTo:
+          type: string
+          format: date
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TherapistStatEntry'
+
+    TherapistStatEntry:
+      type: object
+      properties:
+        TherapistUserId:
+          type: string
+        TherapistName:
+          type: string
+        TotalSessions:
+          type: integer
+        CompletedCount:
+          type: integer
+        NoShowCount:
+          type: integer
+        CancelledCount:
+          type: integer
+        AvailableSlotCount:
+          type: integer
+          description: Number of expanded availability slots in the date range
+        UtilisationRate:
+          type: number
+          format: double
+          description: Sessions / available slots as percentage
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      properties:
+        Title:
+          type: string
+        Detail:
+          type: string
+        Status:
+          type: integer
+        Type:
+          type: string
+        Instance:
+          type: string

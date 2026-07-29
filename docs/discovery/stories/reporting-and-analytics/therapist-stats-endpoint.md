@@ -1,7 +1,7 @@
 ---
 key: MN-37
 type: story
-status: backlog
+status: done
 epic: MN-7
 points: 3
 priority: minor
@@ -11,6 +11,8 @@ relates:
     why: "follows the same reporting pattern (practice stats)"
   - key: MN-27
     why: "extends the per-therapist view from the caseload dashboard"
+  - spec: specs/reports.openapi.yaml
+    why: "contract for therapist statistics endpoint"
 ---
 
 # Session Statistics by Therapist Endpoint
@@ -52,3 +54,13 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-36 (reporting pattern established first).
+
+## Artifacts and references
+
+* API contract - specs/reports.openapi.yaml
+* Domain model - src/MindNova.Domain/Entities/TherapistStatsResult.cs
+* Service method - src/MindNova.Infrastructure/Services/ReportService.cs (GetTherapistStatsAsync)
+* Controller action - src/MindNova.Api/Controllers/ReportsController.cs (GetTherapistStats)
+* DTOs - src/MindNova.Api/Contracts/TherapistStatsResponse.cs
+* Tests - tests/MindNova.Api.Tests/Reports/TherapistStatsEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/35

@@ -1,7 +1,7 @@
 ---
 key: MN-38
 type: story
-status: backlog
+status: done
 epic: MN-7
 points: 3
 priority: minor
@@ -11,6 +11,8 @@ relates:
     why: "exports the same data as practice statistics"
   - key: MN-37
     why: "exports the same data as therapist statistics"
+  - spec: specs/reports.openapi.yaml
+    why: "contract for CSV export endpoints"
 ---
 
 # Report CSV Export
@@ -52,3 +54,10 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-36 and MN-37 (the data endpoints must exist first).
+
+## Artifacts and references
+
+* API contract - specs/reports.openapi.yaml
+* Controller actions - src/MindNova.Api/Controllers/ReportsController.cs (ExportPracticeStats, ExportTherapistStats, EscapeCsv)
+* Tests - tests/MindNova.Api.Tests/Reports/ReportExportTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/36
