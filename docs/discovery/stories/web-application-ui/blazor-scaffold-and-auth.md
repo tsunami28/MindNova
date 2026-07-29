@@ -1,7 +1,7 @@
 ---
 key: MN-40
 type: story
-status: backlog
+status: in-progress
 epic: MN-8
 points: 8
 priority: minor
@@ -59,3 +59,16 @@ relates:
 
 * SignalR WebSocket support must be enabled in Azure App Service config.
 * Token refresh strategy (V1: re-login on expiry; token refresh is a follow-up).
+
+## Artifacts and references
+
+* Project - src/MindNova.Web/MindNova.Web.csproj
+* Program.cs - src/MindNova.Web/Program.cs
+* Auth state provider - src/MindNova.Web/Services/JwtAuthenticationStateProvider.cs
+* Auth service - src/MindNova.Web/Services/AuthService.cs
+* Login page - src/MindNova.Web/Pages/Login.razor
+* Main layout - src/MindNova.Web/Shared/MainLayout.razor
+* Nav menu - src/MindNova.Web/Shared/NavMenu.razor
+* Deployment - MindNova/azure.yaml (web service entry)
+* ADR - docs/adrs/0010-blazor-server-for-web-ui.md
+* PR - https://github.com/tsunami28/MindNova/pull/39
