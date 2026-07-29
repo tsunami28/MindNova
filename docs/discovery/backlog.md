@@ -53,3 +53,5 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
+| MN-8 | Web Application UI | epic | backlog | - | - |
+| MN-39 | UI Technology Selection | spike | backlog | - | MN-8 |
