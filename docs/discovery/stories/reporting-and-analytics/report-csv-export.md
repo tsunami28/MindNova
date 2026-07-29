@@ -1,7 +1,7 @@
 ---
 key: MN-38
 type: story
-status: backlog
+status: in-progress
 epic: MN-7
 points: 3
 priority: minor
@@ -58,3 +58,5 @@ relates:
 ## Artifacts and references
 
 * API contract - specs/reports.openapi.yaml
+* Controller actions - src/MindNova.Api/Controllers/ReportsController.cs (ExportPracticeStats, ExportTherapistStats, EscapeCsv)
+* Tests - tests/MindNova.Api.Tests/Reports/ReportExportTests.cs
