@@ -44,12 +44,12 @@ See [Sprint 1](sprints/sprint-1.md) for the full plan.
 | MN-33 | Treatment Note CRUD Endpoints | story | done | 5 | MN-5 |
 | MN-34 | Treatment Note Query Endpoints | story | done | 3 | MN-5 |
 | MN-35 | Treatment Note Soft-Delete and Audit | story | done | 3 | MN-5 |
+| MN-7 | Reporting and Analytics | epic | done | - | - |
+| MN-36 | Practice Statistics Endpoint | story | done | 5 | MN-7 |
+| MN-37 | Session Statistics by Therapist Endpoint | story | done | 3 | MN-7 |
+| MN-38 | Report CSV Export | story | done | 3 | MN-7 |
 
 ## Backlog
 
 | Key | Title | Type | Status | Points | Epic |
 |-----|-------|------|--------|--------|------|
-| MN-7 | Reporting and Analytics | epic | backlog | - | - |
-| MN-36 | Practice Statistics Endpoint | story | backlog | 5 | MN-7 |
-| MN-37 | Session Statistics by Therapist Endpoint | story | backlog | 3 | MN-7 |
-| MN-38 | Report CSV Export | story | backlog | 3 | MN-7 |
