@@ -70,3 +70,4 @@ relates:
 * DTOs - src/MindNova.Api/Contracts/PracticeStatsResponse.cs, TherapistUtilisationEntry.cs
 * DI registration - src/MindNova.Infrastructure/DependencyInjection.cs
 * Tests - tests/MindNova.Api.Tests/Reports/ReportEndpointTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/34
