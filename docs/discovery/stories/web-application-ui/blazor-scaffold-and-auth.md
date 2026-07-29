@@ -71,3 +71,4 @@ relates:
 * Nav menu - src/MindNova.Web/Shared/NavMenu.razor
 * Deployment - MindNova/azure.yaml (web service entry)
 * ADR - docs/adrs/0010-blazor-server-for-web-ui.md
+* PR - https://github.com/tsunami28/MindNova/pull/39
