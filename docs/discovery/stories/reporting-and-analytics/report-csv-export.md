@@ -60,3 +60,4 @@ relates:
 * API contract - specs/reports.openapi.yaml
 * Controller actions - src/MindNova.Api/Controllers/ReportsController.cs (ExportPracticeStats, ExportTherapistStats, EscapeCsv)
 * Tests - tests/MindNova.Api.Tests/Reports/ReportExportTests.cs
+* PR - https://github.com/tsunami28/MindNova/pull/36
