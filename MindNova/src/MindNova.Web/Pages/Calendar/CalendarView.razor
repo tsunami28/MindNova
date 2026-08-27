@@ -1,0 +1,110 @@
+@page "/calendar"
+@attribute [Authorize]
+@inject SessionApiService SessionApi
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4" Class="mb-4">Calendar</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="4">
+        <MudTextField @bind-Value="_therapistProfileIdText" Label="Therapist Profile ID"
+                      HelperText="Enter the therapist profile GUID" />
+    </MudItem>
+    <MudItem xs="3">
+        <MudDatePicker @bind-Date="_dateFrom" Label="From" />
+    </MudItem>
+    <MudItem xs="3">
+        <MudDatePicker @bind-Date="_dateTo" Label="To" />
+    </MudItem>
+    <MudItem xs="2" Class="d-flex align-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@LoadCalendar">Load</MudButton>
+    </MudItem>
+</MudGrid>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+}
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_entries != null)
+{
+    @if (_entries.Count == 0)
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary">No calendar entries for this range.</MudText>
+    }
+    else
+    {
+        @foreach (var group in _entries.GroupBy(e => e.Date.Date).OrderBy(g => g.Key))
+        {
+            <MudText Typo="Typo.h6" Class="mt-4 mb-2">@group.Key.ToString("dddd, yyyy-MM-dd")</MudText>
+            <MudSimpleTable Hover="true" Striped="true" Dense="true">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in group.OrderBy(e => e.StartTime))
+                    {
+                        <tr>
+                            <td>@entry.StartTime.ToString(@"hh\:mm") - @entry.EndTime.ToString(@"hh\:mm")</td>
+                            <td>
+                                <MudChip T="string" Size="Size.Small"
+                                         Color="@(entry.EntryType == "Availability" ? Color.Success : Color.Info)">
+                                    @entry.EntryType
+                                </MudChip>
+                            </td>
+                            <td>
+                                @if (entry.EntryType == "Session")
+                                {
+                                    <MudLink Href="@($"/sessions/{entry.SourceId}/edit")">@entry.SourceId.ToString()[..8]...</MudLink>
+                                }
+                                else
+                                {
+                                    <MudText Typo="Typo.body2">@entry.SourceId.ToString()[..8]...</MudText>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+    }
+}
+
+@code {
+    private string _therapistProfileIdText = string.Empty;
+    private DateTime? _dateFrom = DateTime.Today;
+    private DateTime? _dateTo = DateTime.Today.AddDays(6);
+    private List<CalendarEntryModel> _entries;
+    private bool _loading;
+    private string _error = string.Empty;
+
+    private async Task LoadCalendar()
+    {
+        _error = string.Empty;
+
+        if (!Guid.TryParse(_therapistProfileIdText, out var profileId))
+        {
+            _error = "Enter a valid therapist profile ID.";
+            return;
+        }
+
+        if (!_dateFrom.HasValue || !_dateTo.HasValue)
+        {
+            _error = "Both dates are required.";
+            return;
+        }
+
+        _loading = true;
+        var result = await SessionApi.GetCalendarAsync(profileId, _dateFrom.Value, _dateTo.Value);
+        _entries = result.Items;
+        _loading = false;
+    }
+}

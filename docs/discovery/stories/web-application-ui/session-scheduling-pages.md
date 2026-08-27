@@ -1,7 +1,7 @@
 ---
 key: MN-42
 type: story
-status: backlog
+status: in-progress
 epic: MN-8
 points: 5
 priority: minor
@@ -56,3 +56,12 @@ relates:
 * Depends on MN-40 (scaffold) and MN-41 (client pages for client selector reuse).
 * MudBlazor does not have a built-in calendar component; may need a custom grid
   or a third-party Blazor calendar library.
+
+## Artifacts and references
+
+* Models - src/MindNova.Web/Models/SessionModels.cs
+* API service - src/MindNova.Web/Services/SessionApiService.cs
+* List page - src/MindNova.Web/Pages/Sessions/List.razor
+* Create page - src/MindNova.Web/Pages/Sessions/Create.razor
+* Edit page - src/MindNova.Web/Pages/Sessions/Edit.razor
+* Calendar view - src/MindNova.Web/Pages/Calendar/CalendarView.razor

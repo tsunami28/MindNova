@@ -1,0 +1,102 @@
+@page "/sessions/create"
+@attribute [Authorize]
+@inject SessionApiService SessionApi
+@inject ClientApiService ClientApi
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Create Session</MudText>
+
+<MudCard>
+    <MudCardContent>
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+        }
+        <MudForm @ref="_form" @bind-IsValid="_formValid">
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.TherapistUserId" Label="Therapist User ID"
+                                  Required="true" RequiredError="Therapist is required" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_clientIdText" Label="Client ID"
+                                  Required="true" RequiredError="Client is required"
+                                  HelperText="Enter the client's GUID" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker @bind-Date="_scheduledDate" Label="Date"
+                                   Required="true" RequiredError="Date is required" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="_scheduledTime" Label="Time"
+                                   Required="true" RequiredError="Time is required" />
+                </MudItem>
+                <MudItem xs="4">
+                    <MudNumericField @bind-Value="_model.DurationMinutes" Label="Duration (minutes)"
+                                     Min="1" Required="true" />
+                </MudItem>
+                <MudItem xs="4">
+                    <MudSelect @bind-Value="_model.SessionType" Label="Session Type" Required="true">
+                        <MudSelectItem Value="@("Individual")">Individual</MudSelectItem>
+                        <MudSelectItem Value="@("Group")">Group</MudSelectItem>
+                        <MudSelectItem Value="@("Intake")">Intake</MudSelectItem>
+                        <MudSelectItem Value="@("FollowUp")">Follow Up</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.Notes" Label="Notes" Lines="3" />
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton OnClick="@(() => Navigation.NavigateTo("/sessions"))">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@HandleSubmit"
+                   Disabled="@(!_formValid || _saving)">
+            @if (_saving) { <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" /> }
+            Create
+        </MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    private MudForm _form;
+    private CreateSessionModel _model = new();
+    private string _clientIdText = string.Empty;
+    private DateTime? _scheduledDate;
+    private TimeSpan? _scheduledTime;
+    private bool _formValid;
+    private bool _saving;
+    private string _error = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        await _form.Validate();
+        if (!_formValid) return;
+
+        if (!Guid.TryParse(_clientIdText, out var clientId))
+        {
+            _error = "Client ID must be a valid GUID.";
+            return;
+        }
+
+        _model.ClientId = clientId;
+        _model.ScheduledAt = _scheduledDate?.Date.Add(_scheduledTime ?? TimeSpan.Zero);
+
+        _saving = true;
+        _error = string.Empty;
+
+        var (session, error) = await SessionApi.CreateSessionAsync(_model);
+
+        if (error != null)
+        {
+            _error = error;
+            _saving = false;
+            return;
+        }
+
+        Snackbar.Add("Session created successfully", Severity.Success);
+        Navigation.NavigateTo("/sessions");
+    }
+}
