@@ -60,3 +60,4 @@ relates:
 * Create page - src/MindNova.Web/Pages/Clients/Create.razor
 * Edit page - src/MindNova.Web/Pages/Clients/Edit.razor
 * Detail page - src/MindNova.Web/Pages/Clients/Detail.razor
+* PR - https://github.com/tsunami28/MindNova/pull/40
