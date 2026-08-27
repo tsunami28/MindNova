@@ -65,3 +65,4 @@ relates:
 * Create page - src/MindNova.Web/Pages/Sessions/Create.razor
 * Edit page - src/MindNova.Web/Pages/Sessions/Edit.razor
 * Calendar view - src/MindNova.Web/Pages/Calendar/CalendarView.razor
+* PR - https://github.com/tsunami28/MindNova/pull/41
