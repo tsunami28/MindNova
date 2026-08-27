@@ -1,0 +1,156 @@
+@page "/reports"
+@attribute [Authorize]
+@inject ReportApiService ReportApi
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4" Class="mb-4">Reports Dashboard</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="4">
+        <MudDatePicker @bind-Date="_dateFrom" Label="From" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudDatePicker @bind-Date="_dateTo" Label="To" />
+    </MudItem>
+    <MudItem xs="4" Class="d-flex align-end gap-2">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@LoadData">Load</MudButton>
+    </MudItem>
+</MudGrid>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_practiceStats != null)
+{
+    <MudText Typo="Typo.h5" Class="mb-3">Practice Statistics</MudText>
+
+    <MudGrid Class="mb-4">
+        <MudItem xs="4" md="2">
+            <MudCard>
+                <MudCardContent Class="text-center">
+                    <MudText Typo="Typo.h4">@_practiceStats.TotalSessions</MudText>
+                    <MudText Typo="Typo.caption">Total Sessions</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudCard>
+                <MudCardContent Class="text-center">
+                    <MudText Typo="Typo.h4" Color="Color.Success">@_practiceStats.CompletedCount</MudText>
+                    <MudText Typo="Typo.caption">Completed</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudCard>
+                <MudCardContent Class="text-center">
+                    <MudText Typo="Typo.h4" Color="Color.Error">@_practiceStats.NoShowCount</MudText>
+                    <MudText Typo="Typo.caption">No Shows</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudCard>
+                <MudCardContent Class="text-center">
+                    <MudText Typo="Typo.h4" Color="Color.Warning">@_practiceStats.CancelledCount</MudText>
+                    <MudText Typo="Typo.caption">Cancelled</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudCard>
+                <MudCardContent Class="text-center">
+                    <MudText Typo="Typo.h4">@(_practiceStats.NoShowRate)%</MudText>
+                    <MudText Typo="Typo.caption">No-Show Rate</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4" md="2">
+            <MudCard>
+                <MudCardContent Class="text-center">
+                    <MudText Typo="Typo.h4" Color="Color.Info">@_practiceStats.NewClientsCount</MudText>
+                    <MudText Typo="Typo.caption">New Clients</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Class="mb-2">
+        <MudItem xs="6">
+            <MudText Typo="Typo.h5">Therapist Utilisation</MudText>
+        </MudItem>
+        <MudItem xs="6" Class="d-flex justify-end gap-2">
+            <MudButton Variant="Variant.Outlined" Size="Size.Small"
+                       Href="@ReportApi.GetPracticeStatsCsvUrl(_dateFrom.Value, _dateTo.Value)" Target="_blank">
+                Practice CSV
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small"
+                       Href="@ReportApi.GetTherapistStatsCsvUrl(_dateFrom.Value, _dateTo.Value)" Target="_blank">
+                Therapist CSV
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+
+    @if (_therapistStats != null && _therapistStats.Items.Count > 0)
+    {
+        <MudTable Items="@_therapistStats.Items" Hover="true" Striped="true" Dense="true">
+            <HeaderContent>
+                <MudTh>Therapist</MudTh>
+                <MudTh>Sessions</MudTh>
+                <MudTh>Completed</MudTh>
+                <MudTh>No Shows</MudTh>
+                <MudTh>Cancelled</MudTh>
+                <MudTh>Slots</MudTh>
+                <MudTh>Utilisation</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.TherapistName</MudTd>
+                <MudTd>@context.TotalSessions</MudTd>
+                <MudTd>@context.CompletedCount</MudTd>
+                <MudTd>@context.NoShowCount</MudTd>
+                <MudTd>@context.CancelledCount</MudTd>
+                <MudTd>@context.AvailableSlotCount</MudTd>
+                <MudTd>
+                    <MudProgressLinear Value="@context.UtilisationRate" Max="100" Color="Color.Primary"
+                                       Size="Size.Medium" Rounded="true" />
+                    <MudText Typo="Typo.caption">@(context.UtilisationRate)%</MudText>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary">No therapist data for this range.</MudText>
+    }
+}
+else if (!_hasLoaded)
+{
+    <MudText Typo="Typo.body1" Color="Color.Secondary">Select a date range and click Load.</MudText>
+}
+else
+{
+    <MudText Typo="Typo.body1" Color="Color.Secondary">No data for the selected range.</MudText>
+}
+
+@code {
+    private DateTime? _dateFrom = DateTime.Today.AddDays(-30);
+    private DateTime? _dateTo = DateTime.Today;
+    private PracticeStatsModel _practiceStats;
+    private TherapistStatsModel _therapistStats;
+    private bool _loading;
+    private bool _hasLoaded;
+
+    private async Task LoadData()
+    {
+        if (!_dateFrom.HasValue || !_dateTo.HasValue) return;
+
+        _loading = true;
+        _hasLoaded = true;
+
+        _practiceStats = await ReportApi.GetPracticeStatsAsync(_dateFrom.Value, _dateTo.Value);
+        _therapistStats = await ReportApi.GetTherapistStatsAsync(_dateFrom.Value, _dateTo.Value);
+
+        _loading = false;
+    }
+}
