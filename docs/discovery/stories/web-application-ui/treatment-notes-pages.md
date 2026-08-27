@@ -1,7 +1,7 @@
 ---
 key: MN-43
 type: story
-status: backlog
+status: in-progress
 epic: MN-8
 points: 5
 priority: minor
@@ -54,3 +54,14 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-40 (scaffold) and MN-42 (session pages for navigation context).
+
+## Artifacts and references
+
+* Models - src/MindNova.Web/Models/NoteModels.cs
+* API service - src/MindNova.Web/Services/NoteApiService.cs
+* Session notes page - src/MindNova.Web/Pages/Notes/SessionNotes.razor
+* Create note page - src/MindNova.Web/Pages/Notes/CreateNote.razor
+* Edit note page - src/MindNova.Web/Pages/Notes/EditNote.razor
+* Client notes page - src/MindNova.Web/Pages/Notes/ClientNotes.razor
+* Delete dialog - src/MindNova.Web/Shared/DeleteConfirmDialog.razor
+* PR - https://github.com/tsunami28/MindNova/pull/42

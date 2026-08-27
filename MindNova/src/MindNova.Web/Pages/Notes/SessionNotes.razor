@@ -1,0 +1,130 @@
+@page "/sessions/{SessionId:guid}/notes"
+@attribute [Authorize]
+@inject NoteApiService NoteApi
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h4" Class="mb-4">Session Notes</MudText>
+
+@if (_accessDenied)
+{
+    <MudAlert Severity="Severity.Warning">You are not authorised to view notes for this session.</MudAlert>
+}
+else
+{
+    <MudGrid Class="mb-4">
+        <MudItem xs="8">
+            <AuthorizeView Roles="Admin" Context="adminCtx">
+                <MudSwitch Value="_includeDeleted" Label="Show deleted notes" Color="Color.Warning"
+                           T="bool" ValueChanged="@OnIncludeDeletedChanged" />
+            </AuthorizeView>
+        </MudItem>
+        <MudItem xs="4" Class="d-flex justify-end">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       Href="@($"/sessions/{SessionId}/notes/create")">New Note</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    @if (_loading)
+    {
+        <MudProgressCircular Indeterminate="true" />
+    }
+    else if (_notes == null || _notes.Count == 0)
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary">No notes for this session.</MudText>
+    }
+    else
+    {
+        @foreach (var note in _notes)
+        {
+            <MudCard Class="mb-3" Outlined="true" Style="@(note.IsDeleted ? "opacity: 0.5;" : "")">
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="8">
+                            <MudText Typo="Typo.subtitle2">Presenting Issue</MudText>
+                            <MudText>@note.PresentingIssue</MudText>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudText Typo="Typo.subtitle2">Progress Rating</MudText>
+                            <MudRating ReadOnly="true" SelectedValue="@note.ProgressRating" MaxValue="10" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.subtitle2">Interventions</MudText>
+                            <MudText>@(string.IsNullOrEmpty(note.Interventions) ? "-" : note.Interventions)</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.subtitle2">Homework</MudText>
+                            <MudText>@(string.IsNullOrEmpty(note.Homework) ? "-" : note.Homework)</MudText>
+                        </MudItem>
+                        @if (!string.IsNullOrEmpty(note.FreeText))
+                        {
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.subtitle2">Free Text</MudText>
+                                <MudText>@note.FreeText</MudText>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                    @if (note.IsDeleted)
+                    {
+                        <MudChip T="string" Color="Color.Error" Size="Size.Small" Class="mt-2">Deleted</MudChip>
+                    }
+                </MudCardContent>
+                <MudCardActions>
+                    <MudText Typo="Typo.caption" Class="ml-2">@note.CreatedAt.ToString("yyyy-MM-dd HH:mm")</MudText>
+                    <MudSpacer />
+                    @if (!note.IsDeleted)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                                       OnClick="@(() => Navigation.NavigateTo($"/notes/{note.Id}/edit"))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                                       OnClick="@(() => ConfirmDelete(note.Id))" />
+                    }
+                </MudCardActions>
+            </MudCard>
+        }
+    }
+}
+
+@code {
+    [Parameter] public Guid SessionId { get; set; }
+
+    private List<NoteModel> _notes;
+    private bool _loading = true;
+    private bool _includeDeleted;
+    private bool _accessDenied;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotes();
+    }
+
+    private async Task OnIncludeDeletedChanged(bool value)
+    {
+        _includeDeleted = value;
+        await LoadNotes();
+    }
+
+    private async Task LoadNotes()
+    {
+        _loading = true;
+        _notes = await NoteApi.GetSessionNotesAsync(SessionId, _includeDeleted);
+        _accessDenied = _notes == null;
+        _loading = false;
+    }
+
+    private async Task ConfirmDelete(Guid noteId)
+    {
+        var parameters = new DialogParameters<DeleteConfirmDialog>
+        {
+            { x => x.ContentText, "This note will be soft-deleted. The audit trail is preserved and an Admin can still view it." },
+            { x => x.ButtonText, "Delete" }
+        };
+        var dialog = await DialogService.ShowAsync<DeleteConfirmDialog>("Delete Note", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await NoteApi.DeleteNoteAsync(noteId);
+            await LoadNotes();
+        }
+    }
+}
