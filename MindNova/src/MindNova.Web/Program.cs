@@ -10,6 +10,7 @@ builder.Services.AddMudServices();
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ClientApiService>();
+builder.Services.AddScoped<SessionApiService>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 
 var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5000";
