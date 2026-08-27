@@ -1,0 +1,144 @@
+@page "/therapists/{TherapistProfileId:guid}/availability"
+@attribute [Authorize(Roles = "Admin")]
+@inject TherapistApiService TherapistApi
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Availability Slots</MudText>
+
+<MudButton Variant="Variant.Outlined" Class="mb-4"
+           OnClick="@(() => Navigation.NavigateTo($"/therapists/{TherapistProfileId}"))">Back to Profile</MudButton>
+
+<MudCard Class="mb-4">
+    <MudCardHeader>
+        <MudText Typo="Typo.h6">Add Slot</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+        }
+        <MudGrid>
+            <MudItem xs="3">
+                <MudSwitch @bind-Value="_newSlot.IsRecurring" Label="Recurring" T="bool" Color="Color.Primary" />
+            </MudItem>
+            @if (_newSlot.IsRecurring)
+            {
+                <MudItem xs="3">
+                    <MudSelect @bind-Value="_newSlot.DayOfWeek" Label="Day of Week" T="int?">
+                        <MudSelectItem Value="@((int?)0)">Sunday</MudSelectItem>
+                        <MudSelectItem Value="@((int?)1)">Monday</MudSelectItem>
+                        <MudSelectItem Value="@((int?)2)">Tuesday</MudSelectItem>
+                        <MudSelectItem Value="@((int?)3)">Wednesday</MudSelectItem>
+                        <MudSelectItem Value="@((int?)4)">Thursday</MudSelectItem>
+                        <MudSelectItem Value="@((int?)5)">Friday</MudSelectItem>
+                        <MudSelectItem Value="@((int?)6)">Saturday</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+            }
+            else
+            {
+                <MudItem xs="3">
+                    <MudDatePicker @bind-Date="_specificDate" Label="Date" />
+                </MudItem>
+            }
+            <MudItem xs="2">
+                <MudTimePicker @bind-Time="_startTime" Label="Start" />
+            </MudItem>
+            <MudItem xs="2">
+                <MudTimePicker @bind-Time="_endTime" Label="End" />
+            </MudItem>
+            <MudItem xs="2" Class="d-flex align-end">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddSlot">Add</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_slots.Count == 0)
+{
+    <MudText Typo="Typo.body1" Color="Color.Secondary">No availability slots defined.</MudText>
+}
+else
+{
+    <MudTable Items="@_slots" Hover="true" Striped="true" Dense="true">
+        <HeaderContent>
+            <MudTh>Type</MudTh>
+            <MudTh>Day/Date</MudTh>
+            <MudTh>Time</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@(context.IsRecurring ? "Recurring" : "One-off")</MudTd>
+            <MudTd>
+                @if (context.IsRecurring)
+                {
+                    @(((System.DayOfWeek)(context.DayOfWeek ?? 0)).ToString())
+                }
+                else
+                {
+                    @(context.SpecificDate?.ToString("yyyy-MM-dd") ?? "-")
+                }
+            </MudTd>
+            <MudTd>@context.StartTime.ToString(@"hh\:mm") - @context.EndTime.ToString(@"hh\:mm")</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => DeleteSlot(context.Id))" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    [Parameter] public Guid TherapistProfileId { get; set; }
+
+    private List<AvailabilitySlotModel> _slots = new();
+    private CreateSlotModel _newSlot = new();
+    private DateTime? _specificDate;
+    private TimeSpan? _startTime = new(9, 0, 0);
+    private TimeSpan? _endTime = new(17, 0, 0);
+    private bool _loading = true;
+    private string _error = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSlots();
+    }
+
+    private async Task LoadSlots()
+    {
+        _loading = true;
+        _slots = await TherapistApi.GetSlotsAsync(TherapistProfileId);
+        _loading = false;
+    }
+
+    private async Task AddSlot()
+    {
+        _error = string.Empty;
+        _newSlot.StartTime = _startTime ?? new TimeSpan(9, 0, 0);
+        _newSlot.EndTime = _endTime ?? new TimeSpan(17, 0, 0);
+        if (!_newSlot.IsRecurring)
+        {
+            _newSlot.SpecificDate = _specificDate;
+            _newSlot.DayOfWeek = null;
+        }
+
+        var (slot, error) = await TherapistApi.CreateSlotAsync(TherapistProfileId, _newSlot);
+        if (error != null) { _error = error; return; }
+
+        Snackbar.Add("Slot added", Severity.Success);
+        _newSlot = new CreateSlotModel();
+        await LoadSlots();
+    }
+
+    private async Task DeleteSlot(Guid slotId)
+    {
+        await TherapistApi.DeleteSlotAsync(slotId);
+        Snackbar.Add("Slot deleted", Severity.Warning);
+        await LoadSlots();
+    }
+}

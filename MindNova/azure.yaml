@@ -9,6 +9,10 @@ services:
     project: src/MindNova.Api
     host: appservice
     language: dotnet
+  web:
+    project: src/MindNova.Web
+    host: appservice
+    language: dotnet
 
 infra:
   provider: bicep

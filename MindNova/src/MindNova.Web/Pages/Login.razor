@@ -1,0 +1,58 @@
+@page "/login"
+@layout MinimalLayout
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h4">MindNova Login</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+            }
+            <MudTextField @bind-Value="_email" Label="Email" InputType="InputType.Email"
+                          Required="true" RequiredError="Email is required" Class="mb-4" />
+            <MudTextField @bind-Value="_password" Label="Password" InputType="InputType.Password"
+                          Required="true" RequiredError="Password is required" Class="mb-4" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                       OnClick="@HandleLogin" Disabled="@_loading">
+                @if (_loading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                }
+                Login
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private string _email = string.Empty;
+    private string _password = string.Empty;
+    private string _error = string.Empty;
+    private bool _loading;
+
+    private async Task HandleLogin()
+    {
+        _error = string.Empty;
+        _loading = true;
+
+        var (success, error) = await AuthService.LoginAsync(_email, _password);
+
+        if (success)
+        {
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            _error = error ?? "Login failed.";
+        }
+
+        _loading = false;
+    }
+}

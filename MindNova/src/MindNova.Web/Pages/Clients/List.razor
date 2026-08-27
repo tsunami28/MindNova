@@ -1,0 +1,77 @@
+@page "/clients"
+@attribute [Authorize]
+@inject ClientApiService ClientApi
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4" Class="mb-4">Clients</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="8">
+        <MudTextField @bind-Value="_search" Label="Search by name" Adornment="Adornment.End"
+                      AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="@SearchClients"
+                      OnKeyDown="@OnSearchKeyDown" Immediate="true" />
+    </MudItem>
+    <MudItem xs="4" Class="d-flex align-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/clients/create">
+            New Client
+        </MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudTable ServerData="@LoadClients" @ref="_table" Hover="true" Striped="true"
+          Loading="@_loading" LoadingProgressColor="Color.Primary">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Phone</MudTh>
+        <MudTh>Created</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.FirstName @context.LastName</MudTd>
+        <MudTd>@context.Email</MudTd>
+        <MudTd>@context.Phone</MudTd>
+        <MudTd>@context.CreatedAt.ToString("yyyy-MM-dd")</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small"
+                           OnClick="@(() => Navigation.NavigateTo($"/clients/{context.Id}"))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Navigation.NavigateTo($"/clients/{context.Id}/edit"))" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private MudTable<ClientModel> _table;
+    private string _search = string.Empty;
+    private bool _loading;
+
+    private async Task<TableData<ClientModel>> LoadClients(TableState state, CancellationToken ct)
+    {
+        _loading = true;
+        var page = state.Page + 1;
+        var pageSize = state.PageSize;
+        var result = await ClientApi.GetClientsAsync(_search, page, pageSize);
+        _loading = false;
+
+        return new TableData<ClientModel>
+        {
+            Items = result.Items,
+            TotalItems = result.TotalCount
+        };
+    }
+
+    private async Task SearchClients()
+    {
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnSearchKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await SearchClients();
+    }
+}

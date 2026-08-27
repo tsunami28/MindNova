@@ -1,7 +1,7 @@
 ---
 key: MN-8
 type: epic
-status: backlog
+status: done
 priority: minor
 labels: [MindNova]
 relates:
@@ -52,3 +52,7 @@ relates:
   detail in their ACs.
 * Accessibility requirements (WCAG) not yet defined; V1 targets functional
   correctness, accessibility as a follow-up.
+
+## Decisions and ADRs
+
+* 2026-07-29: UI technology decided as Blazor Server with MudBlazor - see docs/adrs/0010-blazor-server-for-web-ui.md

@@ -1,0 +1,79 @@
+@page "/clients/{ClientId:guid}/notes"
+@attribute [Authorize(Roles = "Admin,Therapist")]
+@inject NoteApiService NoteApi
+
+<MudText Typo="Typo.h4" Class="mb-4">Client Notes</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="4">
+        <MudDatePicker @bind-Date="_dateFrom" Label="From" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudDatePicker @bind-Date="_dateTo" Label="To" />
+    </MudItem>
+    <MudItem xs="4" Class="d-flex align-end">
+        <MudButton Variant="Variant.Outlined" OnClick="@ApplyFilters">Filter</MudButton>
+    </MudItem>
+</MudGrid>
+
+@if (_accessDenied)
+{
+    <MudAlert Severity="Severity.Warning">You are not authorised to view notes for this client.</MudAlert>
+}
+else if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_result == null || _result.Items.Count == 0)
+{
+    <MudText Typo="Typo.body1" Color="Color.Secondary">No notes found for this date range.</MudText>
+}
+else
+{
+    <MudTable Items="@_result.Items" Hover="true" Striped="true">
+        <HeaderContent>
+            <MudTh>Date</MudTh>
+            <MudTh>Presenting Issue</MudTh>
+            <MudTh>Rating</MudTh>
+            <MudTh>Session</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.CreatedAt.ToString("yyyy-MM-dd")</MudTd>
+            <MudTd>@(context.PresentingIssue.Length > 80 ? context.PresentingIssue[..80] + "..." : context.PresentingIssue)</MudTd>
+            <MudTd>@context.ProgressRating / 10</MudTd>
+            <MudTd>
+                <MudLink Href="@($"/sessions/{context.SessionId}/notes")">View</MudLink>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+
+    <MudText Typo="Typo.caption" Class="mt-2">Showing @_result.Items.Count of @_result.TotalCount notes</MudText>
+}
+
+@code {
+    [Parameter] public Guid ClientId { get; set; }
+
+    private PagedResult<NoteModel> _result;
+    private DateTime? _dateFrom;
+    private DateTime? _dateTo;
+    private bool _loading = true;
+    private bool _accessDenied;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotes();
+    }
+
+    private async Task LoadNotes()
+    {
+        _loading = true;
+        _result = await NoteApi.GetClientNotesAsync(ClientId, _dateFrom, _dateTo, 1, 20);
+        _accessDenied = _result == null;
+        _loading = false;
+    }
+
+    private async Task ApplyFilters() => await LoadNotes();
+}

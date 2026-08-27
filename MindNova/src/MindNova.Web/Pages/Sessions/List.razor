@@ -1,0 +1,81 @@
+@page "/sessions"
+@attribute [Authorize]
+@inject SessionApiService SessionApi
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4" Class="mb-4">Sessions</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="3">
+        <MudSelect @bind-Value="_statusFilter" Label="Status" Clearable="true">
+            <MudSelectItem Value="@("Scheduled")">Scheduled</MudSelectItem>
+            <MudSelectItem Value="@("Completed")">Completed</MudSelectItem>
+            <MudSelectItem Value="@("Cancelled")">Cancelled</MudSelectItem>
+            <MudSelectItem Value="@("NoShow")">No Show</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="3">
+        <MudDatePicker @bind-Date="_dateFrom" Label="From" />
+    </MudItem>
+    <MudItem xs="3">
+        <MudDatePicker @bind-Date="_dateTo" Label="To" />
+    </MudItem>
+    <MudItem xs="3" Class="d-flex align-end gap-2">
+        <MudButton Variant="Variant.Outlined" OnClick="@ApplyFilters">Filter</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/sessions/create">New Session</MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudTable ServerData="@LoadSessions" @ref="_table" Hover="true" Striped="true"
+          Loading="@_loading" LoadingProgressColor="Color.Primary">
+    <HeaderContent>
+        <MudTh>Scheduled</MudTh>
+        <MudTh>Duration</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ScheduledAt.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd>@context.DurationMinutes min</MudTd>
+        <MudTd>@context.SessionType</MudTd>
+        <MudTd>
+            <MudChip T="string" Size="Size.Small" Color="@GetStatusColor(context.Status)">@context.Status</MudChip>
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Navigation.NavigateTo($"/sessions/{context.Id}/edit"))" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private MudTable<SessionModel> _table;
+    private string _statusFilter;
+    private DateTime? _dateFrom;
+    private DateTime? _dateTo;
+    private bool _loading;
+
+    private async Task<TableData<SessionModel>> LoadSessions(TableState state, CancellationToken ct)
+    {
+        _loading = true;
+        var result = await SessionApi.GetSessionsAsync(
+            null, null, _statusFilter, _dateFrom, _dateTo, state.Page + 1, state.PageSize);
+        _loading = false;
+        return new TableData<SessionModel> { Items = result.Items, TotalItems = result.TotalCount };
+    }
+
+    private async Task ApplyFilters() => await _table.ReloadServerData();
+
+    private static Color GetStatusColor(string status) => status switch
+    {
+        "Scheduled" => Color.Info,
+        "Completed" => Color.Success,
+        "Cancelled" => Color.Warning,
+        "NoShow" => Color.Error,
+        _ => Color.Default
+    };
+}

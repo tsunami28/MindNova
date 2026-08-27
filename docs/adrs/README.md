@@ -39,3 +39,4 @@ Do **not** write an ADR for routine work covered by the conventions in `docs/con
 |---|---|---|
 | [0008](0008-azure-sql-database-serverless.md) | Azure SQL Database (serverless) as the MindNova backend database | Accepted |
 | [0009](0009-avm-registry-modules-for-bicep.md) | Use Azure Verified Modules from the Bicep public registry | Accepted |
+| [0010](0010-blazor-server-for-web-ui.md) | Blazor Server for Web Application UI | Accepted |

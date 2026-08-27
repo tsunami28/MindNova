@@ -1,0 +1,94 @@
+@page "/clients/create"
+@attribute [Authorize]
+@inject ClientApiService ClientApi
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Create Client</MudText>
+
+<MudCard>
+    <MudCardContent>
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+        }
+        <MudForm @ref="_form" @bind-IsValid="_formValid">
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.FirstName" Label="First Name"
+                                  Required="true" RequiredError="First name is required" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.LastName" Label="Last Name"
+                                  Required="true" RequiredError="Last name is required" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.Email" Label="Email" InputType="InputType.Email"
+                                  Required="true" RequiredError="Email is required"
+                                  Validation="@(new Func<string, string>(ValidateEmail))" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker @bind-Date="_model.DateOfBirth" Label="Date of Birth"
+                                   Required="true" RequiredError="Date of birth is required" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.Phone" Label="Phone"
+                                  Required="true" RequiredError="Phone is required" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.Address" Label="Address" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.EmergencyContactName" Label="Emergency Contact Name" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_model.EmergencyContactPhone" Label="Emergency Contact Phone" />
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton OnClick="@(() => Navigation.NavigateTo("/clients"))">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@HandleSubmit"
+                   Disabled="@(!_formValid || _saving)">
+            @if (_saving) { <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" /> }
+            Save
+        </MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    private MudForm _form;
+    private CreateClientModel _model = new();
+    private bool _formValid;
+    private bool _saving;
+    private string _error = string.Empty;
+
+    private string ValidateEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email)) return "Email is required";
+        if (!email.Contains('@')) return "Invalid email format";
+        return null;
+    }
+
+    private async Task HandleSubmit()
+    {
+        await _form.Validate();
+        if (!_formValid) return;
+
+        _saving = true;
+        _error = string.Empty;
+
+        var (client, error) = await ClientApi.CreateClientAsync(_model);
+
+        if (error != null)
+        {
+            _error = error;
+            _saving = false;
+            return;
+        }
+
+        Snackbar.Add("Client created successfully", Severity.Success);
+        Navigation.NavigateTo($"/clients/{client.Id}");
+    }
+}

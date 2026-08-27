@@ -1,0 +1,78 @@
+@page "/therapists/{Id:guid}/edit"
+@attribute [Authorize(Roles = "Admin")]
+@inject TherapistApiService TherapistApi
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Edit Therapist Profile</MudText>
+
+@if (_model == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+            }
+            <MudForm @ref="_form" @bind-IsValid="_formValid">
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField @bind-Value="_specialisationsText" Label="Specialisations"
+                                      HelperText="Comma-separated" />
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudNumericField @bind-Value="_model.MaxCaseload" Label="Max Caseload"
+                                         Min="1" Required="true" />
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton OnClick="@(() => Navigation.NavigateTo($"/therapists/{Id}"))">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@HandleSubmit"
+                       Disabled="@(!_formValid || _saving)">
+                @if (_saving) { <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" /> }
+                Save
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private MudForm _form;
+    private UpdateTherapistModel _model;
+    private string _specialisationsText = string.Empty;
+    private bool _formValid;
+    private bool _saving;
+    private string _error = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var profile = await TherapistApi.GetTherapistAsync(Id);
+        if (profile == null) return;
+        _specialisationsText = string.Join(", ", profile.Specialisations);
+        _model = new UpdateTherapistModel { Specialisations = profile.Specialisations, MaxCaseload = profile.MaxCaseload };
+    }
+
+    private async Task HandleSubmit()
+    {
+        await _form.Validate();
+        if (!_formValid) return;
+
+        _model.Specialisations = _specialisationsText.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+        _saving = true;
+        _error = string.Empty;
+
+        var (profile, error) = await TherapistApi.UpdateTherapistAsync(Id, _model);
+        if (error != null) { _error = error; _saving = false; return; }
+
+        Snackbar.Add("Therapist profile updated", Severity.Success);
+        Navigation.NavigateTo($"/therapists/{Id}");
+    }
+}
