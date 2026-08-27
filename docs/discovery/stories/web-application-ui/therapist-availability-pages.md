@@ -66,3 +66,4 @@ relates:
 * Detail page - src/MindNova.Web/Pages/Therapists/Detail.razor
 * Availability page - src/MindNova.Web/Pages/Therapists/Availability.razor
 * Caseload page - src/MindNova.Web/Pages/Therapists/Caseload.razor
+* PR - https://github.com/tsunami28/MindNova/pull/44
