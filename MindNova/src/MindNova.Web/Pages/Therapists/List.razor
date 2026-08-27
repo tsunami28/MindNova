@@ -1,0 +1,62 @@
+@page "/therapists"
+@attribute [Authorize(Roles = "Admin")]
+@inject TherapistApiService TherapistApi
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4" Class="mb-4">Therapists</MudText>
+
+<MudGrid Class="mb-4">
+    <MudItem xs="8">
+        <MudSwitch Value="_includeInactive" Label="Include inactive" Color="Color.Warning"
+                   T="bool" ValueChanged="@OnIncludeInactiveChanged" />
+    </MudItem>
+    <MudItem xs="4" Class="d-flex justify-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/therapists/create">New Therapist</MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudTable ServerData="@LoadTherapists" @ref="_table" Hover="true" Striped="true">
+    <HeaderContent>
+        <MudTh>User ID</MudTh>
+        <MudTh>Specialisations</MudTh>
+        <MudTh>Caseload</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.UserId[..8]...</MudTd>
+        <MudTd>@string.Join(", ", context.Specialisations)</MudTd>
+        <MudTd>@context.MaxCaseload</MudTd>
+        <MudTd>
+            <MudChip T="string" Size="Size.Small" Color="@(context.IsActive ? Color.Success : Color.Warning)">
+                @(context.IsActive ? "Active" : "Inactive")
+            </MudChip>
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small"
+                           OnClick="@(() => Navigation.NavigateTo($"/therapists/{context.Id}"))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Navigation.NavigateTo($"/therapists/{context.Id}/edit"))" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private MudTable<TherapistModel> _table;
+    private bool _includeInactive;
+
+    private async Task<TableData<TherapistModel>> LoadTherapists(TableState state, CancellationToken ct)
+    {
+        var result = await TherapistApi.GetTherapistsAsync(state.Page + 1, state.PageSize, _includeInactive);
+        return new TableData<TherapistModel> { Items = result.Items, TotalItems = result.TotalCount };
+    }
+
+    private async Task OnIncludeInactiveChanged(bool value)
+    {
+        _includeInactive = value;
+        await _table.ReloadServerData();
+    }
+}

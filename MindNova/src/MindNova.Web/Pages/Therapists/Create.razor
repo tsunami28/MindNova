@@ -1,0 +1,66 @@
+@page "/therapists/create"
+@attribute [Authorize(Roles = "Admin")]
+@inject TherapistApiService TherapistApi
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Create Therapist Profile</MudText>
+
+<MudCard>
+    <MudCardContent>
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_error</MudAlert>
+        }
+        <MudForm @ref="_form" @bind-IsValid="_formValid">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.UserId" Label="User ID"
+                                  Required="true" RequiredError="User ID is required"
+                                  HelperText="The ASP.NET Identity user ID" />
+                </MudItem>
+                <MudItem xs="8">
+                    <MudTextField @bind-Value="_specialisationsText" Label="Specialisations"
+                                  HelperText="Comma-separated (e.g. CBT, EMDR, DBT)" />
+                </MudItem>
+                <MudItem xs="4">
+                    <MudNumericField @bind-Value="_model.MaxCaseload" Label="Max Caseload"
+                                     Min="1" Required="true" />
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton OnClick="@(() => Navigation.NavigateTo("/therapists"))">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@HandleSubmit"
+                   Disabled="@(!_formValid || _saving)">
+            @if (_saving) { <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" /> }
+            Save
+        </MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    private MudForm _form;
+    private CreateTherapistModel _model = new();
+    private string _specialisationsText = "CBT";
+    private bool _formValid;
+    private bool _saving;
+    private string _error = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        await _form.Validate();
+        if (!_formValid) return;
+
+        _model.Specialisations = _specialisationsText.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+        _saving = true;
+        _error = string.Empty;
+
+        var (profile, error) = await TherapistApi.CreateTherapistAsync(_model);
+        if (error != null) { _error = error; _saving = false; return; }
+
+        Snackbar.Add("Therapist profile created", Severity.Success);
+        Navigation.NavigateTo($"/therapists/{profile.Id}");
+    }
+}

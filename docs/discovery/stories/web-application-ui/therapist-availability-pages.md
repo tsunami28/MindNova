@@ -1,7 +1,7 @@
 ---
 key: MN-45
 type: story
-status: backlog
+status: in-progress
 epic: MN-8
 points: 5
 priority: minor
@@ -55,3 +55,15 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-40 (scaffold).
+
+## Artifacts and references
+
+* Models - src/MindNova.Web/Models/TherapistModels.cs
+* API service - src/MindNova.Web/Services/TherapistApiService.cs
+* List page - src/MindNova.Web/Pages/Therapists/List.razor
+* Create page - src/MindNova.Web/Pages/Therapists/Create.razor
+* Edit page - src/MindNova.Web/Pages/Therapists/Edit.razor
+* Detail page - src/MindNova.Web/Pages/Therapists/Detail.razor
+* Availability page - src/MindNova.Web/Pages/Therapists/Availability.razor
+* Caseload page - src/MindNova.Web/Pages/Therapists/Caseload.razor
+* PR - https://github.com/tsunami28/MindNova/pull/44

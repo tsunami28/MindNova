@@ -1,0 +1,79 @@
+@page "/therapists/{Id:guid}"
+@attribute [Authorize(Roles = "Admin")]
+@inject TherapistApiService TherapistApi
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudText Typo="Typo.h4" Class="mb-4">Therapist Details</MudText>
+
+@if (_profile == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <MudCard Class="mb-4">
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudText Typo="Typo.caption">User ID</MudText>
+                    <MudText>@_profile.UserId</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText Typo="Typo.caption">Specialisations</MudText>
+                    <MudText>@string.Join(", ", _profile.Specialisations)</MudText>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudText Typo="Typo.caption">Max Caseload</MudText>
+                    <MudText>@_profile.MaxCaseload</MudText>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudText Typo="Typo.caption">Status</MudText>
+                    <MudChip T="string" Color="@(_profile.IsActive ? Color.Success : Color.Warning)" Size="Size.Small">
+                        @(_profile.IsActive ? "Active" : "Inactive")
+                    </MudChip>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton OnClick="@(() => Navigation.NavigateTo("/therapists"))">Back</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick="@(() => Navigation.NavigateTo($"/therapists/{Id}/edit"))">Edit</MudButton>
+            @if (_profile.IsActive)
+            {
+                <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@ConfirmDeactivate">Deactivate</MudButton>
+            }
+            <MudButton Variant="Variant.Outlined" OnClick="@(() => Navigation.NavigateTo($"/therapists/{Id}/availability"))">
+                Availability
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private TherapistModel _profile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _profile = await TherapistApi.GetTherapistAsync(Id);
+    }
+
+    private async Task ConfirmDeactivate()
+    {
+        var parameters = new DialogParameters<DeleteConfirmDialog>
+        {
+            { x => x.ContentText, "This will deactivate the therapist profile. They will no longer appear in active lists." },
+            { x => x.ButtonText, "Deactivate" }
+        };
+        var dialog = await DialogService.ShowAsync<DeleteConfirmDialog>("Deactivate Therapist", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            _profile = await TherapistApi.DeactivateAsync(Id);
+            Snackbar.Add("Therapist deactivated", Severity.Warning);
+            StateHasChanged();
+        }
+    }
+}
