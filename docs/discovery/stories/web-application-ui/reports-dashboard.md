@@ -60,3 +60,4 @@ relates:
 * Models - src/MindNova.Web/Models/ReportModels.cs
 * API service - src/MindNova.Web/Services/ReportApiService.cs
 * Dashboard page - src/MindNova.Web/Pages/Reports/Dashboard.razor
+* PR - https://github.com/tsunami28/MindNova/pull/43
