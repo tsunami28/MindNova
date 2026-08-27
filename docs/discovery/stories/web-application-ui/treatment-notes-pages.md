@@ -64,3 +64,4 @@ relates:
 * Edit note page - src/MindNova.Web/Pages/Notes/EditNote.razor
 * Client notes page - src/MindNova.Web/Pages/Notes/ClientNotes.razor
 * Delete dialog - src/MindNova.Web/Shared/DeleteConfirmDialog.razor
+* PR - https://github.com/tsunami28/MindNova/pull/42
