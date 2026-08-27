@@ -1,7 +1,7 @@
 ---
 key: MN-40
 type: story
-status: in-progress
+status: done
 epic: MN-8
 points: 8
 priority: minor
