@@ -1,0 +1,100 @@
+@page "/clients/{Id:guid}"
+@attribute [Authorize]
+@inject ClientApiService ClientApi
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4" Class="mb-4">Client Details</MudText>
+
+@if (_client == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" md="8">
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Name</MudText>
+                            <MudText>@_client.FirstName @_client.LastName</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Email</MudText>
+                            <MudText>@_client.Email</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Phone</MudText>
+                            <MudText>@_client.Phone</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Date of Birth</MudText>
+                            <MudText>@_client.DateOfBirth.ToString("yyyy-MM-dd")</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Address</MudText>
+                            <MudText>@(string.IsNullOrEmpty(_client.Address) ? "-" : _client.Address)</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Assigned Therapist</MudText>
+                            <MudText>@(_client.AssignedTherapistId.HasValue ? _client.AssignedTherapistId.Value.ToString() : "Not assigned")</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Emergency Contact</MudText>
+                            <MudText>@(string.IsNullOrEmpty(_client.EmergencyContactName) ? "-" : $"{_client.EmergencyContactName} ({_client.EmergencyContactPhone})")</MudText>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption">Status</MudText>
+                            <MudChip T="string" Color="@(_client.IsArchived ? Color.Warning : Color.Success)" Size="Size.Small">
+                                @(_client.IsArchived ? "Archived" : "Active")
+                            </MudChip>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton OnClick="@(() => Navigation.NavigateTo("/clients"))">Back</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                               OnClick="@(() => Navigation.NavigateTo($"/clients/{Id}/edit"))">Edit</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <MudText Typo="Typo.h5" Class="mt-6 mb-4">Treatment Timeline</MudText>
+
+    @if (_timeline == null)
+    {
+        <MudProgressCircular Indeterminate="true" />
+    }
+    else if (_timeline.Count == 0)
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary">No timeline events yet.</MudText>
+    }
+    else
+    {
+        <MudTimeline TimelinePosition="TimelinePosition.Start">
+            @foreach (var evt in _timeline)
+            {
+                <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                    <MudText Typo="Typo.subtitle2">@evt.Date.ToString("yyyy-MM-dd") - @evt.EventType</MudText>
+                    <MudText Typo="Typo.body2">@evt.Summary</MudText>
+                </MudTimelineItem>
+            }
+        </MudTimeline>
+    }
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private ClientModel _client;
+    private List<TimelineEvent> _timeline;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = await ClientApi.GetClientAsync(Id);
+        if (_client != null)
+            _timeline = await ClientApi.GetTimelineAsync(Id);
+    }
+}

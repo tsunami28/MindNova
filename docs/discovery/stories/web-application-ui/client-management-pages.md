@@ -1,7 +1,7 @@
 ---
 key: MN-41
 type: story
-status: backlog
+status: in-progress
 epic: MN-8
 points: 5
 priority: minor
@@ -51,3 +51,13 @@ relates:
 ⚠️ Risks & Blockers
 
 * Depends on MN-40 (scaffold must exist first).
+
+## Artifacts and references
+
+* Models - src/MindNova.Web/Models/ClientModels.cs
+* API service - src/MindNova.Web/Services/ClientApiService.cs
+* List page - src/MindNova.Web/Pages/Clients/List.razor
+* Create page - src/MindNova.Web/Pages/Clients/Create.razor
+* Edit page - src/MindNova.Web/Pages/Clients/Edit.razor
+* Detail page - src/MindNova.Web/Pages/Clients/Detail.razor
+* PR - https://github.com/tsunami28/MindNova/pull/40
