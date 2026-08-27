@@ -1,0 +1,42 @@
+@page "/caseload"
+@attribute [Authorize]
+@inject ReportApiService ReportApi
+
+<MudText Typo="Typo.h4" Class="mb-4">Caseload Overview</MudText>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_stats == null || _stats.TherapistUtilisation.Count == 0)
+{
+    <MudText Typo="Typo.body1" Color="Color.Secondary">No caseload data available.</MudText>
+}
+else
+{
+    <MudTable Items="@_stats.TherapistUtilisation" Hover="true" Striped="true">
+        <HeaderContent>
+            <MudTh>Therapist</MudTh>
+            <MudTh>Current Sessions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.TherapistUserId[..8]...</MudTd>
+            <MudTd>
+                <MudProgressLinear Value="@context.SessionCount" Max="20" Color="Color.Primary"
+                                   Size="Size.Medium" Rounded="true" />
+                <MudText Typo="Typo.caption">@context.SessionCount sessions</MudText>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    private PracticeStatsModel _stats;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _stats = await ReportApi.GetPracticeStatsAsync(DateTime.Today.AddDays(-30), DateTime.Today);
+        _loading = false;
+    }
+}
