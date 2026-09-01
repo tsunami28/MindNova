@@ -2,6 +2,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using MindNova.Web.Models;
 
+using static MindNova.Web.Services.ProblemDetailsDetection;
+
 namespace MindNova.Web.Services;
 
 public class ClientApiService
@@ -37,7 +39,7 @@ public class ClientApiService
         var response = await _http.PostAsJsonAsync("/api/clients", model);
         var content = await response.Content.ReadAsStringAsync();
 
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return (null, ExtractDetail(content));
 
         var client = JsonSerializer.Deserialize<ClientModel>(content, JsonOptions);
@@ -49,7 +51,7 @@ public class ClientApiService
         var response = await _http.PutAsJsonAsync($"/api/clients/{id}", model);
         var content = await response.Content.ReadAsStringAsync();
 
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return (null, ExtractDetail(content));
 
         var client = JsonSerializer.Deserialize<ClientModel>(content, JsonOptions);

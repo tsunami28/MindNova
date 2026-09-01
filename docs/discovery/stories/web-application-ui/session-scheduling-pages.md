@@ -1,7 +1,7 @@
 ---
 key: MN-42
 type: story
-status: done
+status: in-progress
 epic: MN-8
 points: 5
 priority: minor
@@ -66,3 +66,23 @@ relates:
 * Edit page - src/MindNova.Web/Pages/Sessions/Edit.razor
 * Calendar view - src/MindNova.Web/Pages/Calendar/CalendarView.razor
 * PR - https://github.com/tsunami28/MindNova/pull/41
+
+## Triage
+
+**Report:** Session creation asks the user to enter a therapist user ID and client ID,
+rather than selecting a therapist and client.
+
+**Confirmed:** Source inspection of `Pages/Sessions/Create.razor` found two
+`MudTextField` controls for `TherapistUserId` and `ClientId`. This conflicts with
+AC-2, which requires therapist and client selectors. `ClientApiService` and
+`TherapistApiService` already expose list operations that can supply selector data.
+
+**Classification:** Confirmed bug - MN-42 was marked done although AC-2 is incomplete.
+
+**Impact and priority:** Minor. The scheduling workflow remains usable only with opaque
+identifiers, which blocks ordinary UI users from creating sessions without API tooling.
+
+**Duplicate check:** No duplicate work item found under `docs/discovery/`.
+
+**Recommended next step:** `/mature-resolve-ticket` to replace the identifier fields with
+client and therapist selectors and add focused UI coverage.

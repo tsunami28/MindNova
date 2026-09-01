@@ -9,38 +9,34 @@ A .NET 10 Web API for managing psychotherapy consultancy operations.
 
 ## Running locally
 
-1. Ensure the Podman machine is running:
+Full runbook, including troubleshooting: [docs/local-dev-setup.md](../docs/local-dev-setup.md).
 
-```bash
+Quick start, from the `MindNova` directory:
+
+```powershell
+# 1. Start the database
 podman machine start
-```
+podman start mindnova-sql   # first time: see the runbook for the podman run command
 
-2. Start the SQL Server container:
-
-```bash
-cd MindNova
-podman compose up -d
-```
-
-2. Apply EF Core migrations:
-
-```bash
-cd MindNova
+# 2. Build and migrate
+dotnet build MindNova.slnx -c Debug
 dotnet ef database update --project src/MindNova.Infrastructure --startup-project src/MindNova.Api
+
+# 3. Run the API (terminal 1)
+dotnet exec src/MindNova.Api/bin/Debug/net10.0/MindNova.Api.dll `
+  --contentRoot src/MindNova.Api --environment Development --urls http://localhost:5193
+
+# 4. Run the web UI (terminal 2)
+dotnet exec src/MindNova.Web/bin/Debug/net10.0/MindNova.Web.dll `
+  --contentRoot src/MindNova.Web --environment Development --urls http://localhost:5080
 ```
 
-3. Run the API:
+Then browse to `http://localhost:5080`. Health check: `http://localhost:5193/health`.
 
-```bash
-cd MindNova
-dotnet run --project src/MindNova.Api
-```
-
-4. Verify the health endpoint:
-
-```bash
-curl https://localhost:5001/health
-```
+Debug builds set `UseAppHost=false`, so no `.exe` is produced and `dotnet exec` is used in
+place of `dotnet run`. This avoids endpoint security software blocking the freshly built
+apphost. Release builds are unaffected. A fresh database has no user account; register one
+via `POST /api/auth/register` as described in the runbook.
 
 ## Running tests
 

@@ -16,7 +16,7 @@ builder.Services.AddScoped<ReportApiService>();
 builder.Services.AddScoped<TherapistApiService>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 
-var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5000";
+var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://127.0.0.1:5193";
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseUrl) });
 
 var app = builder.Build();

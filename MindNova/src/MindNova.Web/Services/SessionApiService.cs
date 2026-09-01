@@ -2,6 +2,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using MindNova.Web.Models;
 
+using static MindNova.Web.Services.ProblemDetailsDetection;
+
 namespace MindNova.Web.Services;
 
 public class SessionApiService
@@ -66,7 +68,7 @@ public class SessionApiService
 
     private static (SessionModel Session, string Error) ParseResponse(string content)
     {
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
         {
             var error = ExtractConflictMessage(content);
             return (null, error);

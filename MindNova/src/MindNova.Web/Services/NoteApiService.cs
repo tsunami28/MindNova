@@ -2,6 +2,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using MindNova.Web.Models;
 
+using static MindNova.Web.Services.ProblemDetailsDetection;
+
 namespace MindNova.Web.Services;
 
 public class NoteApiService
@@ -22,7 +24,7 @@ public class NoteApiService
         var response = await _http.GetAsync(url);
         var content = await response.Content.ReadAsStringAsync();
 
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return null;
 
         return JsonSerializer.Deserialize<List<NoteModel>>(content, JsonOptions) ?? new List<NoteModel>();
@@ -67,7 +69,7 @@ public class NoteApiService
         var response = await _http.GetAsync(url);
         var content = await response.Content.ReadAsStringAsync();
 
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return null;
 
         return JsonSerializer.Deserialize<PagedResult<NoteModel>>(content, JsonOptions) ?? new PagedResult<NoteModel>();
@@ -75,13 +77,15 @@ public class NoteApiService
 
     private static (NoteModel Note, string Error) ParseResponse(string content)
     {
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
         {
             try
             {
                 var doc = JsonDocument.Parse(content);
                 var root = doc.RootElement;
-                var status = root.TryGetProperty("Status", out var s) ? s.GetInt32() : 0;
+                var status = root.TryGetProperty("status", out var s) || root.TryGetProperty("Status", out s)
+                    ? s.GetInt32()
+                    : 0;
 
                 if (status == 403)
                     return (null, "access-denied");

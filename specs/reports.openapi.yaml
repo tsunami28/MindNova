@@ -224,15 +224,17 @@ components:
 
     ProblemDetails:
       type: object
-      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      description: >
+        RFC 7807 error response (returned with HTTP 200 per C07). Standard members are
+        lowercase as the RFC requires; see ADR 0011.
       properties:
-        Title:
+        title:
           type: string
-        Detail:
+        detail:
           type: string
-        Status:
+        status:
           type: integer
-        Type:
+        type:
           type: string
-        Instance:
+        instance:
           type: string

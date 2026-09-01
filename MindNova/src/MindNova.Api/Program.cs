@@ -40,7 +40,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<MindNovaDbContext>("sqlserver");
 
-builder.Services.AddControllers();
+// Null naming policy serialises property names verbatim, giving the PascalCase wire format
+// required by constitution clause C06. The MVC default (JsonSerializerDefaults.Web) is camelCase.
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 var app = builder.Build();
 

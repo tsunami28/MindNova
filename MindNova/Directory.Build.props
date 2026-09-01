@@ -5,4 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
+  <!-- Debug builds emit no native apphost .exe; endpoint security software blocks launching
+       freshly built unsigned executables. Run via "dotnet exec <project>.dll" instead.
+       Release is left untouched so publish artifacts are unchanged. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
 </Project>

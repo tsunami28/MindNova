@@ -14,8 +14,7 @@ public sealed class SqlServerContainer : IAsyncDisposable
 
     public SqlServerContainer()
     {
-        _container = new ContainerBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+        _container = new ContainerBuilder("mcr.microsoft.com/mssql/server:2022-latest")
             .WithEnvironment("ACCEPT_EULA", "Y")
             .WithEnvironment("MSSQL_SA_PASSWORD", SaPassword)
             .WithPortBinding(ContainerPort, true)

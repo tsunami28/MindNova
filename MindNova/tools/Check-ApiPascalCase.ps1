@@ -27,8 +27,10 @@
 
     Part B - spec well-formedness:
         If specs/ contains *.openapi.yaml or *.yaml files, each must parse as YAML and every
-        schema property name under components.schemas.*.properties must be PascalCase. If specs/
-        is absent or empty, this part is a no-op and reports "no specs yet".
+        schema property name under components.schemas.*.properties must be PascalCase, EXCEPT
+        schemas whose name ends in ProblemDetails: those are RFC 7807 error payloads whose member
+        names the RFC fixes as lowercase (see ADR 0011). If specs/ is absent or empty, this part
+        is a no-op and reports "no specs yet".
 
     OUT OF SCOPE - code-vs-spec drift:
         This script does NOT verify that an OpenAPI document matches the wire format the running
@@ -148,6 +150,11 @@ if ($specFiles.Count -gt 0) {
             $schemas = $doc.components.schemas
             if ($null -eq $schemas) { continue }
             foreach ($schemaName in $schemas.Keys) {
+                # RFC 7807 error schemas are governed by the RFC, not C06: its standard members
+                # (type/title/status/detail/instance) are lowercase by specification, and extension
+                # members follow lowerCamelCase alongside them. See ADR 0011.
+                if ($schemaName -like '*ProblemDetails') { continue }
+
                 $props = $schemas[$schemaName].properties
                 if ($null -eq $props) { continue }
                 foreach ($propName in $props.Keys) {
