@@ -219,11 +219,11 @@ public class SessionsController : ControllerBase
         };
     }
 
-    private static object MapConflictError(string error)
+    private static ProblemDetails MapConflictError(string error)
     {
         if (error == "outside-availability")
         {
-            return new
+            return new ProblemDetails
             {
                 Type = "urn:mindnova:error:outside-availability",
                 Title = "Outside availability",
@@ -234,15 +234,19 @@ public class SessionsController : ControllerBase
 
         // session-conflict|{id}|{start}|{end}
         var parts = error.Split('|');
-        return new
+        var problem = new ProblemDetails
         {
             Type = "urn:mindnova:error:session-conflict",
             Title = "Session conflict",
             Detail = "The proposed time overlaps an existing session for this therapist.",
-            Status = 409,
-            ConflictingSessionId = parts[1],
-            ConflictingStart = parts[2],
-            ConflictingEnd = parts[3]
+            Status = 409
         };
+
+        // RFC 7807 extension members; serialised verbatim via [JsonExtensionData].
+        problem.Extensions["conflictingSessionId"] = parts[1];
+        problem.Extensions["conflictingStart"] = parts[2];
+        problem.Extensions["conflictingEnd"] = parts[3];
+
+        return problem;
     }
 }

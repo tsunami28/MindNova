@@ -34,9 +34,9 @@ paths:
         '200':
           description: >
             Created session on success, or ProblemDetails on validation failure.
-            Conflict errors use Type "urn:mindnova:error:session-conflict" and include
-            ConflictDetail in the Conflict property. Availability errors use
-            Type "urn:mindnova:error:outside-availability".
+            Conflict errors use type "urn:mindnova:error:session-conflict" and carry the
+            conflicting session as flat RFC 7807 extension members. Availability errors use
+            type "urn:mindnova:error:outside-availability".
           content:
             application/json:
               schema:
@@ -255,44 +255,36 @@ components:
         PageSize:
           type: integer
 
-    ConflictDetail:
-      type: object
-      description: >
-        Details of the existing session that conflicts with the proposed time.
-        Included in the Conflict property of SessionConflictProblemDetails.
-      properties:
-        ConflictingSessionId:
-          type: string
-          format: uuid
-          description: ID of the existing session that overlaps
-        ConflictingStart:
-          type: string
-          format: date-time
-          description: Start time of the conflicting session
-        ConflictingEnd:
-          type: string
-          format: date-time
-          description: End time of the conflicting session (ScheduledAt + DurationMinutes)
-
     SessionConflictProblemDetails:
       allOf:
         - $ref: '#/components/schemas/ProblemDetails'
       type: object
       description: >
         Returned when the proposed session time overlaps an existing booking
-        for the same therapist.
+        for the same therapist. The conflicting session is reported as flat RFC 7807
+        extension members (lowerCamelCase), not a nested object.
       properties:
-        Type:
+        type:
           type: string
           example: "urn:mindnova:error:session-conflict"
-        Title:
+        title:
           type: string
           example: "Session conflict"
-        Detail:
+        detail:
           type: string
           example: "The proposed time overlaps an existing session for this therapist."
-        Conflict:
-          $ref: '#/components/schemas/ConflictDetail'
+        conflictingSessionId:
+          type: string
+          format: uuid
+          description: ID of the existing session that overlaps
+        conflictingStart:
+          type: string
+          format: date-time
+          description: Start time of the conflicting session
+        conflictingEnd:
+          type: string
+          format: date-time
+          description: End time of the conflicting session (ScheduledAt + DurationMinutes)
 
     OutsideAvailabilityProblemDetails:
       allOf:
@@ -302,28 +294,30 @@ components:
         Returned when the proposed session time does not fall within any of the
         therapist's defined availability slots.
       properties:
-        Type:
+        type:
           type: string
           example: "urn:mindnova:error:outside-availability"
-        Title:
+        title:
           type: string
           example: "Outside availability"
-        Detail:
+        detail:
           type: string
           example: "The proposed time is not covered by any availability slot for this therapist."
 
     ProblemDetails:
       type: object
-      description: RFC 7807 error response (returned with HTTP 200 per C07)
+      description: >
+        RFC 7807 error response (returned with HTTP 200 per C07). Standard members are
+        lowercase as the RFC requires; see ADR 0011.
       properties:
-        Title:
+        title:
           type: string
-        Detail:
+        detail:
           type: string
-        Status:
+        status:
           type: integer
           description: Semantic status code (400 for validation, 404 for not found)
-        Type:
+        type:
           type: string
-        Instance:
+        instance:
           type: string

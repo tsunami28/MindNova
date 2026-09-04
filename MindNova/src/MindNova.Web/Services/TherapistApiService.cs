@@ -2,6 +2,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using MindNova.Web.Models;
 
+using static MindNova.Web.Services.ProblemDetailsDetection;
+
 namespace MindNova.Web.Services;
 
 public class TherapistApiService
@@ -35,7 +37,7 @@ public class TherapistApiService
     {
         var response = await _http.PostAsJsonAsync("/api/therapists", model);
         var content = await response.Content.ReadAsStringAsync();
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return (null, ExtractDetail(content));
         return (JsonSerializer.Deserialize<TherapistModel>(content, JsonOptions), null);
     }
@@ -44,7 +46,7 @@ public class TherapistApiService
     {
         var response = await _http.PutAsJsonAsync($"/api/therapists/{id}", model);
         var content = await response.Content.ReadAsStringAsync();
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return (null, ExtractDetail(content));
         return (JsonSerializer.Deserialize<TherapistModel>(content, JsonOptions), null);
     }
@@ -67,7 +69,7 @@ public class TherapistApiService
     {
         var response = await _http.PostAsJsonAsync($"/api/therapists/{therapistProfileId}/availability", model);
         var content = await response.Content.ReadAsStringAsync();
-        if (content.Contains("\"Status\"") && content.Contains("\"Title\""))
+        if (IsProblemDetails(content))
             return (null, ExtractDetail(content));
         return (JsonSerializer.Deserialize<AvailabilitySlotModel>(content, JsonOptions), null);
     }
